@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 height="100">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<fx:String id="heading" />
+		<fx:String id="label" />
+		<fx:Boolean id="tapVisible">true</fx:Boolean>
+	</fx:Declarations>
+
+	<fx:Script>
+		<![CDATA[
+			import flash.filters.BitmapFilterType;
+			
+			public function set percent(value:Number):void
+			{
+				coloredBar.right = (this.width * (Math.abs(value - 100) / 100));
+				graphValue.right = (this.width * (Math.abs(value - 100) / 100));
+				
+				var length:Number = graphValue.text.length * 10;
+				
+				if( graphValue.right + length >= this.width )
+				{
+					graphValue.left = (this.width - Number(graphValue.right));
+					graphValue.right = 0;
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Rect top="0" bottom="0" left="0" right="0" radiusX="8" radiusY="8">
+		<s:fill>
+			<s:SolidColor color="#F0F0F0" />
+		</s:fill>
+		
+		<s:filters>
+			<mx:DropShadowFilter />
+		</s:filters>
+	</s:Rect>
+	
+	<s:Rect top="40" bottom="20" left="10" right="10">
+		<s:fill>
+			<s:SolidColor color="#C0C0C0" />
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect id="coloredBar" top="40" bottom="20" left="10">
+		<s:fill>
+			<s:LinearGradient>
+				<s:GradientEntry color="0x3399CC"/>
+				<s:GradientEntry color="0x00CCFF"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Label text="{heading}" top="10" left="10" />
+	
+	<s:Label id="graphValue" text="{label}" top="50" color="#FFFFFF" />
+	
+	<s:Label right="5" bottom="5"
+			 visible="{tapVisible}"
+			 text="Tap for 6 month Payment Plan" color="#000000" fontSize="10" />
+</s:Group>

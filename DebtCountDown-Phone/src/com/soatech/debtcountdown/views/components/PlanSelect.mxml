@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="Select a Plan"
+		implements="com.soatech.debtcountdown.views.interfaces.IPlanSelect">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			public function get addBtn():Button
+			{
+				return _addBtn;
+			}
+			
+			public function get planList():List
+			{
+				return _planList;
+			}
+			
+			public function get instructions():Label
+			{
+				return _instructions;
+			}
+		]]>
+	</fx:Script>
+	
+	<s:actionContent>
+		<s:Button id="_addBtn" label="Add Plan" />
+	</s:actionContent>
+	
+	<s:List id="_planList" top="10" bottom="10" left="10" right="10" 
+			labelField="name" borderVisible="true">
+		
+	</s:List>
+	
+	<s:Label id="_instructions" horizontalCenter="0" verticalCenter="0" width="100%" textAlign="center"
+			 text="Create a Plan and assign your debts to it.  Create different Plans to experiment with different debts and budgets."/>
+	
+</s:View>

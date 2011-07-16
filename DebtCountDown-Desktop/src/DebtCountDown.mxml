@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx" 
+					   xmlns:components="com.soatech.debtcountdown.views.components.*" 
+					   xmlns:debtcountdown="com.soatech.debtcountdown.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<debtcountdown:DesktopContext id="desktopContext" contextView="{this}" />
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			//-----------------------------------------------------------------
+			//
+			// Properties
+			//
+			//-----------------------------------------------------------------
+			
+			public const INDEX_MANAGE:int = 0;
+			public const INDEX_PLAN_CREATE:int = 1;
+			public const INDEX_PLAN_EDIT:int = 2;
+			public const INDEX_DEBT_CREATE:int = 3;
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout />
+	</s:layout>
+	
+	<mx:ViewStack id="mainStack" width="100%" height="100%">
+		<s:NavigatorContent id="planSelectContent" label="Select a Plan">
+			<s:VGroup width="100%" height="100%">
+				<s:ButtonBar dataProvider="{selectStack}" width="100%" />
+				
+				<mx:ViewStack id="selectStack" width="100%" height="100%">
+					<s:NavigatorContent label="Manage Plans">
+						<components:PlanSelect id="planSelect" width="100%" height="100%" />
+					</s:NavigatorContent>
+					
+					<s:NavigatorContent label="Manage Debts">
+						<components:DebtSelect id="debtSelect" width="100%" height="100%" />
+					</s:NavigatorContent>
+				</mx:ViewStack>
+			</s:VGroup>
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent id="planCreateContent" label="Create Plan">
+			<components:PlanCreate id="planCreate" width="100%" height="100%" />
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent id="planEditContent" label="Plan Details">
+			<components:PlanEdit id="planEdit" width="100%" height="100%" />
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent label="Create Debt">
+			<components:DebtCreate id="debtCreate" width="100%" height="100%" />
+		</s:NavigatorContent>
+	</mx:ViewStack>
+	
+</s:WindowedApplication>

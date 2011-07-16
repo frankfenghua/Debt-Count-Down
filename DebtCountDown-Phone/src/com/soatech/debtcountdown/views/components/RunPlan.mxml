@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="Run Plan Run" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		implements="com.soatech.debtcountdown.views.interfaces.IRunPlan">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:CurrencyFormatter id="currencyFormatter" useCurrencySymbol="true" currencySymbol="$"/>
+	</fx:Declarations>
+
+	<s:states>
+		<s:State name="running" />
+		<s:State name="summary" />
+	</s:states>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			[Embed('/assets/thinking.jpg')]
+			[Bindable]
+			private var thinkingSrc:Class;
+			
+			public function get backBtn():Button
+			{
+				return _backBtn;
+			}
+			
+			public function get busyInd():*
+			{
+				return _busyInd;
+			}
+			
+			public function get payOffTimeChart():BarChart
+			{
+				return _payOffTimeChart;
+			}
+			
+			public function get interestChart():BarChart
+			{
+				return _interestChart;
+			}
+			
+			public function get ratePlanBtn():Button
+			{
+				return _ratePlanBtn;
+			}
+			
+			public function get balancePlanBtn():Button
+			{
+				return _balancePlanBtn;
+			}
+			
+			public function setState(value:String):void
+			{
+				currentState = value;
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		
+		.test
+		{
+			fontSize:12px;
+		}
+	</fx:Style>
+	
+	<s:navigationContent>
+		<s:Button id="_backBtn" label="Back" />
+	</s:navigationContent>
+	
+	<s:BitmapImage source="{thinkingSrc}" top="0" bottom="0" left="0" right="0" 
+				   visible.summary="false"/>
+	
+	<s:BusyIndicator id="_busyInd" top="0" bottom="0" left="0" right="0" 
+					 alpha="0.5" visible.summary="false"/>
+	
+	<s:TabbedViewNavigator id="tabViewNavigator" width="100%" height="100%">
+		
+		<s:ViewNavigator label="Duration" width="100%" height="100%" 
+						 firstView="com.soatech.debtcountdown.views.components.DurationChart" />
+		
+		<s:ViewNavigator label="Interest" width="100%" height="100%" 
+						 firstView="com.soatech.debtcountdown.views.components.InterestChart" />
+	</s:TabbedViewNavigator>
+	
+	<s:VGroup top="0" bottom="0" left="0" right="0"
+			  visible="false" visible.summary="false"
+			  includeInLayout="false">
+		
+		<mx:BarChart id="_payOffTimeChart" 
+						height="50%" 
+						width="100%" 
+						paddingLeft="5" 
+						paddingRight="5" 
+						showDataTips="true"
+						visible="false" includeInLayout="false">
+
+			<mx:verticalAxis>
+				<mx:CategoryAxis categoryField="Routine"/>
+			</mx:verticalAxis>
+			
+			<mx:series>
+				<mx:BarSeries 
+					xField="Duration" 
+					yField="Routine" 
+					displayName="Months to Pay Off"
+					/>
+			</mx:series>
+		</mx:BarChart>
+		
+		<mx:BarChart id="_interestChart" 
+					 height="100%" 
+					 width="100%" 
+					 paddingLeft="5" 
+					 paddingRight="5" 
+					 showDataTips="true" 
+					 gridLinesStyleName="test" axisTitleStyleName="test"
+					 verticalAxisStyleNames="test">
+			
+			<mx:verticalAxis>
+				<mx:CategoryAxis categoryField="Routine"/>
+			</mx:verticalAxis>
+			
+			<mx:series>
+				<mx:BarSeries 
+					xField="Interest" 
+					yField="Routine" 
+					displayName="Interest Paid"
+					/>
+			</mx:series>
+		</mx:BarChart>
+		
+		<s:Label text="Plan My Next 6 Months:" visible="false" includeInLayout="false" />
+		
+		<s:TileGroup width="100%" visible="false" includeInLayout="false">
+			<s:Button id="_ratePlanBtn" label="Highest Rate Priority" />
+			<s:Button id="_balancePlanBtn" label="Lowest Balance Priority" />
+		</s:TileGroup>
+		
+	</s:VGroup>
+</s:View>

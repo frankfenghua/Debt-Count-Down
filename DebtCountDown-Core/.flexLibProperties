@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="com.soatech.debtcountdown.CoreContext"/>
+    <classEntry path="com.soatech.debtcountdown.events.PlanEvent"/>
+    <classEntry path="com.soatech.debtcountdown.events.DebtEvent"/>
+    <classEntry path="com.soatech.debtcountdown.events.RotateEvent"/>
+    <classEntry path="com.soatech.debtcountdown.commands.PlanSaveCommand"/>
+    <classEntry path="com.soatech.debtcountdown.commands.DebtCreateCommand"/>
+    <classEntry path="com.soatech.debtcountdown.commands.DebtSaveCommand"/>
+    <classEntry path="com.soatech.debtcountdown.services.PayOffService"/>
+    <classEntry path="com.soatech.debtcountdown.models.vo.StatsVO"/>
+    <classEntry path="com.soatech.debtcountdown.commands.PaymentPlanRunCommand"/>
+    <classEntry path="com.soatech.debtcountdown.models.StatsProxy"/>
+    <classEntry path="com.soatech.debtcountdown.events.DataBaseEvent"/>
+    <classEntry path="com.soatech.debtcountdown.models.DataBaseProxy"/>
+    <classEntry path="com.soatech.debtcountdown.events.MigrationEvent"/>
+    <classEntry path="com.soatech.debtcountdown.events.AppEvent"/>
+    <classEntry path="com.soatech.debtcountdown.commands.AppInitCommand"/>
+    <classEntry path="com.soatech.debtcountdown.commands.MigrationsRunCommand"/>
+    <classEntry path="com.soatech.debtcountdown.services.DebtService"/>
+    <classEntry path="com.soatech.debtcountdown.services.PlanService"/>
+    <classEntry path="com.soatech.debtcountdown.commands.DebtsLoadAllCommand"/>
+    <classEntry path="com.soatech.debtcountdown.commands.PlanAddDebtCommand"/>
+    <classEntry path="com.soatech.debtcountdown.commands.PlanLinkDebtCommand"/>
+    <classEntry path="com.soatech.debtcountdown.commands.PlanUnlinkDebtCommand"/>
+    <classEntry path="com.soatech.debtcountdown.models.vo.PaymentPlanVO"/>
+    <classEntry path="com.soatech.debtcountdown.enum.RoutineType"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IDebtEdit"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IDebtEditMediator"/>
+    <classEntry path="com.soatech.debtcountdown.views.DebtEditMediatorBase"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IAppMediator"/>
+    <classEntry path="com.soatech.debtcountdown.views.AppMediatorBase"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IPaymentPlanMediator"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IPaymentPlan"/>
+    <classEntry path="com.soatech.debtcountdown.views.PaymentPlanMediatorBase"/>
+    <classEntry path="com.soatech.debtcountdown.events.PaymentPlanEvent"/>
+    <classEntry path="com.soatech.debtcountdown.enum.DebtEditStates"/>
+    <classEntry path="com.soatech.debtcountdown.enum.DebtSelectStates"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IDebtSelect"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IDebtSelectMediator"/>
+    <classEntry path="com.soatech.debtcountdown.views.DebtSelectMediatorBase"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IPlanEdit"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IPlanEditMediator"/>
+    <classEntry path="com.soatech.debtcountdown.views.PlanEditMediatorBase"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IPlanSelect"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IPlanSelectMediator"/>
+    <classEntry path="com.soatech.debtcountdown.views.PlanSelectMediatorBase"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IRunPlan"/>
+    <classEntry path="com.soatech.debtcountdown.enum.RunPlanStates"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IRunPlanMediator"/>
+    <classEntry path="com.soatech.debtcountdown.views.RunPlanMediatorBase"/>
+    <classEntry path="com.soatech.debtcountdown.commands.DebtSelectCommand"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IInterestChart"/>
+    <classEntry path="com.soatech.debtcountdown.views.interfaces.IInterestChartMediator"/>
+    <classEntry path="com.soatech.debtcountdown.views.InterestChartMediatorBase"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

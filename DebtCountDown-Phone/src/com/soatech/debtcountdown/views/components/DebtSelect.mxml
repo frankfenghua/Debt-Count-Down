@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="Select a Debt"
+		implements="com.soatech.debtcountdown.views.interfaces.IDebtSelect">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			public function get addBtn():Button
+			{
+				return _addBtn;
+			}
+			
+			public function get backBtn():Button
+			{
+				return _backBtn;
+			}
+			
+			public function get debtList():List
+			{
+				return _debtList;
+			}
+			
+			public function get instructions():Label
+			{
+				return _instructions;
+			}
+			
+			public function setState(value:String):void
+			{
+				currentState = value;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="manage" />
+		<s:State name="selector" />
+	</s:states>
+	
+	<s:navigationContent>
+		<s:Button id="_backBtn" label="Back"
+				  visible="false" includeInLayout="false"
+				  visible.selector="true" includeInLayout.selector="true"/>
+	</s:navigationContent>
+	
+	<s:actionContent>
+		<s:Button id="_addBtn" label="Add Debt" />
+	</s:actionContent>
+	
+	<s:Label text="Select a Debt to add it to your Plan." top="10" left="10" right="10" 
+			 visible="false" includeInLayout="false"
+			 visible.selector="true" includeInLayout.selector="true"/>
+	
+	<s:List id="_debtList" top="10" top.selector="50" bottom="10" left="10" 
+			right="10" labelField="name" borderVisible="true">
+		
+	</s:List>
+	
+	<s:Label id="_instructions" horizontalCenter="0" verticalCenter="0" width="80%"
+			 text.manage="Add, edit, and manage your Credit Card Debts.  You can also add them directly to a Plan."
+			 text.selector="Add, edit, and manage your Credit Card Debts.  You can also manage them via the Manage Debts screen."/>
+	
+</s:View>

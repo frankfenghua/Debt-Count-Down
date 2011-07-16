@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		<fx:Array id="validators">
+			<s:NumberValidator id="dayBtnValidator" required="true" 
+							   listener="{dayBtn}" property="label"
+							   source="{dayBtn}" />
+			
+			<s:NumberValidator id="monthBtnValidator" required="true" 
+							   listener="{monthBtn}" property="label"
+							   source="{monthBtn}"/>
+			
+			<s:NumberValidator id="yearBtnValidator" required="true" 
+							   listener="{yearBtn}" property="label"
+							   source="{yearBtn}"/>
+		</fx:Array>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.soatech.debtcountdown.events.DatePickerEvent;
+			
+			private var _date:Date;
+
+			public function get date():Date
+			{
+				return _date;
+			}
+
+			public function set date(value:Date):void
+			{
+				_date = value;
+				
+				dispatchEvent( new DatePickerEvent( DatePickerEvent.DATE_CHANGE, value ) );
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:HorizontalLayout />
+	</s:layout>
+	
+	<s:Button id="monthBtn" width="90" label="MM" />
+	<s:Button id="dayBtn" width="90" label="DD" />
+	<s:Button id="yearBtn" width="150" label="YYYY" />
+	
+</s:Group>

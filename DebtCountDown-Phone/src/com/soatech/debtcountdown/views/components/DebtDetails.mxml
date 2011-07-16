@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="Debt Details" xmlns:vo="com.soatech.debtcountdown.models.vo.*" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+		xmlns:components="com.soatech.debtcountdown.views.components.*"
+		implements="com.soatech.debtcountdown.views.interfaces.IDebtEdit">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:states>
+		<s:State name="default" />
+		<s:State name="plan" />
+	</s:states>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			public function setState(value:String):void
+			{
+				this.currentState = value;
+			}
+			
+			public function get backBtn():Button
+			{
+				return _backBtn;
+			}
+			
+			public function get saveBtn():Button
+			{
+				return _saveBtn;
+			}
+			
+			public function get nameTI():TextInput
+			{
+				return _nameTI;
+			}
+			
+			public function get bankTI():TextInput
+			{
+				return _bankTI;
+			}
+			
+			public function get balanceTI():TextInput
+			{
+				return _balanceTI;
+			}
+			
+			public function get aprTI():TextInput
+			{
+				return _aprTI;
+			}
+			
+			public function get minPaymentTI():TextInput
+			{
+				return _minPaymentTI;
+			}
+			
+			public function get deleteBtn():Button
+			{
+				return _deleteBtn;
+			}
+			
+			public function get removeFromPlanBtn():Button
+			{
+				return _removeFromPlanBtn;
+			}
+		]]>
+	</fx:Script>
+	
+	<!--====================================================================-->
+	<!-- Navigation -->
+	<!--====================================================================-->
+	
+	<s:navigationContent>
+		<s:Button id="_backBtn" label="Back" />
+	</s:navigationContent>
+	
+	<s:actionContent>
+		<s:Button id="_saveBtn" label="Save" />
+	</s:actionContent>
+	
+	<!--====================================================================-->
+	<!-- Form -->
+	<!--====================================================================-->
+	
+	<s:Scroller top="10" bottom="10" left="10" right="10">
+		
+		<s:VGroup width="100%" height="100%" paddingRight="20" paddingBottom="10" 
+				  paddingLeft="10">
+			<s:Label text="Name"/>
+			<s:TextInput id="_nameTI" width="100%"/>
+
+			<s:Label text="Bank"/>
+			<s:TextInput id="_bankTI" width="100%"/>
+
+			<s:Label text="Balance"/>
+			<s:TextInput id="_balanceTI" width="100%" restrict="0-9."/>
+
+			<s:Label text="APR"/>
+			<s:TextInput id="_aprTI" width="100%" restrict="0-9."/>
+
+			<s:Label text="Minimum Payment"/>
+			<s:TextInput id="_minPaymentTI" width="100%" restrict="0-9."/>
+		
+			<s:Group height="100%" width="100%">
+				
+				<s:HGroup width="100%" horizontalAlign="center" bottom="10">
+					<s:Button id="_deleteBtn" label="Delete Debt" 
+							  visible.plan="false" includeInLayout.plan="false"/>
+					
+					<s:Button id="_removeFromPlanBtn" label="Remove From Plan" 
+							  visible="false" includeInLayout="false"
+							  visible.plan="true" includeInLayout.plan="true"/>
+				</s:HGroup>
+		
+			</s:Group>
+			
+			</s:VGroup>
+	</s:Scroller>
+	
+</s:View>
