@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:components="com.soatech.debtcountdown.views.components.*"
+		 implements="com.soatech.debtcountdown.views.interfaces.IPlanEdit">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" 
+						  paddingTop="10" />
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.net.dns.AAAARecord;
+			public function get saveBtn():Button
+			{
+				return _saveBtn;
+			}
+			
+			public function get runBtn():Button
+			{
+				return _runBtn;
+			}
+			
+			public function get nameTI():TextInput
+			{
+				return _nameTI;
+			}
+			
+			public function get incomeTI():TextInput
+			{
+				return _incomeTI;
+			}
+			
+			public function get expensesTI():TextInput
+			{
+				return _expensesTI;
+			}
+			
+			public function get deleteBtn():Button
+			{
+				return _deleteBtn;
+			}
+			
+			public function get debtList():List
+			{
+				return _debtList;
+			}
+			
+			public function get debtAddBtn():Button
+			{
+				return _debtAddBtn;
+			}
+			
+			public function get backBtn():Button
+			{
+				return _backBtn;
+			}
+			
+			public function get saveInstructions():Label
+			{
+				return _saveInstructions;
+			}
+			
+			public function get instructions():Label
+			{
+				return _instructions;
+			}
+		]]>
+	</fx:Script>
+	
+	<s:HGroup width="100%" horizontalAlign="center">
+		<s:Label text="Plan Details" />
+	</s:HGroup>
+	
+	<!--====================================================================-->
+	<!-- Plan Details -->
+	<!--====================================================================-->
+	
+	<mx:Form>
+		<mx:FormItem label="Name">
+			<s:TextInput id="_nameTI" />
+		</mx:FormItem>
+		
+		<mx:FormItem label="Income">
+			<s:TextInput id="_incomeTI" restrict="0-9." />
+		</mx:FormItem>
+		
+		<mx:FormItem label="Expenses">
+			<s:TextInput id="_expensesTI" restrict="0-9." />
+		</mx:FormItem>
+	</mx:Form>
+	
+	<!--====================================================================-->
+	<!-- Add Debt Items -->
+	<!--====================================================================-->
+	
+	<s:Group width="100%" height="100%">
+		<s:List id="_debtList" top="0" bottom="0" left="0" right="0"
+				labelField="name" borderVisible="true">
+			
+		</s:List>
+		
+		<s:Label id="_instructions" horizontalCenter="0" verticalCenter="0" 
+				 text="Create new or assign existing Debts to your Plan."/>
+		
+		
+		<s:Label id="_saveInstructions" horizontalCenter="0" verticalCenter="0" 
+				 text="You must Save before adding debts or running the Plan."/>
+	</s:Group>
+	
+	<s:HGroup horizontalAlign="center" width="100%">
+		<s:Button id="_backBtn" label="Back" />
+		<s:Button id="_saveBtn" label="Save" />
+		<s:Button id="_debtAddBtn" label="Add Debt" />
+		<s:Button id="_deleteBtn" label="Delete Plan" />
+		<s:Button id="_runBtn" label="Run" />
+	</s:HGroup>
+	
+</s:Group>
