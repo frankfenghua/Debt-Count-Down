@@ -10,10 +10,10 @@ package com.soatech.debtcountdown
 	import com.soatech.debtcountdown.commands.DebtsLoadAllCommand;
 	import com.soatech.debtcountdown.commands.DebtsLoadByPlanCommand;
 	import com.soatech.debtcountdown.commands.MigrationsRunCommand;
+	import com.soatech.debtcountdown.commands.PaymentPlanRunCommand;
 	import com.soatech.debtcountdown.commands.PlanCreateCommand;
 	import com.soatech.debtcountdown.commands.PlanDeleteCommand;
 	import com.soatech.debtcountdown.commands.PlanLinkDebtCommand;
-	import com.soatech.debtcountdown.commands.PaymentPlanRunCommand;
 	import com.soatech.debtcountdown.commands.PlanSaveCommand;
 	import com.soatech.debtcountdown.commands.PlanSelectCommand;
 	import com.soatech.debtcountdown.commands.PlanUnlinkDebtCommand;
@@ -32,6 +32,9 @@ package com.soatech.debtcountdown
 	import com.soatech.debtcountdown.services.DebtService;
 	import com.soatech.debtcountdown.services.PayOffService;
 	import com.soatech.debtcountdown.services.PlanService;
+	import com.soatech.debtcountdown.services.interfaces.IDebtService;
+	import com.soatech.debtcountdown.services.interfaces.IPayOffService;
+	import com.soatech.debtcountdown.services.interfaces.IPlanService;
 	
 	import flash.display.DisplayObjectContainer;
 	
@@ -74,12 +77,14 @@ package com.soatech.debtcountdown
 			// model
 			injector.mapSingleton( DataBaseProxy );
 			injector.mapSingleton( DebtProxy );
-			injector.mapSingleton( DebtService );
 			injector.mapSingleton( ELSHelper );
-			injector.mapSingleton( PayOffService );
 			injector.mapSingleton( PlanProxy );
-			injector.mapSingleton( PlanService );
 			injector.mapSingleton( StatsProxy );
+			
+			// services
+			injector.mapSingletonOf( IDebtService, DebtService );
+			injector.mapSingletonOf( IPayOffService, PayOffService );
+			injector.mapSingletonOf( IPlanService, PlanService );
 			
 			// commands
 			commandMap.mapEvent( AppEvent.INIT, AppInitCommand );

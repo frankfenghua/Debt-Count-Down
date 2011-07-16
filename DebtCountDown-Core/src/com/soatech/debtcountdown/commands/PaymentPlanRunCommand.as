@@ -5,8 +5,8 @@ package com.soatech.debtcountdown.commands
 	import com.soatech.debtcountdown.models.StatsProxy;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
 	import com.soatech.debtcountdown.models.vo.StatsVO;
-	import com.soatech.debtcountdown.services.DebtService;
-	import com.soatech.debtcountdown.services.PayOffService;
+	import com.soatech.debtcountdown.services.interfaces.IDebtService;
+	import com.soatech.debtcountdown.services.interfaces.IPayOffService;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -21,7 +21,7 @@ package com.soatech.debtcountdown.commands
 		//---------------------------------------------------------------------
 		
 		[Inject]
-		public var payOffService:PayOffService;
+		public var payOffService:IPayOffService;
 		
 		[Inject]
 		public var event:PaymentPlanEvent;
@@ -33,7 +33,7 @@ package com.soatech.debtcountdown.commands
 		public var statsProxy:StatsProxy;
 		
 		[Inject]
-		public var debtService:DebtService;
+		public var debtService:IDebtService;
 		
 		//---------------------------------------------------------------------
 		//

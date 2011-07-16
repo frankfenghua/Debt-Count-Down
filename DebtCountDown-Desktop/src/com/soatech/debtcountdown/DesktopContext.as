@@ -2,7 +2,6 @@ package com.soatech.debtcountdown
 {
 	import com.soatech.debtcountdown.events.AppEvent;
 	import com.soatech.debtcountdown.views.AppMediator;
-	import com.soatech.debtcountdown.views.DebtCreateMediator;
 	import com.soatech.debtcountdown.views.DebtEditMediator;
 	import com.soatech.debtcountdown.views.DebtListRendererMediator;
 	import com.soatech.debtcountdown.views.DebtSelectMediator;
@@ -60,7 +59,7 @@ package com.soatech.debtcountdown
 			super.startup();
 			
 			// mediators
-			mediatorMap.mapView( DebtCountDown, AppMediator, contextView );
+			mediatorMap.mapView( DebtCountDownDesktop, AppMediator, contextView );
 			mediatorMap.mapView( DebtEdit, DebtEditMediator );
 			mediatorMap.mapView( DebtListRenderer, DebtListRendererMediator );
 			mediatorMap.mapView( DebtSelect, DebtSelectMediator );

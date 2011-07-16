@@ -54,6 +54,9 @@
     <classEntry path="com.soatech.debtcountdown.views.interfaces.IInterestChart"/>
     <classEntry path="com.soatech.debtcountdown.views.interfaces.IInterestChartMediator"/>
     <classEntry path="com.soatech.debtcountdown.views.InterestChartMediatorBase"/>
+    <classEntry path="com.soatech.debtcountdown.services.interfaces.IDebtService"/>
+    <classEntry path="com.soatech.debtcountdown.services.interfaces.IPayOffService"/>
+    <classEntry path="com.soatech.debtcountdown.services.interfaces.IPlanService"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

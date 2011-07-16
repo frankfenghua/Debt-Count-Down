@@ -3,12 +3,13 @@ package com.soatech.debtcountdown.services
 	import com.soatech.debtcountdown.models.vo.DebtVO;
 	import com.soatech.debtcountdown.models.vo.PaymentPlanVO;
 	import com.soatech.debtcountdown.models.vo.StatsVO;
+	import com.soatech.debtcountdown.services.interfaces.IPayOffService;
 	
 	import mx.collections.ArrayCollection;
 	
 	import spark.collections.Sort;
 
-	public class PayOffService
+	public class PayOffService implements IPayOffService
 	{
 		//---------------------------------------------------------------------
 		//
@@ -224,7 +225,7 @@ package com.soatech.debtcountdown.services
 		 * @return 
 		 * 
 		 */		
-		protected function payOffDebts(debtList:ArrayCollection, payment:Number):StatsVO
+		public function payOffDebts(debtList:ArrayCollection, payment:Number):StatsVO
 		{
 			var debt:DebtVO;
 			var remainderPayment:Number;

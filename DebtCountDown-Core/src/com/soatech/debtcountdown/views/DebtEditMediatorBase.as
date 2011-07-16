@@ -6,7 +6,7 @@ package com.soatech.debtcountdown.views
 	import com.soatech.debtcountdown.models.DebtProxy;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
 	import com.soatech.debtcountdown.models.vo.PlanVO;
-	import com.soatech.debtcountdown.services.PayOffService;
+	import com.soatech.debtcountdown.services.interfaces.IPayOffService;
 	import com.soatech.debtcountdown.views.interfaces.IDebtEdit;
 	import com.soatech.debtcountdown.views.interfaces.IDebtEditMediator;
 	
@@ -29,7 +29,7 @@ package com.soatech.debtcountdown.views
 		//---------------------------------------------------------------------
 		
 		[Inject]
-		public var payOffService:PayOffService;
+		public var payOffService:IPayOffService;
 		
 		[Inject]
 		public var debtProxy:DebtProxy;

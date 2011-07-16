@@ -3,7 +3,7 @@ package com.soatech.debtcountdown.commands
 	import com.soatech.debtcountdown.events.PlanEvent;
 	import com.soatech.debtcountdown.models.PlanProxy;
 	import com.soatech.debtcountdown.models.vo.PlanVO;
-	import com.soatech.debtcountdown.services.PlanService;
+	import com.soatech.debtcountdown.services.interfaces.IPlanService;
 	
 	import org.robotlegs.mvcs.Command;
 	
@@ -22,7 +22,7 @@ package com.soatech.debtcountdown.commands
 		public var planProxy:PlanProxy;
 		
 		[Inject]
-		public var planService:PlanService;
+		public var planService:IPlanService;
 		
 		//---------------------------------------------------------------------
 		//

@@ -2,12 +2,13 @@ package com.soatech.debtcountdown.services
 {
 	import com.soatech.debtcountdown.models.DataBaseProxy;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
+	import com.soatech.debtcountdown.services.interfaces.IDebtService;
 	
 	import flash.errors.SQLError;
 	
 	import mx.collections.ArrayCollection;
 
-	public class DebtService
+	public class DebtService implements IDebtService
 	{
 		//---------------------------------------------------------------------
 		//

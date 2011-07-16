@@ -6,7 +6,6 @@ package com.soatech.debtcountdown.views
 	import com.soatech.debtcountdown.events.PlanEvent;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
 	import com.soatech.debtcountdown.models.vo.PlanVO;
-	import com.soatech.debtcountdown.services.PayOffService;
 	import com.soatech.debtcountdown.views.components.DebtDetails;
 	import com.soatech.debtcountdown.views.components.DeleteConfirm;
 	import com.soatech.debtcountdown.views.interfaces.IDebtEdit;

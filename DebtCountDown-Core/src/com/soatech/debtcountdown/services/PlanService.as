@@ -3,12 +3,13 @@ package com.soatech.debtcountdown.services
 	import com.soatech.debtcountdown.models.DataBaseProxy;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
 	import com.soatech.debtcountdown.models.vo.PlanVO;
+	import com.soatech.debtcountdown.services.interfaces.IPlanService;
 	
 	import flash.errors.SQLError;
 	
 	import mx.collections.ArrayCollection;
 
-	public class PlanService
+	public class PlanService implements IPlanService
 	{
 		//---------------------------------------------------------------------
 		//

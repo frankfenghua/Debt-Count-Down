@@ -1,7 +1,7 @@
 package com.soatech.debtcountdown.commands
 {
 	import com.soatech.debtcountdown.events.PlanEvent;
-	import com.soatech.debtcountdown.services.PlanService;
+	import com.soatech.debtcountdown.services.interfaces.IPlanService;
 	
 	import org.robotlegs.mvcs.Command;
 	
@@ -17,7 +17,7 @@ package com.soatech.debtcountdown.commands
 		public var event:PlanEvent;
 		
 		[Inject]
-		public var planService:PlanService;
+		public var planService:IPlanService;
 		
 		//---------------------------------------------------------------------
 		//

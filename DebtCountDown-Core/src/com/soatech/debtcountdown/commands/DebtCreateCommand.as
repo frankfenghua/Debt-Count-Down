@@ -3,7 +3,7 @@ package com.soatech.debtcountdown.commands
 	import com.soatech.debtcountdown.events.DebtEvent;
 	import com.soatech.debtcountdown.models.DebtProxy;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
-	import com.soatech.debtcountdown.services.DebtService;
+	import com.soatech.debtcountdown.services.interfaces.IDebtService;
 	
 	import org.robotlegs.mvcs.Command;
 	
@@ -22,7 +22,7 @@ package com.soatech.debtcountdown.commands
 		public var debtProxy:DebtProxy;
 		
 		[Inject]
-		public var debtService:DebtService;
+		public var debtService:IDebtService;
 		
 		//---------------------------------------------------------------------
 		//
