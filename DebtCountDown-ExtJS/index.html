@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Debt Count Down</title>
+
+<link rel="stylesheet" type="text/css" href="libs/extjs/resources/css/ext-all.css" />
+<script type="text/javascript" src="libs/extjs/ext-all-debug.js"></script>
+<!-- <script type="text/javascript" src="app.js"></script> -->
+<script type="text/javascript" src="libs/PureMVC_JS_ExtJS_2_0.js"></script>
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/ApplicationFacade.js"></script>
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/view/components/core/UIComponent.js"></script>
+
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/view/components/Manage.js"></script>
+
+<script type="text/javascript">
+	Ext.onReady(function () {
+		Ext.core.DomHelper.append(document.body, {id: 'manage', tag: 'div'});
+		
+		var app = new DebtCountDown.view.components.Manage();
+		app.initializeChildren();
+		app.childrenInitialized();
+		app.initializationComplete();
+		
+		DebtCountDown.ApplicationFacade.getInstance().startup(app);
+	});
+</script>
+
+</head>
+
+<body>
+</body>
+</html>
