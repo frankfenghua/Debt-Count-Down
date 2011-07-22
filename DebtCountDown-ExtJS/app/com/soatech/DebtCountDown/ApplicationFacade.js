@@ -7,7 +7,7 @@ DebtCountDown.ApplicationFacade = Ext.extend(Puremvc.patterns.Facade, {
 	
 	initializeController: function() {
 		DebtCountDown.ApplicationFacade.superclass.initializeController.call(this);
-//		this.registerCommand(DebtCountDown.ApplicationFacade.STARTUP, DebtCountDown.controller.StartupCommand);
+		this.registerCommand(DebtCountDown.ApplicationFacade.STARTUP, DebtCountDown.controller.StartupCommand);
 	},
 	
 	startup: function(viewComponent) {

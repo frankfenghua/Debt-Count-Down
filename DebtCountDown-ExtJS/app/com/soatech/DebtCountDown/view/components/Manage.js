@@ -1,16 +1,20 @@
 Ext.namespace('DebtCountDown.view.components');
 DebtCountDown.view.components.Manage = Ext.extend(DebtCountDown.view.components.core.UIComponent, {
+
+	debtsGrid: null,
+	plansGrid: null,	
+	debtStore: null,
+	planStore: null,
+	
 	contructor: function () {
 		DebtCountdown.view.components.Manage.superclass.constructor.call(this, "manage", {});
 	},
 	
 	initializeChildren: function() {
-		Ext.create('Ext.data.Store', {
-		    storeId:'planStore',
+		
+		this.debtStore = new Ext.data.Store({
+			storeId:'debtStore',
 		    fields:['name'],
-		    data:{'items':[
-		        {"name":"Plan One"},
-		    ]},
 		    proxy: {
 		        type: 'memory',
 		        reader: {
@@ -20,12 +24,9 @@ DebtCountDown.view.components.Manage = Ext.extend(DebtCountDown.view.components.
 		    }
 		});
 		
-		Ext.create('Ext.data.Store', {
-		    storeId:'debtStore',
+		this.planStore = new Ext.data.Store({
+			storeId:'planStore',
 		    fields:['name'],
-		    data:{'items':[
-		        {"name":"Debt One"},
-		    ]},
 		    proxy: {
 		        type: 'memory',
 		        reader: {
@@ -35,7 +36,7 @@ DebtCountDown.view.components.Manage = Ext.extend(DebtCountDown.view.components.
 		    }
 		});
 		
-		Ext.create('Ext.grid.Panel', {
+		this.plansGrid = new Ext.grid.Panel({
 			id: 'managePlansGrid',
 		    title: 'Manage Plans',
 		    store: Ext.data.StoreManager.lookup('planStore'),
@@ -44,11 +45,12 @@ DebtCountDown.view.components.Manage = Ext.extend(DebtCountDown.view.components.
 		    ],
 		    height: 500,
 		    width: 400,
-		    renderTo: Ext.getBody(),
-		    hideHeaders:true
+		    renderTo: Ext.get('managePlansTab'),
+		    hideHeaders:true,
+			forceFit: true
 		});
 		
-		Ext.create('Ext.grid.Panel', {
+		this.debtsGrid = new Ext.grid.Panel({
 			id: 'manageDebtsGrid',
 		    title: 'Manage Grids',
 		    store: Ext.data.StoreManager.lookup('debtStore'),
@@ -57,49 +59,19 @@ DebtCountDown.view.components.Manage = Ext.extend(DebtCountDown.view.components.
 		    ],
 		    height: 500,
 		    width: 400,
-		    renderTo: Ext.getBody(),
+		    renderTo: Ext.get('manageDebtsTab'),
 		    hideHeaders:true,
-		    hidden: true,
-		    hideMode: 'Offsets'
+			forceFit: true
 		});
 		
-		Ext.create('Ext.Button',{
-			id: 'managePlansBtn',
-			text: 'Manage Plans',
+		Ext.create('Ext.tab.Panel', {
+			width: 400,
+			height: 500,
 			renderTo: Ext.getBody(),
-			scale: 'large',
-			enableToggle: true,
-			height: 50,
-			width: 200,
-			pressed: true,
-			toggleGroup: "mainNav",
-			toggleHandler: function() 
-			{
-				if(this.pressed)
-				{
-					Ext.get('managePlansGrid').toggle();
-					Ext.get('manageDebtsGrid').toggle();
-				}
-			}
-		});
-		
-		Ext.create('Ext.Button',{
-			id: 'manageDebtsBtn',
-			text: 'Manage Debts',
-			renderTo: Ext.getBody(),
-			scale: 'large',
-			enableToggle: true,
-			height: 50,
-			width: 200,
-			toggleGroup: "mainNav",
-			toggleHandler: function() 
-			{
-				if(this.pressed)
-				{
-					Ext.get('managePlansGrid').toggle();
-					Ext.get('manageDebtsGrid').toggle();
-				}
-			}
+			tabPosition: 'bottom',
+			items: [ this.plansGrid, this.debtsGrid ],
+			minTabWidth: 195,
+			minTabHeight: 100
 		});
 	},
 	
@@ -109,5 +81,15 @@ DebtCountDown.view.components.Manage = Ext.extend(DebtCountDown.view.components.
 	
 	initializationComplete: function() {
 		DebtCountDown.view.components.Manage.superclass.initializationComplete.call(this);
+	},
+	
+	setDebtStore: function( list /* array */ )
+	{
+		this.debtStore.loadData(list, false);
+	},
+	
+	setPlanStore: function( list /* array */ )
+	{
+		this.planStore.loadData(list, false);
 	}
 });

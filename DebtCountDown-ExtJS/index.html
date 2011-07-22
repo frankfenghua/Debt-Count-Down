@@ -5,13 +5,29 @@
 <title>Debt Count Down</title>
 
 <link rel="stylesheet" type="text/css" href="libs/extjs/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css" href="resources/css/main.css" />
 <script type="text/javascript" src="libs/extjs/ext-all-debug.js"></script>
-<!-- <script type="text/javascript" src="app.js"></script> -->
 <script type="text/javascript" src="libs/PureMVC_JS_ExtJS_2_0.js"></script>
 <script type="text/javascript" src="app/com/soatech/DebtCountDown/ApplicationFacade.js"></script>
 <script type="text/javascript" src="app/com/soatech/DebtCountDown/view/components/core/UIComponent.js"></script>
 
+<!-- Models -->
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/model/vo/DebtVO.js"></script>
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/model/vo/PaymentPlanVO.js"></script>
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/model/vo/PlanVO.js"></script>
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/model/vo/StatsVO.js"></script>
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/model/DebtProxy.js"></script>
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/model/PlanProxy.js"></script>
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/model/StatsProxy.js"></script>
+
+<!-- View -->
 <script type="text/javascript" src="app/com/soatech/DebtCountDown/view/components/Manage.js"></script>
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/view/ManageMediator.js"></script>
+
+<!-- Controller -->
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/controller/ModelPrepCommand.js"></script>
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/controller/StartupCommand.js"></script>
+<script type="text/javascript" src="app/com/soatech/DebtCountDown/controller/ViewPrepCommand.js"></script>
 
 <script type="text/javascript">
 	Ext.onReady(function () {
