@@ -21,7 +21,11 @@ App.views.ManagePlans = Ext.extend(Ext.Panel, {
         list = {
             xtype: 'list',
             itemTpl: '{name}',
-            store: App.stores.plans
+            store: App.stores.plans,
+			listeners: {
+				scope: this,
+				itemtap: this.onItemtapAction
+			}
         };
 
         Ext.apply(this, {
@@ -35,8 +39,19 @@ App.views.ManagePlans = Ext.extend(Ext.Panel, {
     },
 
     onAddAction: function() {
-       
-    }
+		Ext.dispatch({
+			controller: 'Plans',
+			action: 'newPlan'
+		});
+    },
+	
+	onItemtapAction: function(list, index, item, e) {
+		Ext.dispatch({
+			controller: 'Plans',
+			action: 'editPlan',
+			index: index	
+		});
+	}
 
 });
 

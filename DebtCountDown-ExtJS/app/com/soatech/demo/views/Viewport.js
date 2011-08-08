@@ -7,6 +7,7 @@ App.views.Viewport = Ext.extend(Ext.TabPanel, {
             items: [
                 { xtype: 'App.views.ManagePlans', id: 'managePlans', title: 'Manage Plans' },
                 { xtype: 'App.views.ManageDebts', id: 'manageDebts', title: 'Manage Debts' },
+				{ xtype: 'App.views.PlanEdit', id: 'planEdit' }
             ]
         });
         App.views.Viewport.superclass.initComponent.apply(this, arguments);

@@ -3,5 +3,8 @@ App = new Ext.Application({
 
     launch: function() {
         this.views.viewport = new this.views.Viewport();
+		this.views.managePlans = this.views.viewport.down('#managePlans');
+		this.views.manageDebts = this.views.viewport.down('#manageDebts');
+		this.views.planEdit = this.views.viewport.down('#planEdit');
     }
 });

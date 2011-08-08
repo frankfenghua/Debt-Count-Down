@@ -6,7 +6,13 @@ App.models.Plan = Ext.regModel('Plan', {
         }, {
             name: 'name',
             type: 'string'
-        }
+        }, {
+			name: 'expenses',
+			type: 'float'
+		}, {
+			name: 'income',
+			type: 'float'
+		}
     ],
 
     proxy: {
