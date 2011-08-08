@@ -14,6 +14,21 @@ App.models.Plan = Ext.regModel('Plan', {
 			type: 'float'
 		}
     ],
+	
+	validations: [
+		{
+			type: 'presence',
+			name: 'name'
+		}, {
+			type: 'format', name: 'expenses', matcher: /^[0-9]+\.[0-9]{2}$/, message: 'E.g. 12345.67 (no commas, $, or other symbols)'
+		}, {
+			type: 'format', name: 'income', matcher: /^[0-9]+\.[0-9]{2}$/, message: 'E.g. 12345.67 (no commas, $, or other symbols)'
+		}
+	],
+	
+	associations: [
+		{ type: 'hasMany', model: 'Debt', name: 'debts' }
+	],
 
     proxy: {
         type: 'localstorage',

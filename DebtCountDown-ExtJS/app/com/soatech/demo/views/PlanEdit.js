@@ -141,7 +141,7 @@ App.views.PlanEdit = Ext.extend(Ext.form.FormPanel, {
 		}, this);
 	},
 	
-	showErros: function(errors) {
+	showErrors: function(errors) {
 		var fieldset = this.down('#planEditFieldset');
 		this.fields.each(function(field){
 			var fieldErrors = errors.getByField(field.name);
