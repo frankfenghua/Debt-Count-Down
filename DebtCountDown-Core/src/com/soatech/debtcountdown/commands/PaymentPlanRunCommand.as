@@ -4,15 +4,17 @@ package com.soatech.debtcountdown.commands
 	import com.soatech.debtcountdown.models.DebtProxy;
 	import com.soatech.debtcountdown.models.StatsProxy;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
+	import com.soatech.debtcountdown.models.vo.PlanVO;
 	import com.soatech.debtcountdown.models.vo.StatsVO;
 	import com.soatech.debtcountdown.services.interfaces.IDebtService;
 	import com.soatech.debtcountdown.services.interfaces.IPayOffService;
 	
 	import mx.collections.ArrayCollection;
+	import mx.rpc.IResponder;
 	
 	import org.robotlegs.mvcs.Command;
 	
-	public class PaymentPlanRunCommand extends Command
+	public class PaymentPlanRunCommand extends Command implements IResponder
 	{
 		//---------------------------------------------------------------------
 		//
@@ -43,9 +45,36 @@ package com.soatech.debtcountdown.commands
 		
 		override public function execute():void
 		{
-			var balanceList:ArrayCollection = debtService.loadByPlan( event.plan.pid );
-			var rateList:ArrayCollection = debtService.loadByPlan( event.plan.pid );
-			var minList:ArrayCollection = debtService.loadByPlan( event.plan.pid );
+			debtService.loadByPlan( event.plan.pid, this );
+		}
+
+		//---------------------------------------------------------------------
+		//
+		// Handlers
+		//
+		//---------------------------------------------------------------------
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		public function result(data:Object):void
+		{
+			var list:ArrayCollection = data as ArrayCollection;
+			
+			// need each list unique, as we are modifying object values
+			var balanceList:ArrayCollection = new ArrayCollection();
+			var rateList:ArrayCollection = new ArrayCollection();
+			var minList:ArrayCollection = new ArrayCollection();
+			
+			for each( var item:DebtVO in list )
+			{
+				balanceList.addItem(item.clone());
+				rateList.addItem(item.clone());
+				minList.addItem(item.clone());
+			}
+			
 			var payment:Number = event.plan.income - event.plan.expenses;
 			
 			if( payment <= 0 )
@@ -59,6 +88,16 @@ package com.soatech.debtcountdown.commands
 			statsProxy.rateStats = payOffService.determinePayOffMultipleByRate(rateList, payment);
 			
 			dispatch( new PaymentPlanEvent( PaymentPlanEvent.RUN_COMPLETE, null, event.plan ) );
+		}
+		
+		/**
+		 * 
+		 * @param info
+		 * 
+		 */
+		public function fault(info:Object):void
+		{
+			CONFIG::debugtrace{ trace("PaymentPlanRunCommand::fault - " + info.toString()); }
 		}
 	}
 }

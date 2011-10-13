@@ -6,6 +6,7 @@ package com.soatech.debtcountdown.services
 	import com.soatech.debtcountdown.services.interfaces.IDebtService;
 	
 	import mx.collections.ArrayCollection;
+	import mx.rpc.IResponder;
 	
 	public class StaticDebtService implements IDebtService
 	{
@@ -43,7 +44,7 @@ package com.soatech.debtcountdown.services
 		 * @return 
 		 * 
 		 */		
-		public function create(debt:DebtVO):DebtVO
+		public function create(debt:DebtVO, responder:IResponder):void
 		{
 			var max:int = 0;
 			
@@ -57,7 +58,7 @@ package com.soatech.debtcountdown.services
 			
 			debtData.debts.push(debt);
 			
-			return debt;
+			responder.result(debt);
 		}
 		
 		/**
@@ -65,7 +66,7 @@ package com.soatech.debtcountdown.services
 		 * @return 
 		 * 
 		 */		
-		public function loadAll():ArrayCollection
+		public function loadAll(responder:IResponder):void
 		{
 			var list:ArrayCollection = new ArrayCollection();
 			var debt:DebtVO;
@@ -77,7 +78,7 @@ package com.soatech.debtcountdown.services
 				list.addItem( debt );
 			}
 			
-			return list;
+			responder.result(list);
 		}
 		
 		/**
@@ -86,7 +87,7 @@ package com.soatech.debtcountdown.services
 		 * @return 
 		 * 
 		 */		
-		public function loadByPlan(planId:int):ArrayCollection
+		public function loadByPlan(planId:int, responder:IResponder):void
 		{
 			var list:ArrayCollection = new ArrayCollection();
 			var debt:DebtVO;
@@ -101,7 +102,7 @@ package com.soatech.debtcountdown.services
 				}
 			}
 			
-			return list;
+			responder.result(list);
 		}
 		
 		/**
@@ -109,13 +110,15 @@ package com.soatech.debtcountdown.services
 		 * @param debt
 		 * 
 		 */		
-		public function remove(debt:DebtVO):void
+		public function remove(debt:DebtVO, responder:IResponder):void
 		{
 			for( var i:int = 0; i < debtData.debts.length; i++ )
 			{
 				if( debtData.debts[i].pid == debt.pid )
 					debtData.debts.splice(i, 1);
 			}
+			
+			responder.result(null);
 		}
 		
 		/**
@@ -123,13 +126,15 @@ package com.soatech.debtcountdown.services
 		 * @param debt
 		 * 
 		 */		
-		public function update(debt:DebtVO):void
+		public function update(debt:DebtVO, responder:IResponder):void
 		{
 			for( var i:int = 0; i < debtData.debts.length; i++ )
 			{
 				if( debtData.debts[i].pid == debt.pid )
 					debtData.debts[i] = debt;
 			}
+			
+			responder.result(null);
 		}
 	}
 }

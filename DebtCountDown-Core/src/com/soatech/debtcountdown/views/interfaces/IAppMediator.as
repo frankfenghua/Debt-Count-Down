@@ -1,5 +1,6 @@
 package com.soatech.debtcountdown.views.interfaces
 {
+	import com.soatech.debtcountdown.events.DataBaseEvent;
 	import com.soatech.debtcountdown.events.DebtEvent;
 	import com.soatech.debtcountdown.events.PaymentPlanEvent;
 	import com.soatech.debtcountdown.events.PlanEvent;
@@ -8,6 +9,7 @@ package com.soatech.debtcountdown.views.interfaces
 	
 	public interface IAppMediator extends IMediator
 	{
+		function dataBase_connectedHandler(event:DataBaseEvent):void;
 		function debt_createSuccessHandler(event:DebtEvent):void;
 		function debt_editHandler(event:DebtEvent):void;
 		function debt_editBackHandler(event:DebtEvent):void;

@@ -11,6 +11,7 @@ package com.soatech.debtcountdown.events
 		//---------------------------------------------------------------------
 		
 		public static const CONNECT:String = "DATA_BASE_CONNECT";
+		public static const CONNECTED:String = "DATA_BASE_CONNECTED";
 		
 		//---------------------------------------------------------------------
 		//

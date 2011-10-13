@@ -1,16 +1,23 @@
 package com.soatech.debtcountdown.db
 {
+	import com.soatech.debtcountdown.enum.QueryTypes;
+	
 	import flash.data.SQLConnection;
 	import flash.data.SQLMode;
-	import flash.data.SQLResult;
 	import flash.data.SQLStatement;
 	import flash.data.SQLTransactionLockType;
-	import flash.errors.SQLError;
 	import flash.events.SQLErrorEvent;
+	import flash.events.SQLEvent;
 	import flash.filesystem.File;
 	import flash.utils.ByteArray;
+	import flash.utils.setTimeout;
 	
-	public class DBI
+	import mx.rpc.IResponder;
+	import mx.rpc.Responder;
+	
+	import org.robotlegs.mvcs.Actor;
+	
+	public class DBI extends Actor
 	{
 		//---------------------------------------------------------------------
 		//
@@ -74,6 +81,12 @@ package com.soatech.debtcountdown.db
 			_location = value;
 		}
 		
+		//-----------------------------
+		// results
+		//-----------------------------
+		
+		public var results:Array;
+		
 		//---------------------------------------------------------------------
 		//
 		// Variables
@@ -90,13 +103,33 @@ package com.soatech.debtcountdown.db
 		 * Reference to the SQLite connection
 		 * @private
 		 */
-		protected var con:SQLConnection;
+		public var con:SQLConnection;
 		
 		/**
-		 * Reference to the SQL statement object
-		 * @private
-		 */
-		protected var stmt:SQLStatement;
+		 * @private 
+		 */		
+		protected var connectionCloseResponder:IResponder;
+		
+		/**
+		 * @private 
+		 */		
+		protected var connectionResponder:IResponder;
+		
+		/**
+		 * @private 
+		 */		
+		protected var currentQuery:Query;
+		
+		/**
+		 * Default location of the DB
+		 * @private 
+		 */		
+		protected const DEFAULT_LOCATION:String = 'DebtCountDown';
+		
+		/**
+		 * @private 
+		 */		
+		private var deleteFileResponder:IResponder;
 		
 		/**
 		 * Raw byte array of the pass phrase
@@ -105,10 +138,31 @@ package com.soatech.debtcountdown.db
 		protected var encryptionKey:ByteArray;
 		
 		/**
-		 * Default location of the DB
+		 *@private 
+		 */		
+		protected var queryStack:Vector.<Query>;
+		
+		/**
+		 * Reference to the SQL statement object
+		 * @private
+		 */
+		protected var stmt:SQLStatement;
+		
+		/**
+		 * @private
+		 */		
+		protected var stmtResponder:IResponder;
+		
+		/**
+		 * @private 
+		 */
+		protected var transactionResponder:IResponder;
+		
+		/**
 		 * @private 
 		 */		
-		protected const DEFAULT_LOCATION:String = 'DebtCountDown';
+		protected var transactionStack:Vector.<IResponder>;
+		
 		
 		//---------------------------------------------------------------------
 		//
@@ -120,10 +174,10 @@ package com.soatech.debtcountdown.db
 		 * Sets up the data store references.  If a data store does not exist,
 		 * it runs the installer.
 		 */
-		public function DBI(location:String=null, file:File = null, 
-							encrypted:Boolean=false, encryptionKey:ByteArray=null, 
-							autoconnect:Boolean=true)
+		public function DBI(con:SQLConnection=null, location:String=null, file:File = null, 
+							encrypted:Boolean=false, encryptionKey:ByteArray=null)
 		{
+			
 			if( !location )
 				location = DEFAULT_LOCATION;
 			
@@ -136,12 +190,18 @@ package com.soatech.debtcountdown.db
 			
 			if( file )
 				db = file;
+			else
+				db = File.applicationStorageDirectory.resolvePath(location);
+			
+			if( con )
+			{
+				this.con = con;
+				stmt = new SQLStatement();
+				stmt.sqlConnection = con;
+			}
 			
 			this.encrypted = encrypted;
 			this.encryptionKey = encryptionKey;
-			
-			if( autoconnect )
-				connect();
 		}
 		
 		//---------------------------------------------------------------------
@@ -151,33 +211,182 @@ package com.soatech.debtcountdown.db
 		//---------------------------------------------------------------------
 		
 		/**
+		 * 
+		 * @param query
+		 * 
+		 */		
+		public function addQuery(query:Query):void
+		{
+			if( !queryStack )
+				queryStack = new Vector.<Query>();
+			
+			queryStack.push(query);
+		}
+		
+		/**
+		 * 
+		 * 
+		 */		
+		public function clearTransactions():void
+		{
+			transactionResponder = null;
+			transactionStack = new Vector.<IResponder>();
+		}
+		
+		/**
+		 * Closes the DB location 
+		 */		
+		public function closeConnection(onResponse:Function, onFault:Function):void
+		{
+			if( con )
+			{
+				connectionCloseResponder = new Responder(onResponse, onFault);
+				con.addEventListener(SQLEvent.CLOSE, onConnectionClose);
+				con.addEventListener(SQLErrorEvent.ERROR, onConnectionCloseFail);
+				// calling it directly can cause the app to crash in some situations
+				// even a slight delay seems to resolve this.
+				setTimeout(function():void{ con.close() }, 2000);
+			}
+		}
+		
+		/**
+		 * Finalizes a transactions
+		 */
+		public function commit(onResult:Function, onFault:Function):void
+		{
+			transactionResponder = new Responder(onResult, onFault);
+			con.addEventListener(SQLErrorEvent.ERROR, commit_errorHandler);
+			con.addEventListener(SQLEvent.COMMIT, con_commitHandler);
+			con.commit();
+		}
+		
+		/**
+		 * After deleting all entries in the DB, this will free up the file system space 
+		 * 
+		 */		
+		public function compact():void
+		{
+			if(!con.inTransaction && !stmt.executing)
+				con.compact();
+		}
+		
+		/**
 		 * Connects to the DB 
 		 */		
-		private function connect():void
+		public function connect(onConnectionResult:Function=null, 
+								onConnectionFault:Function=null):void
 		{
-			var firstTime:Boolean;
+			connectionResponder = new Responder(onConnectionResult, onConnectionFault);
 			
-			// New, encrypted DB
-			if ( !db )
-				db = File.applicationStorageDirectory.resolvePath(location);
+			var firstTime:Boolean;
 			
 			if (!db.exists)
 				firstTime = true;
 			
 			con = new SQLConnection();
+			con.addEventListener(SQLErrorEvent.ERROR, con_openErrorHandler);
+			con.addEventListener(SQLEvent.OPEN, con_openHandler);
 			
 			// generate encryption
 			if( encrypted && encryptionKey )
 			{
-				con.open(db, SQLMode.CREATE, false, 1024, encryptionKey);
+				con.openAsync(db, SQLMode.CREATE, null, false, 1024, encryptionKey);
 			}
 			else
 			{
-				con.open(db, SQLMode.CREATE);
+				con.openAsync(db, SQLMode.CREATE);
 			}
+		}
+		
+		/**
+		 * 
+		 * 
+		 */		
+		protected function execute():void
+		{
+			if( queryStack && queryStack.length )
+				currentQuery = queryStack.shift();
+			else
+				currentQuery = null;
 			
-			stmt = new SQLStatement();
-			stmt.sqlConnection = con;
+			if( currentQuery )
+			{
+				query(currentQuery.sql, currentQuery.params);
+			}
+			else
+			{
+				stmtResponder.result([]);
+			}
+		}
+		
+		/**
+		 * Runs a query against the database and rolls it back if there is an error 
+		 * @param sql
+		 * @param params
+		 * @param commit
+		 * 
+		 */		
+		protected function query(sql:String, params:Array = null):void
+		{
+			stmt.text = sql;
+			
+			if(!params)
+				params = [];
+			
+			setParameters(params);
+			stmt.execute();
+		}
+		
+		/**
+		 * Rollbacks a transaction
+		 */
+		public function rollback():void
+		{
+			if(con.inTransaction)
+			{
+				con.addEventListener(SQLEvent.ROLLBACK, con_rollbackHandler);
+				con.rollback();
+			}
+		}
+		
+		/**
+		 * 
+		 * 
+		 */		
+		public function run(onResult:Function, onFault:Function):void
+		{
+			results = [];
+			
+			stmtResponder = new Responder(onResult, onFault);
+			
+			if( !stmt.hasEventListener(SQLEvent.RESULT) )
+				stmt.addEventListener(SQLEvent.RESULT, stmt_resultHandler);
+			
+			if( !stmt.hasEventListener(SQLErrorEvent.ERROR) )
+				stmt.addEventListener(SQLErrorEvent.ERROR, stmt_errorHandler);
+			
+			execute();
+		}
+		
+		/**
+		 * 
+		 * 
+		 */		
+		protected function runTransaction():void
+		{
+			if( transactionStack && transactionStack.length )
+			{
+				con.addEventListener(SQLErrorEvent.ERROR, tran_ErrorHandler);
+				
+				con.addEventListener(SQLEvent.BEGIN, con_beginHandler);
+				
+				transactionResponder = transactionStack.shift();
+				
+				// for some reason this is happening too fast, so events aren't firing correctly
+				if( con.connected ) 
+					con.begin(SQLTransactionLockType.IMMEDIATE);
+//					setTimeout(function ():void { con.begin(SQLTransactionLockType.IMMEDIATE); }, 2000);
+			}
 		}
 		
 		/**
@@ -202,152 +411,219 @@ package com.soatech.debtcountdown.db
 		/**
 		 * Start a transaction
 		 */
-		public function startTransaction():void
+		public function startTransaction(onResult:Function, onFault:Function):void
 		{
-			if (!con.inTransaction)
-				con.begin(SQLTransactionLockType.IMMEDIATE);
+			if( !transactionStack )
+				transactionStack = new Vector.<IResponder>();
+			
+			transactionStack.push(new Responder(onResult, onFault));
+			
+			if( !transactionResponder )
+				runTransaction();
 		}
 		
+		//---------------------------------------------------------------------
+		//
+		// Result Handlers
+		//
+		//---------------------------------------------------------------------
+		
 		/**
-		 * After deleting all entries in the DB, this will free up the file system space 
+		 * 
+		 * @param event
 		 * 
 		 */		
-		public function compact():void
+		protected function onConnectionClose(event:SQLEvent):void
 		{
-			con.compact();
+			con.removeEventListener(SQLEvent.CLOSE, onConnectionClose);
+			con.removeEventListener(SQLErrorEvent.ERROR, onConnectionCloseFail);
+			connectionCloseResponder.result(this);
 		}
 		
-		/**
-		 * Closes the DB location 
-		 */		
-		public function closeConnection():void
-		{
-			stmt = null;
-			
-			if( con )
-				con.close();
-			
-			con = null;
-			db = null;
-		}
+		//---------------------------------------------------------------------
+		//
+		// Fault Handlers
+		//
+		//---------------------------------------------------------------------
 		
 		/**
-		 * Finalizes a transactions
-		 */
-		public function commit():void
-		{
-			if(con.inTransaction)
-				con.commit();
-		}
-		
-		/**
-		 * Rollbacks a transaction
-		 */
-		public function rollback():void
-		{
-			if(con.inTransaction)
-				con.rollback();
-		}
-		
-		/**
-		 * Runs a query against the database and rolls it back if there is an error 
-		 * @param sql
-		 * @param params
-		 * @param commit
+		 * 
+		 * @param event
 		 * 
 		 */		
-		public function query(sql:String, params:Array = null, commit:Boolean = true):void
+		protected function onConnectionCloseFail(event:SQLErrorEvent):void
 		{
-			try
+			con.removeEventListener(SQLEvent.CLOSE, onConnectionClose);
+			con.removeEventListener(SQLErrorEvent.ERROR, onConnectionCloseFail);
+			connectionCloseResponder.fault(event);
+		}
+		
+		//---------------------------------------------------------------------
+		//
+		// Event Handlers
+		//
+		//---------------------------------------------------------------------
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */		
+		protected function commit_errorHandler(event:SQLErrorEvent):void
+		{
+			con.removeEventListener(SQLEvent.COMMIT, con_commitHandler);
+			con.removeEventListener(SQLErrorEvent.ERROR, commit_errorHandler);
+			
+			if( transactionResponder )
 			{
-				if (commit)
-					startTransaction();
-				
-				stmt.text = sql;
-				
-				if(!params)
-					params = [];
-					
-				setParameters(params);
-				stmt.execute();
-				
-				if (commit)
-					con.commit();
+				transactionResponder.fault(event);
 			}
-			catch( e:SQLError )
+			
+			transactionResponder = null;
+			runTransaction();
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */		
+		protected function con_beginHandler(event:SQLEvent):void
+		{
+			con.removeEventListener(SQLErrorEvent.ERROR, tran_ErrorHandler);
+			con.removeEventListener(SQLEvent.BEGIN, con_beginHandler);
+			
+			if( transactionResponder )
 			{
-				this.rollback();
-				
-				throw e;
+				transactionResponder.result(this);
 			}
 		}
 		
 		/**
-		 * Runs a select statement on the database
-		 * @param sql String
-		 * @param params Array. Parameters to be bound in the SQL statement
-		 * @param commit Boolean. Default true. Whether or not to commit after executing statement
-		 * @return Array
-		 */
-		public function select(sql:String, params:Array = null):Array
+		 * 
+		 * @param event
+		 * 
+		 */		
+		protected function con_commitHandler(event:SQLEvent):void
 		{
-			stmt.text = sql;
-	
-			if( !params )
-				params = [];
+			con.removeEventListener(SQLErrorEvent.ERROR, commit_errorHandler);
+			con.removeEventListener(SQLEvent.COMMIT, con_commitHandler);
+			transactionResponder.result(this);
 			
-			setParameters(params);
+			// run the next transaction in the stack
+			results = [];
+			currentQuery = null;
+			transactionResponder = null;
+			runTransaction();
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */		
+		protected function con_openErrorHandler(event:SQLErrorEvent):void
+		{
+			con.removeEventListener(SQLEvent.OPEN, con_openHandler);
+			con.removeEventListener(SQLErrorEvent.ERROR, con_openErrorHandler);
 			
-			stmt.execute();
+			connectionResponder.fault(event);
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */		
+		private function con_openHandler(event:SQLEvent):void
+		{
+			con.removeEventListener(SQLErrorEvent.ERROR, con_openErrorHandler);
+			con.removeEventListener(SQLEvent.OPEN, con_openHandler);
+			stmt = new SQLStatement();
+			stmt.sqlConnection = con;
 			
-			var result:SQLResult = stmt.getResult();
+			connectionResponder.result(this);
+			connectionResponder = null;
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */		
+		protected function con_rollbackHandler(event:SQLEvent):void
+		{
+			con.removeEventListener(SQLEvent.ROLLBACK, con_rollbackHandler);
+			queryStack = new Vector.<Query>();
 			
-			if( result )
-				return result.data;
+			stmtResponder.fault(event);
+//			stmtResponder = null;
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */		
+		protected function stmt_errorHandler(event:SQLErrorEvent):void
+		{
+			stmtResponder.fault(event.error);
+//			stmtResponder = null;
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */		
+		protected function stmt_resultHandler(event:SQLEvent):void
+		{
+			if( currentQuery )
+			{
+				switch( currentQuery.type )
+				{
+					case QueryTypes.DELETE:
+					case QueryTypes.UPDATE:
+						results.push(con.totalChanges);
+						break;
+					case QueryTypes.INSERT:
+						results.push(con.lastInsertRowID);
+						break;
+					case QueryTypes.SELECT:
+						results.push(stmt.getResult().data);
+						break;
+				}
+			}
+			
+			if( queryStack.length )
+			{
+				execute();
+			}
 			else
-				return null;
+			{
+				queryStack = new Vector.<Query>();
+				
+				stmtResponder.result(results);
+			}
 		}
 		
 		/**
-		 * Runs an insert statement on the database
-		 * @param sql String
-		 * @param params Array. Parameters to be bound in the SQL statement
-		 * @param commit Boolean. Default true. Whether or not to commit after executing statement
-		 * @return Number Primary Key/ID of the last inserted record
-		 */
-		public function insert(sql:String, params:Array, commit:Boolean = true):Number
+		 * 
+		 * @param event
+		 * 
+		 */		
+		protected function tran_ErrorHandler(event:SQLErrorEvent):void
 		{
-			this.query(sql, params, commit);
+			con.removeEventListener(SQLErrorEvent.ERROR, tran_ErrorHandler);
+			con.removeEventListener(SQLEvent.BEGIN, con_beginHandler);
 			
-			return con.lastInsertRowID;
-		}
-		
-		/**
-		 * Runs a delete statement on the database
-		 * @param sql String
-		 * @param params Array. Parameters to be bound in the SQL statement
-		 * @param commit Boolean. Default true. Whether or not to commit after executing statement
-		 * @return Number How many records were affected
-		 */
-		public function del(sql:String, params:Array, commit:Boolean = true):Number
-		{
-			this.query(sql, params, commit);
+			if( transactionResponder )
+			{
+				transactionResponder.fault(event);
+			}
 			
-			return con.totalChanges;
-		}
-		
-		/**
-		 * Runs an update statement on the database
-		 * @param sql String
-		 * @param params Array. Parameters to be bound in the SQL statement
-		 * @param commit Boolean. Default true. Whether or not to commit after executing statement
-		 * @return Number How many records were affected
-		 */
-		public function update(sql:String, params:Array, commit:Boolean = true):Number
-		{
-			this.query(sql, params, commit);
-			
-			return con.totalChanges;
+			transactionResponder = null;
+			runTransaction();
 		}
 	}
 }

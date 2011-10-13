@@ -1,11 +1,13 @@
 package com.soatech.debtcountdown.views
 {
+	import com.soatech.debtcountdown.events.DataBaseEvent;
 	import com.soatech.debtcountdown.events.DebtEvent;
 	import com.soatech.debtcountdown.events.PaymentPlanEvent;
 	import com.soatech.debtcountdown.events.PlanEvent;
 	import com.soatech.debtcountdown.events.RotateEvent;
 	import com.soatech.debtcountdown.views.components.DebtDetails;
 	import com.soatech.debtcountdown.views.components.DebtSelect;
+	import com.soatech.debtcountdown.views.components.Manage;
 	import com.soatech.debtcountdown.views.components.PaymentPlan;
 	import com.soatech.debtcountdown.views.components.PlanDetails;
 	import com.soatech.debtcountdown.views.components.RunPlan;
@@ -60,6 +62,11 @@ package com.soatech.debtcountdown.views
 		protected function resizeHandler(event:ResizeEvent):void
 		{
 			dispatch( new RotateEvent( RotateEvent.ROTATED ) );
+		}
+		
+		override public function dataBase_connectedHandler(event:DataBaseEvent):void
+		{
+			view.navigator.pushView( Manage );
 		}
 		
 		override public function debt_createSuccessHandler(event:DebtEvent):void

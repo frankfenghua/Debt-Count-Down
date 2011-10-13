@@ -1,17 +1,23 @@
 package com.soatech.debtcountdown.db
 {
-	import flash.errors.SQLError;
+	import com.soatech.debtcountdown.enum.QueryTypes;
+	import com.soatech.debtcountdown.events.MigrationEvent;
 	
-	import mx.rpc.Fault;
-	import mx.rpc.events.FaultEvent;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	
+	import org.robotlegs.mvcs.Actor;
 
-	public class Migrator
+	[Event(name="MIGRATION_COMPLETE", type="com.follett.fsc.reader.events.MigrationEvent")]
+	public class Migrator extends Actor
 	{
 		//---------------------------------------------------------------------
 		//
 		// Properties
 		//
 		//---------------------------------------------------------------------
+		
+		public static const NO_DATABASE_EXISTS_DO_COMPLETE_MIGRATION:int = 0;
 		
 		/**
 		 * 
@@ -21,6 +27,16 @@ package com.soatech.debtcountdown.db
 		public function set migrations(value:Vector.<Migration>):void
 		{
 			_migrations = value;
+		}
+		
+		/**
+		 * 
+		 * @param value
+		 * 
+		 */		
+		public function set db(value:DBI):void
+		{
+			_dbi = value;
 		}
 		
 		//---------------------------------------------------------------------
@@ -53,15 +69,19 @@ package com.soatech.debtcountdown.db
 		 */		
 		protected var _currentVersion:int;
 		
+		/**
+		 * @private 
+		 */		
+		private var _requestedVersion:int;
+		
 		//----------------------------------------------------------------------
 		// 
 		// Constructor
 		//
 		//----------------------------------------------------------------------
 		
-		public function Migrator(dbi:DBI)
+		public function Migrator()
 		{
-			_dbi = dbi;
 		}
 		
 		//----------------------------------------------------------------------
@@ -76,32 +96,65 @@ package com.soatech.debtcountdown.db
 		 */		
 		protected function determineVersion():void
 		{
-			_currentVersion = getSchemaVersion();
+			_dbi.addQuery( new Query(SQL_SELECT_VERSION, QueryTypes.SELECT) );
+			_dbi.run(onSelectVersionResult, onSelectVersionFault);
 		}
 		
-		/**
-		 * Fetches the currentVersion from the schemaVersion table 
-		 * @return 
-		 * 
-		 */		
-		public function getSchemaVersion():int
+		public function onSelectVersionFault(info:Object):void
 		{
-			var version:int = 0;
-			var results:Array
+			onSelectVersionResult([[{'currentVersion': 0}]]);
+		}
+		
+		public function onSelectVersionResult(data:Object):void
+		{
+			var migration:Migration;
+			var sql:String;
 			
-			try
+			var result:Array = data[0];
+			
+			if( !result || !result.length )
+				_currentVersion = 0;
+			else
+				_currentVersion = int(result[0]['currentVersion']);
+			
+			// find the upper limit of migrations
+			if( _requestedVersion == NO_DATABASE_EXISTS_DO_COMPLETE_MIGRATION )
 			{
-				results = _dbi.select(SQL_SELECT_VERSION);
+				_requestedVersion = _migrations[_migrations.length-1].version;
+			}
+			
+			for( var i:int = 0; i < _migrations.length; ++i )
+			{
+				migration = _migrations[i];
 				
-				if( results && results.length > 0 )
-					version = int( results[0]["currentVersion"] );
+				if(migration.version > _currentVersion && migration.version <= _requestedVersion )
+				{
+					for each( sql in migration.upList )
+					{
+						_dbi.addQuery( new Query(sql, QueryTypes.OTHER) );
+					}
+					_dbi.addQuery( new Query(SQL_UPDATE_VERSION, QueryTypes.UPDATE, [migration.version]) );
+				}
 			}
-			catch( e:SQLError )
-			{
-				version = 0;
-			}
-			
-			return version;
+			_dbi.run(onMigrationComplete, onMigrationFault);
+		}
+		
+		public function onMigrationComplete(data:Object):void
+		{
+			_dbi.commit(onCommit, onCommitFail);
+		}
+		
+		private function onCommitFail(info:Object):void
+		{
+		}
+		
+		private function onCommit(data:Object):void
+		{
+			dispatch(new MigrationEvent( MigrationEvent.MIGRATION_COMPLETE ));
+		}
+		
+		public function onMigrationFault(info:Object):void
+		{
 		}
 		
 		/**
@@ -112,53 +165,19 @@ package com.soatech.debtcountdown.db
 		 */		
 		public function migrateTo(version:int = 0):void
 		{
-			var migration:Migration;
-			var sql:String;
-			var bottom:int;
-			var top:int;
-			var i:int;
+			_requestedVersion = version;
 			
-			try
-			{
-				determineVersion();
-				
-				// find the upper limit of migrations
-				if( version == 0 )
-				{
-					version = _migrations[_migrations.length-1].version;
-				}
-				
-				for( i = 0; i < _migrations.length; ++i )
-				{
-					migration = _migrations[i];
-
-					if(migration.version > _currentVersion && migration.version <= version )
-					{
-						_dbi.startTransaction();
-						for each( sql in migration.upList )
-						{
-							_dbi.update(sql, [], false);
-						}
-						_dbi.commit();
-						
-						// for at least the first version this has to happen after commit
-						// so schemaVersion exists
-						_dbi.update(SQL_UPDATE_VERSION, [migration.version]);
-					}
-				}
-			}
-			catch(sqlError:SQLError)
-			{
-				_dbi.rollback();
-				
-				var fault:FaultEvent = new FaultEvent(FaultEvent.FAULT, false, true, new Fault(sqlError.errorID.toString(), sqlError.message, sqlError.details));
-				
-//				Alert.show(fault.fault.faultDetail, fault.fault.faultString);
-			}
-			catch( error:Error )
-			{
-//				Alert.show(error.message);
-			}
+			_dbi.startTransaction(onTransactionStart, onTransactionFail);
 		}
+		
+		private function onTransactionFail(info:Object):void
+		{
+		}
+		
+		private function onTransactionStart(data:Object):void
+		{
+			determineVersion();
+		}
+		
 	}
 }

@@ -6,6 +6,7 @@ package com.soatech.debtcountdown.services
 	import com.soatech.debtcountdown.services.interfaces.IPlanService;
 	
 	import mx.collections.ArrayCollection;
+	import mx.rpc.IResponder;
 	
 	public class StaticPlanService implements IPlanService
 	{
@@ -40,7 +41,7 @@ package com.soatech.debtcountdown.services
 		 * @return 
 		 * 
 		 */		
-		public function create(plan:PlanVO):PlanVO
+		public function create(plan:PlanVO, responder:IResponder):void
 		{
 			var max:int = 0;
 			
@@ -54,7 +55,7 @@ package com.soatech.debtcountdown.services
 			
 			planData.plans.push(plan);
 			
-			return plan;
+			responder.result(plan);
 		}
 		
 		/**
@@ -63,7 +64,7 @@ package com.soatech.debtcountdown.services
 		 * @param debt
 		 * 
 		 */		
-		public function linkDebt(plan:PlanVO, debt:DebtVO):void
+		public function linkDebt(plan:PlanVO, debt:DebtVO, responder:IResponder):void
 		{
 			var linked:Boolean;
 			
@@ -79,6 +80,8 @@ package com.soatech.debtcountdown.services
 				debt.planId = plan.pid;
 				planData.debts.push(debt);
 			}
+			
+			responder.result(null);
 		}
 		
 		/**
@@ -86,7 +89,7 @@ package com.soatech.debtcountdown.services
 		 * @return 
 		 * 
 		 */		
-		public function load():ArrayCollection
+		public function load(responder:IResponder):void
 		{
 			var list:ArrayCollection = new ArrayCollection();
 			var plan:PlanVO;
@@ -98,7 +101,7 @@ package com.soatech.debtcountdown.services
 				list.addItem( plan );
 			}
 			
-			return list;
+			responder.result(list);
 		}
 		
 		/**
@@ -106,13 +109,15 @@ package com.soatech.debtcountdown.services
 		 * @param plan
 		 * 
 		 */		
-		public function remove(plan:PlanVO):void
+		public function remove(plan:PlanVO, responder:IResponder):void
 		{
 			for( var i:int = 0; i < planData.plans.length; i++ )
 			{
 				if( planData.plans[i].pid == plan.pid )
 					planData.plans.splice(i, 1);
 			}
+			
+			responder.result(null);
 		}
 		
 		/**
@@ -121,13 +126,15 @@ package com.soatech.debtcountdown.services
 		 * @param debt
 		 * 
 		 */		
-		public function unlinkDebt(plan:PlanVO, debt:DebtVO):void
+		public function unlinkDebt(plan:PlanVO, debt:DebtVO, responder:IResponder):void
 		{
 			for( var i:int = 0; planData.debts.length; i++ )
 			{
 				if( planData.debts[i].planId == plan.pid )
 					planData.debts.splice(i, 1);
 			}
+			
+			responder.result(null);
 		}
 		
 		/**
@@ -135,13 +142,15 @@ package com.soatech.debtcountdown.services
 		 * @param plan
 		 * 
 		 */		
-		public function update(plan:PlanVO):void
+		public function update(plan:PlanVO, responder:IResponder):void
 		{
 			for( var i:int = 0; i < planData.plans.length; i++ )
 			{
 				if( planData.plans[i].pid == plan.pid )
 					planData.plans[i] = plan;
 			}
+			
+			responder.result(null);
 		}
 	}
 }

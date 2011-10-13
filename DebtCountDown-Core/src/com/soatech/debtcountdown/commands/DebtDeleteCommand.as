@@ -6,9 +6,11 @@ package com.soatech.debtcountdown.commands
 	import com.soatech.debtcountdown.services.DebtService;
 	import com.soatech.debtcountdown.services.interfaces.IDebtService;
 	
+	import mx.rpc.IResponder;
+	
 	import org.robotlegs.mvcs.Command;
 	
-	public class DebtDeleteCommand extends Command
+	public class DebtDeleteCommand extends Command implements IResponder
 	{
 		//---------------------------------------------------------------------
 		//
@@ -38,9 +40,35 @@ package com.soatech.debtcountdown.commands
 		 */		
 		override public function execute():void
 		{
-			debtService.remove( event.debt );
+			debtService.remove( event.debt, this );
 			
+			
+		}
+
+		//---------------------------------------------------------------------
+		//
+		// Handlers
+		//
+		//---------------------------------------------------------------------
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		public function result(data:Object):void
+		{
 			debtProxy.removeDebt( event.debt );
+		}
+		
+		/**
+		 * 
+		 * @param info
+		 * 
+		 */
+		public function fault(info:Object):void
+		{
+			CONFIG::debugtrace{ trace("DebtDebtCommand::fault - " + info.toString()); }
 		}
 	}
 }

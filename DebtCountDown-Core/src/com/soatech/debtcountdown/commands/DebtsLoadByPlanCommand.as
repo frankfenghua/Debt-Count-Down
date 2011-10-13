@@ -7,10 +7,11 @@ package com.soatech.debtcountdown.commands
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
+	import mx.rpc.IResponder;
 	
 	import org.robotlegs.mvcs.Command;
 	
-	public class DebtsLoadByPlanCommand extends Command
+	public class DebtsLoadByPlanCommand extends Command implements IResponder
 	{
 		//---------------------------------------------------------------------
 		//
@@ -39,7 +40,33 @@ package com.soatech.debtcountdown.commands
 		 */		
 		override public function execute():void
 		{
-			debtProxy.debtList = debtService.loadByPlan( event.plan.pid );
+			debtService.loadByPlan( event.plan.pid, this );
+		}
+
+		//---------------------------------------------------------------------
+		//
+		// Handlers
+		//
+		//---------------------------------------------------------------------
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		public function result(data:Object):void
+		{
+			debtProxy.debtList = data as ArrayCollection;
+		}
+		
+		/**
+		 * 
+		 * @param info
+		 * 
+		 */
+		public function fault(info:Object):void
+		{
+			CONFIG::debugtrace{ trace("DebtsLoadByPlanCommand::fault - " + info.toString()); }
 		}
 	}
 }

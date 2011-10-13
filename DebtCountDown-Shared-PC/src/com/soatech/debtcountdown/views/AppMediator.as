@@ -1,6 +1,7 @@
 package com.soatech.debtcountdown.views
 {
 	import com.soatech.debtcountdown.enum.MainStackIndexes;
+	import com.soatech.debtcountdown.events.DataBaseEvent;
 	import com.soatech.debtcountdown.events.DebtEvent;
 	import com.soatech.debtcountdown.events.MainStackEvent;
 	import com.soatech.debtcountdown.events.PaymentPlanEvent;
@@ -63,15 +64,16 @@ package com.soatech.debtcountdown.views
 		{
 			super.onRegister();
 			
-			eventMap.mapListener( eventDispatcher, MainStackEvent.SWITCH_DEBT_EDIT, mainStack_switchHandler );
-			eventMap.mapListener( eventDispatcher, MainStackEvent.SWITCH_DEBT_SELECT, mainStack_switchHandler );
-			eventMap.mapListener( eventDispatcher, MainStackEvent.SWITCH_MANAGE, mainStack_switchHandler );
-			eventMap.mapListener( eventDispatcher, MainStackEvent.SWITCH_PLAN_EDIT, mainStack_switchHandler );
-			eventMap.mapListener( eventDispatcher, MainStackEvent.SWITCH_RUN_PLAN, mainStack_switchHandler );
-			eventMap.mapListener( eventDispatcher, MainStackEvent.SWITCH_PAYMENT_PLAN, mainStack_switchHandler );
+			addContextListener( MainStackEvent.SWITCH_DEBT_EDIT, mainStack_switchHandler );
+			addContextListener( MainStackEvent.SWITCH_DEBT_SELECT, mainStack_switchHandler );
+			addContextListener( MainStackEvent.SWITCH_MANAGE, mainStack_switchHandler );
+			addContextListener( MainStackEvent.SWITCH_PAYMENT_PLAN, mainStack_switchHandler );
+			addContextListener( MainStackEvent.SWITCH_PLAN_EDIT, mainStack_switchHandler );
+			addContextListener( MainStackEvent.SWITCH_RUN_PLAN, mainStack_switchHandler );
+			addContextListener( MainStackEvent.SWITCH_SPLASH, mainStack_switchHandler );
 			
 			stackHistory = new Vector.<String>();
-			currentStack = MainStackEvent.SWITCH_MANAGE;
+			currentStack = MainStackEvent.SWITCH_SPLASH;
 		}
 		
 		//---------------------------------------------------------------------
@@ -105,6 +107,16 @@ package com.soatech.debtcountdown.views
 		// Event Handlers
 		//
 		//---------------------------------------------------------------------
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
+		override public function dataBase_connectedHandler(event:DataBaseEvent):void
+		{
+			changeView(MainStackEvent.SWITCH_MANAGE);
+		}
 		
 		/**
 		 * 
@@ -219,6 +231,11 @@ package com.soatech.debtcountdown.views
 				case MainStackEvent.SWITCH_PAYMENT_PLAN:
 				{
 					view.mainView.mainStack.selectedIndex = MainStackIndexes.PAYMENT_PLAN;
+					break;
+				}
+				case MainStackEvent.SWITCH_SPLASH:
+				{
+					view.mainView.mainStack.selectedIndex = MainStackIndexes.SPLASH;
 					break;
 				}
 			}
