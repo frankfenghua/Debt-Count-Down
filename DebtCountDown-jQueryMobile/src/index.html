@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Debt Count Down</title>
+
+<!-- jQuery Mobile -->
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.css" />
+<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script>
+
+<!-- Model -->
+<script src="model/Plan.js"></script>
+
+<!-- Services -->
+<script src="services/PlanService.js"></script>
+
+<!-- Controller -->
+<script src="controller/PlanController.js"></script>
+
+<!-- Views -->
+<script src="view/ManagePlansMediator.js"></script>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		
+	});
+</script>
+
+</head>
+
+<body>
+
+<div data-role="page" data-theme="b" id="manage-page">
+    <div id="manage-header" data-role="header" data-backbtn="false">
+        <h1>Manage Plans</h1>
+        <a id="manage-page-settings-button" href="#" data-icon="gear" data-iconpos="notext"
+           data-transition="slidedown" class="ui-btn-right" data-rel="dialog">
+            Options
+        </a>
+    </div>
+    <div data-role="content">
+        <ul id="plan-list" data-role="listview" data-theme="b"></ul>
+    </div>
+</div>
+
+</body>
+</html>
