@@ -26,9 +26,7 @@ App.models.Plan = Ext.regModel('Plan', {
 		}
 	],
 	
-	associations: [
-		{ type: 'hasMany', model: 'Debt', name: 'debts' }
-	],
+	hasMany: 'Debt',
 
     proxy: {
         type: 'localstorage',
