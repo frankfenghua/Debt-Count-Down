@@ -28,7 +28,13 @@ cafescribe.controller.planController.loadAllPlans = function()
  */
 cafescribe.controller.planController.loadAllPlans_resultHandler = function(plans)
 {
-	var list = "<li>" + plans.name + "</li>";
+	var list = "";
+	
+	for( var i = 0; i < plans.length; i++ )
+	{
+		list += "<li>" + plans[i].name + "</li>";
+	}
+	
 	cafescribe.view.managePlans.reloadPlans(list);
 };
 

@@ -39,10 +39,9 @@ cafescribe.model.plan = function ()
 	 */
 	this.fromJSON = function(json)
 	{
-		var item = jQuery.parseJSON(json);
-		this.id = parseInt(item.id);
-		this.name = item.name;
-		this.expenses = parseFloat(item.expenses);
-		this.income = parseFloat(item.income);
+		this.id = parseInt(json.id);
+		this.name = json.name;
+		this.expenses = parseFloat(json.expenses);
+		this.income = parseFloat(json.income);
 	};
 };
