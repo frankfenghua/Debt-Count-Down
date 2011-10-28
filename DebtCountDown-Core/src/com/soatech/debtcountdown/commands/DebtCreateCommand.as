@@ -5,9 +5,11 @@ package com.soatech.debtcountdown.commands
 	import com.soatech.debtcountdown.models.vo.DebtVO;
 	import com.soatech.debtcountdown.services.interfaces.IDebtService;
 	
+	import mx.rpc.IResponder;
+	
 	import org.robotlegs.mvcs.Command;
 	
-	public class DebtCreateCommand extends Command
+	public class DebtCreateCommand extends Command implements IResponder
 	{
 		//---------------------------------------------------------------------
 		//
@@ -37,11 +39,37 @@ package com.soatech.debtcountdown.commands
 		 */		
 		override public function execute():void
 		{
-			var debt:DebtVO = debtService.create( event.debt );
+			debtService.create( event.debt, this );
+		}
+
+		//---------------------------------------------------------------------
+		//
+		// Handlers
+		//
+		//---------------------------------------------------------------------
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		public function result(data:Object):void
+		{
+			var debt:DebtVO = data as DebtVO;
 			
 			debtProxy.addDebt(debt);
 			
 			dispatch( new DebtEvent( DebtEvent.CREATE_SUCCESS, debt ) );
+		}
+		
+		/**
+		 * 
+		 * @param info
+		 * 
+		 */
+		public function fault(info:Object):void
+		{
+			CONFIG::debugtrace{ trace("DebtCreateCommand::fault - " + info.toString()); }
 		}
 	}
 }

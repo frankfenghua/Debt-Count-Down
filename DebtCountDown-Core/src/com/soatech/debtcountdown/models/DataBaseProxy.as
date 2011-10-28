@@ -1,6 +1,7 @@
 package com.soatech.debtcountdown.models
 {
 	import com.soatech.debtcountdown.db.DBI;
+	import com.soatech.debtcountdown.db.Migration;
 	
 	import flash.utils.ByteArray;
 	
@@ -27,5 +28,13 @@ package com.soatech.debtcountdown.models
 		//-----------------------------
 		
 		public var applicationKey:ByteArray;
+
+		//-----------------------------
+		// applicationMigrations
+		//-----------------------------
+		
+		public var applicationMigrations:Vector.<Migration>;
+		
+		
 	}
 }

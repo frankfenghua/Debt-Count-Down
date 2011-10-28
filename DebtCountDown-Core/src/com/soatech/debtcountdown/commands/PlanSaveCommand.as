@@ -5,9 +5,11 @@ package com.soatech.debtcountdown.commands
 	import com.soatech.debtcountdown.models.vo.PlanVO;
 	import com.soatech.debtcountdown.services.interfaces.IPlanService;
 	
+	import mx.rpc.IResponder;
+	
 	import org.robotlegs.mvcs.Command;
 	
-	public class PlanSaveCommand extends Command
+	public class PlanSaveCommand extends Command implements IResponder
 	{
 		//---------------------------------------------------------------------
 		//
@@ -36,11 +38,35 @@ package com.soatech.debtcountdown.commands
 		 */		
 		override public function execute():void
 		{
-			planService.update( event.plan );
-			
+			planService.update( event.plan, this );
+		}
+
+		//---------------------------------------------------------------------
+		//
+		// Handlers
+		//
+		//---------------------------------------------------------------------
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		public function result(data:Object):void
+		{
 			planProxy.replacePlan( event.plan );
 			
 			dispatch( new PlanEvent(PlanEvent.SAVE_SUCCESS, event.plan ) );
+		}
+		
+		/**
+		 * 
+		 * @param info
+		 * 
+		 */
+		public function fault(info:Object):void
+		{
+			CONFIG::debugtrace{ trace("PlanSaveCommand::fault - " + info.toString()); }
 		}
 	}
 }

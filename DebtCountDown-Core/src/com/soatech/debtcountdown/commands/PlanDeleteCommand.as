@@ -5,9 +5,11 @@ package com.soatech.debtcountdown.commands
 	import com.soatech.debtcountdown.models.vo.PlanVO;
 	import com.soatech.debtcountdown.services.interfaces.IPlanService;
 	
+	import mx.rpc.IResponder;
+	
 	import org.robotlegs.mvcs.Command;
 	
-	public class PlanDeleteCommand extends Command
+	public class PlanDeleteCommand extends Command implements IResponder
 	{
 		//---------------------------------------------------------------------
 		//
@@ -37,9 +39,33 @@ package com.soatech.debtcountdown.commands
 		 */		
 		override public function execute():void
 		{
-			planService.remove( event.plan );
-			
+			planService.remove( event.plan, this );
+		}
+
+		//---------------------------------------------------------------------
+		//
+		// Handlers
+		//
+		//---------------------------------------------------------------------
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		public function result(data:Object):void
+		{
 			planProxy.removePlan(event.plan);
+		}
+		
+		/**
+		 * 
+		 * @param info
+		 * 
+		 */
+		public function fault(info:Object):void
+		{
+			CONFIG::debugtrace{ trace("PlanDeleteCommand::fault - " + info.toString()); }
 		}
 	}
 }

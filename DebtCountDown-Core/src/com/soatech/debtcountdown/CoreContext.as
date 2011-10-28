@@ -9,7 +9,7 @@ package com.soatech.debtcountdown
 	import com.soatech.debtcountdown.commands.DebtSelectCommand;
 	import com.soatech.debtcountdown.commands.DebtsLoadAllCommand;
 	import com.soatech.debtcountdown.commands.DebtsLoadByPlanCommand;
-	import com.soatech.debtcountdown.commands.MigrationsRunCommand;
+	import com.soatech.debtcountdown.commands.MigrationsBuildCommand;
 	import com.soatech.debtcountdown.commands.PaymentPlanRunCommand;
 	import com.soatech.debtcountdown.commands.PlanCreateCommand;
 	import com.soatech.debtcountdown.commands.PlanDeleteCommand;
@@ -18,6 +18,7 @@ package com.soatech.debtcountdown
 	import com.soatech.debtcountdown.commands.PlanSelectCommand;
 	import com.soatech.debtcountdown.commands.PlanUnlinkDebtCommand;
 	import com.soatech.debtcountdown.commands.PlansLoadCommand;
+	import com.soatech.debtcountdown.db.Migrator;
 	import com.soatech.debtcountdown.events.AppEvent;
 	import com.soatech.debtcountdown.events.DataBaseEvent;
 	import com.soatech.debtcountdown.events.DebtEvent;
@@ -80,11 +81,12 @@ package com.soatech.debtcountdown
 			injector.mapSingleton( ELSHelper );
 			injector.mapSingleton( PlanProxy );
 			injector.mapSingleton( StatsProxy );
+			injector.mapSingleton( Migrator );
 			
 			// services
-			injector.mapSingletonOf( IDebtService, DebtService );
-			injector.mapSingletonOf( IPayOffService, PayOffService );
-			injector.mapSingletonOf( IPlanService, PlanService );
+			injector.mapClass( IDebtService, DebtService );
+			injector.mapClass( IPayOffService, PayOffService );
+			injector.mapClass( IPlanService, PlanService );
 			
 			// commands
 			commandMap.mapEvent( AppEvent.INIT, AppInitCommand );
@@ -98,7 +100,7 @@ package com.soatech.debtcountdown
 			commandMap.mapEvent( DebtEvent.SAVE, DebtSaveCommand, DebtEvent );
 			commandMap.mapEvent( DebtEvent.SELECT, DebtSelectCommand, DebtEvent );
 			
-			commandMap.mapEvent( MigrationEvent.RUN, MigrationsRunCommand );
+			commandMap.mapEvent( MigrationEvent.BUILD, MigrationsBuildCommand );
 			
 			commandMap.mapEvent( PaymentPlanEvent.RUN, PaymentPlanRunCommand );
 			

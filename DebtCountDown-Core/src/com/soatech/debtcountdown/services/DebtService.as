@@ -1,5 +1,8 @@
 package com.soatech.debtcountdown.services
 {
+	import com.soatech.debtcountdown.db.DBI;
+	import com.soatech.debtcountdown.db.Query;
+	import com.soatech.debtcountdown.enum.QueryTypes;
 	import com.soatech.debtcountdown.models.DataBaseProxy;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
 	import com.soatech.debtcountdown.services.interfaces.IDebtService;
@@ -7,6 +10,8 @@ package com.soatech.debtcountdown.services
 	import flash.errors.SQLError;
 	
 	import mx.collections.ArrayCollection;
+	import mx.rpc.AsyncToken;
+	import mx.rpc.IResponder;
 
 	public class DebtService implements IDebtService
 	{
@@ -49,6 +54,23 @@ package com.soatech.debtcountdown.services
 		
 		//---------------------------------------------------------------------
 		//
+		// Variables
+		//
+		//---------------------------------------------------------------------
+
+		/**
+		 * @private 
+		 */
+		private var responder:IResponder;
+
+		/**
+		 * @private 
+		 */
+		private var debt:DebtVO;
+		
+		
+		//---------------------------------------------------------------------
+		//
 		// Constructor
 		//
 		//---------------------------------------------------------------------
@@ -69,21 +91,12 @@ package com.soatech.debtcountdown.services
 		 * @return 
 		 * 
 		 */		
-		public function create(debt:DebtVO):DebtVO
+		public function create(debt:DebtVO, responder:IResponder):void
 		{
-			try
-			{
-				debt.pid = dbProxy.applicationDb.insert( SQL_INSERT, [ 
-					debt.name, debt.bank, debt.balance, debt.apr, 
-					"", debt.minPayment
-				] );
-			}
-			catch( e:SQLError )
-			{
-				trace("DebtService::Create - " + e.toString());
-			}
+			this.debt = debt;
+			this.responder = responder;
 			
-			return debt;
+			dbProxy.applicationDb.startTransaction(onCreateTransactionStart, onFail);
 		}
 		
 		/**
@@ -91,34 +104,13 @@ package com.soatech.debtcountdown.services
 		 * @return 
 		 * 
 		 */		
-		public function loadAll():ArrayCollection
+		public function loadAll(responder:IResponder):void
 		{
-			var result:Array;
-			var list:ArrayCollection = new ArrayCollection();
-			var item:Object;
-			var debt:DebtVO;
+			this.responder = responder;
 			
-			try
-			{
-				result = dbProxy.applicationDb.select( SQL_SELECT_ALL );
-				
-				if( result )
-				{
-					for each( item in result )
-					{
-						debt = new DebtVO();
-						debt.loadFromDb(item);
-						
-						list.addItem(debt);
-					}
-				}
-			}
-			catch( e:SQLError )
-			{
-				trace("DebtService::LoadAll - " + e.toString());
-			}
-			
-			return list;
+			var db:DBI = new DBI(dbProxy.applicationDb.con);
+			db.addQuery( new Query( SQL_SELECT_ALL, QueryTypes.SELECT ) );
+			db.run(onLoadAllRunResult, onFail);
 		}
 		
 		/**
@@ -126,76 +118,215 @@ package com.soatech.debtcountdown.services
 		 * @return 
 		 * 
 		 */		
-		public function loadByPlan(planId:int):ArrayCollection
+		public function loadByPlan(planId:int, responder:IResponder):void
 		{
-			var result:Array;
+			this.responder = responder;
+			
+			var db:DBI = new DBI(dbProxy.applicationDb.con);
+			db.addQuery( new Query( SQL_SELECT_BY_PLAN, QueryTypes.SELECT, [planId] ) );
+			db.run(onLoadByPlanRunResult, onFail);
+		}
+		
+		/**
+		 * 
+		 * @param debt
+		 * 
+		 */		
+		public function remove(debt:DebtVO, responder:IResponder):void
+		{
+			this.debt = debt;
+			this.responder = responder;
+			
+			dbProxy.applicationDb.startTransaction(onRemoveTransactionResult, onFail);
+		}
+		
+		/**
+		 * 
+		 * @param debt
+		 * 
+		 */		
+		public function update(debt:DebtVO, responder:IResponder):void
+		{
+			this.debt = debt;
+			this.responder = responder;
+			
+			dbProxy.applicationDb.startTransaction(onUpdateTransactionResult, onFail);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function onUpdateCommitResult(data:Object):void
+		{
+			responder.result(null);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function onUpdateRunResult(data:Object):void
+		{
+			dbProxy.applicationDb.commit(onUpdateCommitResult, onFail);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function onUpdateTransactionResult(data:Object):void
+		{
+			dbProxy.applicationDb.addQuery( new Query( SQL_UPDATE, QueryTypes.UPDATE, [ 
+				debt.name, debt.bank, debt.balance, debt.apr, 
+				"", debt.minPayment, debt.pid] ) );
+			dbProxy.applicationDb.run(onUpdateRunResult, onFail);
+		}
+		
+		//---------------------------------------------------------------------
+		//
+		// Result Handlers
+		//
+		//---------------------------------------------------------------------
+
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function onCreateCommitResult(data:Object):void
+		{
+			responder.result(debt);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function onCreateRunResult(data:Object):void
+		{
+			debt.pid = int(data[0]);
+			
+			dbProxy.applicationDb.commit(onCreateCommitResult, onFail);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function onCreateTransactionStart(data:Object):void
+		{
+			dbProxy.applicationDb.addQuery( new Query(SQL_INSERT, QueryTypes.INSERT, [ 
+				debt.name, debt.bank, debt.balance, debt.apr, 
+				"", debt.minPayment
+			] ) );
+			
+			dbProxy.applicationDb.run(onCreateRunResult, onFail);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function onLoadAllRunResult(data:Object):void
+		{
+			var result:Array = data[0];
 			var list:ArrayCollection = new ArrayCollection();
 			var item:Object;
 			var debt:DebtVO;
 			
-			try
+			if( result )
 			{
-				result = dbProxy.applicationDb.select( SQL_SELECT_BY_PLAN, [planId] );
-				
-				if( result )
+				for each( item in result )
 				{
-					for each( item in result )
-					{
-						debt = new DebtVO();
-						debt.loadFromDb(item);
-						
-						list.addItem(debt);
-					}
+					debt = new DebtVO();
+					debt.loadFromDb(item);
+					
+					list.addItem(debt);
 				}
 			}
-			catch( e:SQLError )
+			
+			responder.result(list);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function onLoadByPlanRunResult(data:Object):void
+		{
+			var result:Array = data[0];
+			var list:ArrayCollection = new ArrayCollection();
+			var item:Object;
+			var debt:DebtVO;
+			
+			if( result )
 			{
-				trace("DebtService::LoadByPlan - " + e.toString());
+				for each( item in result )
+				{
+					debt = new DebtVO();
+					debt.loadFromDb(item);
+					
+					list.addItem(debt);
+				}
 			}
 			
-			return list;
+			responder.result(list);
 		}
 		
 		/**
 		 * 
-		 * @param debt
+		 * @param data
 		 * 
-		 */		
-		public function remove(debt:DebtVO):void
+		 */
+		private function onRemoveCommitResult(data:Object):void
 		{
-			try
-			{
-				dbProxy.applicationDb.startTransaction();
-				
-				dbProxy.applicationDb.del( SQL_DELETE, [debt.pid], false );
-				
-				dbProxy.applicationDb.del( SQL_UNLINK_DEBT, [debt.pid], false );
-				
-				dbProxy.applicationDb.commit();
-			}
-			catch( e:SQLError )
-			{
-				trace("DebtService::Remove - " + e.toString());
-			}
+			responder.result(null);
 		}
 		
 		/**
 		 * 
-		 * @param debt
+		 * @param data
 		 * 
-		 */		
-		public function update(debt:DebtVO):void
+		 */
+		private function onRemoveRunResult(data:Object):void
 		{
-			try
-			{
-				dbProxy.applicationDb.update( SQL_UPDATE, [ 
-					debt.name, debt.bank, debt.balance, debt.apr, 
-					"", debt.minPayment, debt.pid] );
-			}
-			catch( e:SQLError )
-			{
-				trace("DebtService::Update - " + e.toString());
-			}
+			dbProxy.applicationDb.commit(onRemoveCommitResult, onFail);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function onRemoveTransactionResult(data:Object):void
+		{
+			dbProxy.applicationDb.addQuery( new Query( SQL_DELETE, QueryTypes.DELETE, [debt.pid] ) );
+			dbProxy.applicationDb.addQuery( new Query( SQL_UNLINK_DEBT, QueryTypes.DELETE, [debt.pid] ) );
+			dbProxy.applicationDb.run(onRemoveRunResult, onFail);
+		}
+		
+		//---------------------------------------------------------------------
+		//
+		// Fault Handlers
+		//
+		//---------------------------------------------------------------------
+		
+		/**
+		 * 
+		 * @param info
+		 * 
+		 */
+		private function onFail(info:Object):void
+		{
+			responder.fault(info);
 		}
 	}
 }

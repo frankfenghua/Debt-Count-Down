@@ -56,6 +56,31 @@ package com.soatech.debtcountdown.models.vo
 		//
 		//---------------------------------------------------------------------
 		
+		/**
+		 * 
+		 * @return 
+		 * 
+		 */
+		public function clone():DebtVO
+		{
+			var newItem:DebtVO = new DebtVO();
+			newItem.apr = this.apr;
+			newItem.balance = this.balance;
+			newItem.bank = this.bank;
+			newItem.dueDate = this.dueDate;
+			newItem.minPayment = this.minPayment;
+			newItem.name = this.name;
+			newItem.pid = this.pid;
+			newItem.planId = this.planId;
+			
+			return newItem;
+		}
+		
+		/**
+		 * 
+		 * @param item
+		 * 
+		 */
 		public function loadFromDb(item:Object):void
 		{
 			if( item.hasOwnProperty('pid') )

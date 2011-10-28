@@ -7,7 +7,7 @@ package com.soatech.debtcountdown.commands
 	
 	import org.robotlegs.mvcs.Command;
 	
-	public class MigrationsRunCommand extends Command
+	public class MigrationsBuildCommand extends Command
 	{
 		//---------------------------------------------------------------------
 		//
@@ -27,6 +27,10 @@ package com.soatech.debtcountdown.commands
 		//
 		//---------------------------------------------------------------------
 		
+		/**
+		 * 
+		 * 
+		 */
 		override public function execute():void
 		{
 			var list:Vector.<Migration> = new Vector.<Migration>();
@@ -91,11 +95,8 @@ package com.soatech.debtcountdown.commands
 			list.push(migration);
 			
 			version++;
-				
-			migrator = new Migrator(event.db);
-			migrator.migrations = list;
-			migrator.migrateTo();
+			
+			dbProxy.applicationMigrations = list;
 		}
-		
 	}
 }
