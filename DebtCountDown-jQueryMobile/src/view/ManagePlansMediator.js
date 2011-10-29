@@ -1,6 +1,6 @@
 var cafescribe = cafescribe || {};
 cafescribe.view = cafescribe.view || {};
-cafescribe.view.managePlans = cafescribe.view.managePlans || {};
+cafescribe.view.managePlansMediator = cafescribe.view.managePlansMediator || {};
 
 //-----------------------------------------------------------------------------
 //
@@ -17,10 +17,30 @@ cafescribe.view.managePlans = cafescribe.view.managePlans || {};
 /**
  * 
  */
-cafescribe.view.managePlans.onPageBeforeShow = function()
+cafescribe.view.managePlansMediator.onEditClick = function(event)
+{
+	var planId = parseInt(event.currentTarget.attributes[0].value);
+	
+	cafescribe.controller.planController.showPlan(planId);
+};
+
+/**
+ * 
+ */
+cafescribe.view.managePlansMediator.onPageBeforeShow = function()
 {
 	// fetch plans
-	cafescribe.controller.planController.loadAllPlans(cafescribe.view.managePlans.loadAllPlans_resultHandler, cafescribe.view.managePlans.loadAllPlans_faultHandler);
+	cafescribe.controller.planController.loadAllPlans();
+};
+
+/**
+ * 
+ */
+cafescribe.view.managePlansMediator.onAddBtnClick = function()
+{
+	cafescribe.model.planProxy.selectedPlan = null;
+	
+	cafescribe.controller.appController.changePage(cafescribe.enum.pages.addPlan);
 };
 
 //-----------------------------------------------------------------------------
@@ -32,7 +52,7 @@ cafescribe.view.managePlans.onPageBeforeShow = function()
 /**
  * @param plans
  */
-cafescribe.view.managePlans.reloadPlans = function(plans)
+cafescribe.view.managePlansMediator.reloadPlans = function(plans)
 {
 	$("#plan-list").html(plans);
 	$("#plan-list").listview('refresh');
@@ -47,7 +67,7 @@ cafescribe.view.managePlans.reloadPlans = function(plans)
 /**
  * @param error
  */
-cafescribe.view.managePlans.loadAllPlans_faultHandler = function(error)
+cafescribe.view.managePlansMediator.loadAllPlans_faultHandler = function(error)
 {
 	alert("loadAllPlans_faultHandler");
 };
@@ -58,4 +78,6 @@ cafescribe.view.managePlans.loadAllPlans_faultHandler = function(error)
 //
 //-----------------------------------------------------------------------------
 
-$("#manage-page").live('pagebeforeshow',cafescribe.view.managePlans.onPageBeforeShow);
+$("#manage-page").live('pagebeforeshow',cafescribe.view.managePlansMediator.onPageBeforeShow);
+$("#manage-page-add-button").live('click',cafescribe.view.managePlansMediator.onAddBtnClick);
+$(".edit-plan-link").live('click',cafescribe.view.managePlansMediator.onEditClick);
