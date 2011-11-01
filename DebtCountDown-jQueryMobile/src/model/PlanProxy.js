@@ -1,22 +1,18 @@
 var cafescribe = cafescribe || {};
 cafescribe.model = cafescribe.model || {};
-cafescribe.model.planProxy = cafescribe.model.planProxy || {};
 
+function PlanProxy()
+{
+		
 	//-------------------------------------------------------------------------
 	//
 	// Properties
 	//
 	//-------------------------------------------------------------------------
-		
-	/**
-	 * @private
-	 */
-	cafescribe.model.planProxy.plans = [];
-
-	/**
-	 * @private
-	 */
-	cafescribe.model.planProxy.selectedPlan = null;
+	
+	this.plans = [];
+	
+	this.selectedPlan = null;
 	
 	//-------------------------------------------------------------------------
 	//
@@ -27,12 +23,12 @@ cafescribe.model.planProxy = cafescribe.model.planProxy || {};
 	/**
 	 * @param plan
 	 */
-	cafescribe.model.planProxy.addPlan = function(plan)
+	this.addPlan = function(plan)
 	{
-		if( !cafescribe.model.planProxy.plans )
-			cafescribe.model.planProxy.plans = [];
+		if( !this.plans )
+			this.plans = [];
 		
-		cafescribe.model.planProxy.plans.push(plan);
+		this.push(plan);
 	};
 	
 	/**
@@ -40,26 +36,26 @@ cafescribe.model.planProxy = cafescribe.model.planProxy || {};
 	 * @param planId
 	 * @returns plan
 	 */
-	cafescribe.model.planProxy.getPlanById = function (planId)
+	this.getPlanById = function (planId)
 	{
-		for( var i = 0; i < cafescribe.model.planProxy.plans.length; i++ )
+		for( var i = 0; i < this.plans.length; i++ )
 		{
-			if( cafescribe.model.planProxy.plans[i].id == planId)
-				return cafescribe.model.planProxy.plans[i];
+			if( this.plans[i].id == planId)
+				return this.plans[i];
 		}
 		
 		return null;
-	}
+	};
 	
 	/**
 	 * @param plan
 	 * @returns integer
 	 */
-	cafescribe.model.planProxy.getPlanIndex = function (plan)
+	this.getPlanIndex = function (plan)
 	{
-		for( var i = 0; i < cafescribe.model.planProxy.plans.length; i++ )
+		for( var i = 0; i < this.plans.length; i++ )
 		{
-			if( cafescribe.model.planProxy.plans[i].id == plan.id)
+			if( this.plans[i].id == plan.id)
 				return i;
 		}
 		
@@ -69,15 +65,20 @@ cafescribe.model.planProxy = cafescribe.model.planProxy || {};
 	/**
 	 * @param plan
 	 */
-	cafescribe.model.planProxy.removePlan = function (plan)
+	this.removePlan = function (plan)
 	{
-		cafescribe.model.planProxy.plans.splice(cafescribe.model.planProxy.getPlanIndex(plan), 1);
+		this.plans.splice(this.getPlanIndex(plan), 1);
 	};
 	
 	/**
 	 * @param plan
 	 */
-	cafescribe.model.planProxy.updatePlan = function (plan)
+	this.updatePlan = function (plan)
 	{
-		cafescribe.model.planProxy.plans[cafescribe.model.planProxy.getPlanIndex(plan)] = plan;
+		this.plans[this.getPlanIndex(plan)] = plan;
 	};
+
+};
+
+// make it a singleton
+cafescribe.model.planProxy = cafescribe.model.planProxy || new PlanProxy();

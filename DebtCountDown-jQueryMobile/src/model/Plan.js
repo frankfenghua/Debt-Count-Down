@@ -1,6 +1,4 @@
-var cafescribe = cafescribe || {};
-cafescribe.model = cafescribe.model || {};
-cafescribe.model.plan = function () 
+function PlanVO() 
 {
 	//-------------------------------------------------------------------------
 	//
@@ -45,3 +43,5 @@ cafescribe.model.plan = function ()
 		this.income = parseFloat(json.income);
 	};
 };
+
+//cafescribe.model.plan = new PlanVO();

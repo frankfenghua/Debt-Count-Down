@@ -1,113 +1,140 @@
 var cafescribe = cafescribe || {};
 cafescribe.controller = cafescribe.controller || {};
-cafescribe.controller.planController = cafescribe.controller.planController || {};
 
-//-----------------------------------------------------------------------------
-//
-// Methods
-//
-//-----------------------------------------------------------------------------
-
-/**
- * @param plan
- */
-cafescribe.controller.planController.addPlan = function(plan)
+function PlanController()
 {
-	cafescribe.services.planService.addPlan(plan, cafescribe.controller.planController.addPlan_resultHandler, cafescribe.controller.planController.faultHandler);
-};
-
-/**
- * 
- * @param plan
- */
-cafescribe.controller.planController.editPlan = function(plan)
-{
-	cafescribe.services.planService.updatePlan(plan, cafescribe.controller.planController.updatePlan_resultHandler, cafescribe.controller.planController.faultHandler);
-};
-
-/**
- * Loads all plans from server
- */
-cafescribe.controller.planController.loadAllPlans = function()
-{
-	cafescribe.services.planService.loadAllPlans(cafescribe.controller.planController.loadAllPlans_resultHandler, cafescribe.controller.planController.faultHandler);
-};
-
-/**
- * 
- * @param planId
- */
-cafescribe.controller.planController.showPlan = function(planId)
-{
-	cafescribe.services.planService.loadPlan(planId, cafescribe.controller.planController.loadPlan_resultHandler, cafescribe.controller.planController.faultHandler);
-};
-
-//-----------------------------------------------------------------------------
-//
-// Result Handlers
-//
-//-----------------------------------------------------------------------------
-
-/**
- * @param plan
- */
-cafescribe.controller.planController.addPlan_resultHandler = function (plan)
-{
-	cafescribe.model.planProxy.addPlan(plan);
+	//-------------------------------------------------------------------------
+	//
+	// References
+	//
+	//-------------------------------------------------------------------------
 	
-	cafescribe.controller.appController.changePage(cafescribe.enum.pages.manage);
-};
-
-/**
- * 
- * @param plan
- */
-cafescribe.controller.planController.updatePlan_resultHandler = function (plan)
-{
-	cafescribe.model.planProxy.updatePlan(plan);
+	this.planService = cafescribe.services.planService;
 	
-	cafescribe.controller.appController.changePage(cafescribe.enum.pages.manage);
-};
-
-/**
- * @param plans
- */
-cafescribe.controller.planController.loadAllPlans_resultHandler = function(plans)
-{
-	// set plans on in-memory model
-	cafescribe.model.planProxy.plans = plans;
+	this.appController = cafescribe.controller.appController;
 	
-	var list = "";
+	this.planProxy = cafescribe.model.planProxy;
 	
-	for( var i = 0; i < plans.length; i++ )
+	// this might not be loaded yet, as we load views after controllers
+	this.managePlansMediator = function()
 	{
-		list += '<li><a href="#" class="edit-plan-link" value="' + plans[i].id + '">' + plans[i].name + "</a></li>";
-	}
+		return cafescribe.view.managePlansMediator;
+	};
 	
-	cafescribe.view.managePlansMediator.reloadPlans(list);
-};
+	//-------------------------------------------------------------------------
+	//
+	// Methods
+	//
+	//-------------------------------------------------------------------------
 
-/**
- * 
- * @param plan
- */
-cafescribe.controller.planController.loadPlan_resultHandler = function(plan)
-{
-	cafescribe.model.planProxy.selectedPlan = plan;
+	/**
+	 * @param plan
+	 */
+	this.addPlan = function(plan)
+	{
+		cafescribe.services.planService.addPlan(plan, this.addPlan_resultHandler, 
+				this.faultHandler);
+	};
 	
-	cafescribe.controller.appController.changePage(cafescribe.enum.pages.editPlan);
+	/**
+	 * 
+	 * @param plan
+	 */
+	this.editPlan = function(plan)
+	{
+		cafescribe.services.planService.updatePlan(plan, this.updatePlan_resultHandler, 
+				this.faultHandler);
+	};
+	
+	/**
+	 * Loads all plans from server
+	 */
+	this.loadAllPlans = function()
+	{
+		cafescribe.services.planService.loadAllPlans(this.loadAllPlans_resultHandler, 
+				this.faultHandler);
+	};
+	
+	/**
+	 * 
+	 * @param planId
+	 */
+	this.showPlan = function(planId)
+	{
+		cafescribe.services.planService.loadPlan(planId, this.loadPlan_resultHandler, 
+				this.faultHandler);
+	};
+
+	//-------------------------------------------------------------------------
+	//
+	// Result Handlers
+	//
+	//-------------------------------------------------------------------------
+
+	/**
+	 * @param plan
+	 */
+	this.addPlan_resultHandler = function (plan)
+	{
+		cafescribe.model.planProxy.addPlan(plan);
+		
+		cafescribe.controller.appController.changePage(cafescribe.enum.pages.manage);
+	};
+
+	/**
+	 * 
+	 * @param plan
+	 */
+	this.updatePlan_resultHandler = function (plan)
+	{
+		cafescribe.model.planProxy.updatePlan(plan);
+		
+		cafescribe.controller.appController.changePage(cafescribe.enum.pages.manage);
+	};
+	
+	/**
+	 * @param plans
+	 */
+	this.loadAllPlans_resultHandler = function(plans)
+	{
+		// set plans on in-memory model
+		cafescribe.model.planProxy.plans = plans;
+		
+		var list = "";
+		
+		for( var i = 0; i < plans.length; i++ )
+		{
+			list += '<li><a href="#" class="edit-plan-link" value="' 
+				+ plans[i].id + '">' + plans[i].name + "</a></li>";
+		}
+		
+		cafescribe.view.managePlansMediator.reloadPlans(list);
+	};
+	
+	/**
+	 * 
+	 * @param plan
+	 */
+	this.loadPlan_resultHandler = function(plan)
+	{
+		cafescribe.model.planProxy.selectedPlan = plan;
+		
+		cafescribe.controller.appController.changePage(cafescribe.enum.pages.editPlan);
+	};
+
+	//-------------------------------------------------------------------------
+	//
+	// Fault Handlers
+	//
+	//-------------------------------------------------------------------------
+
+	/**
+	 * @param error
+	 */
+	this.faultHandler = function(error)
+	{
+		alert(error);
+	};
 };
 
-//-----------------------------------------------------------------------------
-//
-// Fault Handlers
-//
-//-----------------------------------------------------------------------------
-
-/**
- * @param error
- */
-cafescribe.controller.planController.faultHandler = function(error)
-{
-	alert(error);
-};
+cafescribe.controller.planController = new PlanController();
