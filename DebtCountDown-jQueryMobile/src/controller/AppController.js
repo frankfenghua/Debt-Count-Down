@@ -1,14 +1,18 @@
 var cafescribe = cafescribe || {};
 cafescribe.controller = cafescribe.controller || {};
-cafescribe.controller.appController = cafescribe.controller.appController || {};
 
-//-----------------------------------------------------------------------------
-//
-// Methods
-//
-//-----------------------------------------------------------------------------
-
-cafescribe.controller.appController.changePage = function (page)
+function AppController()
 {
-	$.mobile.changePage(page);
+	//-----------------------------------------------------------------------------
+	//
+	// Methods
+	//
+	//-----------------------------------------------------------------------------
+
+	this.changePage = function (page)
+	{
+		$.mobile.changePage(page);
+	};
 };
+
+cafescribe.controller.appController = new AppController();
