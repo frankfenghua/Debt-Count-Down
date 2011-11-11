@@ -95,6 +95,26 @@ package com.soatech.debtcountdown.commands
 			list.push(migration);
 			
 			version++;
+
+			//4 - Add paymentRate column 
+			migration = new Migration();
+			migration.version = version;
+			migration.upList = new Vector.<String>();
+			migration.upList.push("ALTER TABLE debts ADD COLUMN paymentRate real NOT NULL DEFAULT 0.0");
+			
+			list.push(migration);
+			
+			version++;
+
+			//5 - Calculate payment rates on old data 
+			migration = new Migration();
+			migration.version = version;
+			migration.upList = new Vector.<String>();
+			migration.upList.push("UPDATE debts SET paymentRate = minPayment / balance");
+			
+			list.push(migration);
+			
+			version++;
 			
 			dbProxy.applicationMigrations = list;
 		}

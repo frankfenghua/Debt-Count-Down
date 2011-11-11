@@ -155,7 +155,6 @@ package com.soatech.debtcountdown.views
 			aprValidator.listener = view.aprTI;
 			aprValidator.property = "apr";
 			aprValidator.source = debt;
-			aprValidator.minValue = 0.0001;
 			aprValidator.fractionalDigits = 6;
 			
 			balanceValidator = new NumberValidator();
@@ -265,8 +264,11 @@ package com.soatech.debtcountdown.views
 			debt.apr = Number(view.aprTI.text);
 			debt.balance = Number(view.balanceTI.text);
 			debt.bank = view.bankTI.text;
-			debt.minPayment = Number(view.minPaymentTI.text);
+//			debt.minPayment = Number(view.minPaymentTI.text);
 			debt.name = view.nameTI.text;
+			
+			// calculate payment rate
+			debt.paymentRate = Number(view.minPaymentTI.text) / debt.balance;
 
 			if( !validateAll() )
 				return;

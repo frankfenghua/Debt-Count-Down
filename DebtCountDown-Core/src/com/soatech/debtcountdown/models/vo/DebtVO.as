@@ -38,7 +38,19 @@ package com.soatech.debtcountdown.models.vo
 		public var balance:Number;
 		public var apr:Number;
 		public var dueDate:Date;
-		public var minPayment:Number;
+		
+		public function get minPayment():Number
+		{
+			var min:Number = balance * paymentRate;
+			
+			// make no payment less than $15
+			if( min < 15 )
+				min = 15;
+			
+			return min;
+		}
+		
+		public var paymentRate:Number;
 		
 		//---------------------------------------------------------------------
 		//
@@ -68,7 +80,7 @@ package com.soatech.debtcountdown.models.vo
 			newItem.balance = this.balance;
 			newItem.bank = this.bank;
 			newItem.dueDate = this.dueDate;
-			newItem.minPayment = this.minPayment;
+			newItem.paymentRate = this.paymentRate;
 			newItem.name = this.name;
 			newItem.pid = this.pid;
 			newItem.planId = this.planId;
@@ -104,8 +116,8 @@ package com.soatech.debtcountdown.models.vo
 			if( item.hasOwnProperty('dueDate') )
 				this.dueDate = new Date(Date.parse(item['dueDate']));
 			
-			if( item.hasOwnProperty('minPayment') )
-				this.minPayment = Number(item['minPayment']);
+			if( item.hasOwnProperty('paymentRate') )
+				this.paymentRate = Number(item['paymentRate']);
 		}
 	}
 }

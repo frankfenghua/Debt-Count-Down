@@ -31,21 +31,21 @@ package com.soatech.debtcountdown.services
 		//---------------------------------------------------------------------
 
 		private const SQL_SELECT_ALL:String = "SELECT pid, name, bank, " +
-			"balance, apr, dueDate, minPayment FROM debts";
+			"balance, apr, dueDate, paymentRate FROM debts";
 		
 		private const SQL_SELECT_BY_PLAN:String = "SELECT d.pid, name, bank, " +
-			"balance, apr, dueDate, minPayment " +
+			"balance, apr, dueDate, paymentRate " +
 			"FROM debts d " +
 			"INNER JOIN planDebts pd ON pd.debtId = d.pid " +
 			"AND pd.planId = :planId";
 		
 		private const SQL_INSERT:String = "INSERT INTO debts (name, bank, " +
-			"balance, apr, dueDate, minPayment) VALUES (:name, :bank, " +
-			":balance, :apr, :dueDate, :minPayment)";
+			"balance, apr, dueDate, paymentRate) VALUES (:name, :bank, " +
+			":balance, :apr, :dueDate, :paymentRate)";
 		
 		private const SQL_UPDATE:String = "UPDATE debts SET " +
 			"name = :name, bank = :bank, balance = :balance, apr = :apr, dueDate = :dueDate, " +
-			"minPayment = :minPayment WHERE pid = :pid";
+			"paymentRate = :paymentRate WHERE pid = :pid";
 		
 		private const SQL_DELETE:String = "DELETE FROM debts WHERE pid = :pid";
 		
@@ -153,39 +153,6 @@ package com.soatech.debtcountdown.services
 			dbProxy.applicationDb.startTransaction(onUpdateTransactionResult, onFail);
 		}
 		
-		/**
-		 * 
-		 * @param data
-		 * 
-		 */
-		private function onUpdateCommitResult(data:Object):void
-		{
-			responder.result(null);
-		}
-		
-		/**
-		 * 
-		 * @param data
-		 * 
-		 */
-		private function onUpdateRunResult(data:Object):void
-		{
-			dbProxy.applicationDb.commit(onUpdateCommitResult, onFail);
-		}
-		
-		/**
-		 * 
-		 * @param data
-		 * 
-		 */
-		private function onUpdateTransactionResult(data:Object):void
-		{
-			dbProxy.applicationDb.addQuery( new Query( SQL_UPDATE, QueryTypes.UPDATE, [ 
-				debt.name, debt.bank, debt.balance, debt.apr, 
-				"", debt.minPayment, debt.pid] ) );
-			dbProxy.applicationDb.run(onUpdateRunResult, onFail);
-		}
-		
 		//---------------------------------------------------------------------
 		//
 		// Result Handlers
@@ -223,7 +190,7 @@ package com.soatech.debtcountdown.services
 		{
 			dbProxy.applicationDb.addQuery( new Query(SQL_INSERT, QueryTypes.INSERT, [ 
 				debt.name, debt.bank, debt.balance, debt.apr, 
-				"", debt.minPayment
+				"", debt.paymentRate
 			] ) );
 			
 			dbProxy.applicationDb.run(onCreateRunResult, onFail);
@@ -311,6 +278,39 @@ package com.soatech.debtcountdown.services
 			dbProxy.applicationDb.addQuery( new Query( SQL_DELETE, QueryTypes.DELETE, [debt.pid] ) );
 			dbProxy.applicationDb.addQuery( new Query( SQL_UNLINK_DEBT, QueryTypes.DELETE, [debt.pid] ) );
 			dbProxy.applicationDb.run(onRemoveRunResult, onFail);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function onUpdateCommitResult(data:Object):void
+		{
+			responder.result(null);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function onUpdateRunResult(data:Object):void
+		{
+			dbProxy.applicationDb.commit(onUpdateCommitResult, onFail);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function onUpdateTransactionResult(data:Object):void
+		{
+			dbProxy.applicationDb.addQuery( new Query( SQL_UPDATE, QueryTypes.UPDATE, [ 
+				debt.name, debt.bank, debt.balance, debt.apr, 
+				"", debt.paymentRate, debt.pid] ) );
+			dbProxy.applicationDb.run(onUpdateRunResult, onFail);
 		}
 		
 		//---------------------------------------------------------------------
