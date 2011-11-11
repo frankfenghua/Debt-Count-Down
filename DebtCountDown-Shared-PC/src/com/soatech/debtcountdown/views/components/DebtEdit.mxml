@@ -86,7 +86,7 @@
 		</mx:FormItem>
 		
 		<mx:FormItem label="Balance">
-			<s:TextInput id="_balanceTI" restrict="0-9" />
+			<s:TextInput id="_balanceTI" restrict="0-9." />
 		</mx:FormItem>
 		
 		<mx:FormItem label="APR">
@@ -94,7 +94,7 @@
 		</mx:FormItem>
 		
 		<mx:FormItem label="Minimum Payment">
-			<s:TextInput id="_minPaymentTI" restrict="0-9" />
+			<s:TextInput id="_minPaymentTI" restrict="0-9." />
 		</mx:FormItem>
 	</mx:Form>
 	
