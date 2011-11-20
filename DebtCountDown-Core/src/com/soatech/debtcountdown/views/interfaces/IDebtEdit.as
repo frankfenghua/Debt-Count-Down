@@ -18,7 +18,6 @@ package com.soatech.debtcountdown.views.interfaces
 		function get aprTI():TextInput;
 		function get minPaymentTI():TextInput;
 		function get deleteBtn():Button;
-		function get removeFromPlanBtn():Button;
-		function setState(value:String):void;
+		function get estimateBtn():Button;
 	}
 }

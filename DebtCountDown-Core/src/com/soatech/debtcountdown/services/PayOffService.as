@@ -166,7 +166,7 @@ package com.soatech.debtcountdown.services
 					
 					rate = (debt.apr / 100) / 12;
 					
-					interest = (debt.balance * rate) * 100;
+					interest = (debt.balance * rate);
 					
 					principal = debt.minPayment - interest;
 					
@@ -276,7 +276,7 @@ package com.soatech.debtcountdown.services
 					
 					rate = (debt.apr / 100) / 12;
 					
-					interest = (debt.balance * rate) * 100;
+					interest = (debt.balance * rate);
 					
 					if( debt.pid == focusDebt.pid )
 					{

@@ -41,8 +41,6 @@ package com.soatech.debtcountdown.commands
 		override public function execute():void
 		{
 			debtService.remove( event.debt, this );
-			
-			
 		}
 
 		//---------------------------------------------------------------------
@@ -68,7 +66,7 @@ package com.soatech.debtcountdown.commands
 		 */
 		public function fault(info:Object):void
 		{
-			CONFIG::debugtrace{ trace("DebtDebtCommand::fault - " + info.toString()); }
+			CONFIG::debugtrace{ trace("DebtDeleteCommand::fault - " + info.toString()); }
 		}
 	}
 }

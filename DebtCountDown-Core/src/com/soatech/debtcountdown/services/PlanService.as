@@ -2,6 +2,7 @@ package com.soatech.debtcountdown.services
 {
 	import com.soatech.debtcountdown.db.DBI;
 	import com.soatech.debtcountdown.db.Query;
+	import com.soatech.debtcountdown.enum.BudgetItemTypes;
 	import com.soatech.debtcountdown.enum.QueryTypes;
 	import com.soatech.debtcountdown.models.DataBaseProxy;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
@@ -32,6 +33,15 @@ package com.soatech.debtcountdown.services
 		
 		private const SQL_SELECT_ALL:String = "SELECT pid, expenses, income, " +
 			"name, startDate FROM plans";
+		
+		private const SQL_SELECT_PLAN_DEBTS:String = "SELECT pid, name, bank, " +
+			"balance, apr, dueDate, paymentRate FROM debts";
+		
+		private const SQL_SELECT_PLAN_BUDGET_SUM:String = "SELECT SUM(i.amount) AS income, " +
+			"SUM(e.amount) AS expenses " +
+			"FROM budgetItems i " +
+			"LEFT JOIN budgetItems e ON e.type = :expenseType " +
+			"WHERE i.type = :incomeType";
 		
 		private const SQL_INSERT:String = "INSERT INTO plans (expenses, income, " +
 			"name, startDate) VALUES (:expenses, :income, :name, :startDate)";
@@ -102,7 +112,7 @@ package com.soatech.debtcountdown.services
 			this.plan = plan;
 			this.responder = responder;
 			
-			dbProxy.applicationDb.startTransaction(onCreateTransactionResult, onFail);
+			dbProxy.applicationDb.startTransaction(onCreateTransactionResult, faultHandler);
 		}
 		
 		/**
@@ -119,7 +129,7 @@ package com.soatech.debtcountdown.services
 			
 			var db:DBI = new DBI(dbProxy.applicationDb.con);
 			db.addQuery( new Query( SQL_SELECT_DEBT, QueryTypes.SELECT, [plan.pid, debt.pid] ) );
-			db.run(onLinkDebtSelectResult, onFail);
+			db.run(onLinkDebtSelectResult, faultHandler);
 		}
 		
 		/**
@@ -133,7 +143,54 @@ package com.soatech.debtcountdown.services
 			
 			var db:DBI = new DBI(dbProxy.applicationDb.con);
 			db.addQuery( new Query( SQL_SELECT_ALL, QueryTypes.SELECT ) );
-			db.run(onLoadRunResult, onFail);
+			db.run(onLoadRunResult, faultHandler);
+		}
+		
+		/**
+		 * 
+		 * @param plan
+		 * @param responder
+		 * 
+		 */
+		public function loadFullPlan(plan:PlanVO, responder:IResponder):void
+		{
+			this.plan = plan;
+			this.responder = responder;
+			
+			var db:DBI = new DBI(dbProxy.applicationDb.con);
+			db.addQuery( new Query( SQL_SELECT_PLAN_DEBTS, QueryTypes.SELECT ) );
+			db.addQuery( new Query( SQL_SELECT_PLAN_BUDGET_SUM, QueryTypes.SELECT, 
+				[ BudgetItemTypes.EXPENSE, BudgetItemTypes.INCOME ] ) );
+			db.run(loadFullPlan_runResult, faultHandler);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function loadFullPlan_runResult(data:Object):void
+		{
+			var debtResult:Array = data[0];
+			var sumResult:Array = data[1];
+			
+			plan.debtList = new ArrayCollection();
+			
+			if( debtResult )
+			{
+				for each( var item:Object in debtResult )
+				{
+					plan.debtList.addItem( DebtVO.createFromObject(item) );
+				}
+			}
+			
+			if( sumResult )
+			{
+				plan.expenses = Number(sumResult[0]['expenses']);
+				plan.income = Number(sumResult[0]['income']);
+			}
+			
+			responder.result(plan);
 		}
 		
 		/**
@@ -146,7 +203,7 @@ package com.soatech.debtcountdown.services
 			this.plan = plan;
 			this.responder = responder;
 			
-			dbProxy.applicationDb.startTransaction(onRemoveTransactionResult, onFail);
+			dbProxy.applicationDb.startTransaction(onRemoveTransactionResult, faultHandler);
 		}
 		
 		/**
@@ -161,7 +218,7 @@ package com.soatech.debtcountdown.services
 			this.plan = plan;
 			this.responder = responder;
 			
-			dbProxy.applicationDb.startTransaction(onUnlinkDebtTransactionResult, onFail);
+			dbProxy.applicationDb.startTransaction(onUnlinkDebtTransactionResult, faultHandler);
 		}
 		
 		/**
@@ -174,7 +231,7 @@ package com.soatech.debtcountdown.services
 			this.plan = plan;
 			this.responder = responder;
 			
-			dbProxy.applicationDb.startTransaction(onUpdateTransactionResult, onFail);
+			dbProxy.applicationDb.startTransaction(onUpdateTransactionResult, faultHandler);
 		}
 		
 		//---------------------------------------------------------------------
@@ -212,7 +269,7 @@ package com.soatech.debtcountdown.services
 		{
 			plan.pid = int(data[0]);
 			
-			dbProxy.applicationDb.commit(onCreateCommitResult, onFail);
+			dbProxy.applicationDb.commit(onCreateCommitResult, faultHandler);
 		}
 		
 		/**
@@ -224,7 +281,7 @@ package com.soatech.debtcountdown.services
 		{
 			dbProxy.applicationDb.addQuery( new Query( SQL_INSERT, QueryTypes.INSERT, [plan.expenses, 
 				plan.income, plan.name, ""] ) );
-			dbProxy.applicationDb.run(onCreateRunResult, onFail);
+			dbProxy.applicationDb.run(onCreateRunResult, faultHandler);
 		}
 		
 		/**
@@ -244,7 +301,7 @@ package com.soatech.debtcountdown.services
 		 */
 		private function onLinkDebtInsertResult(info:Object):void
 		{
-			dbProxy.applicationDb.commit(onLinkDebtCommitResult, onFail);
+			dbProxy.applicationDb.commit(onLinkDebtCommitResult, faultHandler);
 		}
 		
 		/**
@@ -258,7 +315,7 @@ package com.soatech.debtcountdown.services
 			
 			if( !result )
 			{
-				dbProxy.applicationDb.startTransaction(onLinkDebtTransactionResult, onFail);
+				dbProxy.applicationDb.startTransaction(onLinkDebtTransactionResult, faultHandler);
 			}
 			else
 			{
@@ -274,7 +331,7 @@ package com.soatech.debtcountdown.services
 		private function onLinkDebtTransactionResult(data:Object):void
 		{
 			dbProxy.applicationDb.addQuery( new Query( SQL_LINK_DEBT, QueryTypes.INSERT, [plan.pid, debt.pid] ) );
-			dbProxy.applicationDb.run(onLinkDebtInsertResult, onFail);
+			dbProxy.applicationDb.run(onLinkDebtInsertResult, faultHandler);
 		}
 		
 		/**
@@ -320,7 +377,7 @@ package com.soatech.debtcountdown.services
 		 */
 		private function onRemoveRunResult(data:Object):void
 		{
-			dbProxy.applicationDb.commit(onRemoveCommitResult, onFail);
+			dbProxy.applicationDb.commit(onRemoveCommitResult, faultHandler);
 		}
 		
 		/**
@@ -332,7 +389,7 @@ package com.soatech.debtcountdown.services
 		{
 			dbProxy.applicationDb.addQuery( new Query( SQL_UNLINK_PLAN, QueryTypes.DELETE, [plan.pid] ) );
 			dbProxy.applicationDb.addQuery( new Query( SQL_DELETE, QueryTypes.DELETE, [plan.pid] ) );
-			dbProxy.applicationDb.run(onRemoveRunResult, onFail);
+			dbProxy.applicationDb.run(onRemoveRunResult, faultHandler);
 		}
 		
 		/**
@@ -342,7 +399,7 @@ package com.soatech.debtcountdown.services
 		 */
 		private function onRunResult(data:Object):void
 		{
-			dbProxy.applicationDb.commit(onCommitResult, onFail);
+			dbProxy.applicationDb.commit(onCommitResult, faultHandler);
 		}
 		
 		/**
@@ -353,7 +410,7 @@ package com.soatech.debtcountdown.services
 		private function onUnlinkDebtTransactionResult(data:Object):void
 		{
 			dbProxy.applicationDb.addQuery( new Query( SQL_UNLINK_DEBT, QueryTypes.DELETE, [plan.pid, debt.pid] ) );
-			dbProxy.applicationDb.run(onRunResult, onFail);
+			dbProxy.applicationDb.run(onRunResult, faultHandler);
 		}
 		
 		/**
@@ -366,7 +423,7 @@ package com.soatech.debtcountdown.services
 			dbProxy.applicationDb.addQuery( new Query(SQL_UPDATE, QueryTypes.UPDATE, [plan.expenses, 
 				plan.income, plan.name, "", 
 				plan.pid] ) );
-			dbProxy.applicationDb.run(onRunResult, onFail);
+			dbProxy.applicationDb.run(onRunResult, faultHandler);
 		}
 		
 		//---------------------------------------------------------------------
@@ -380,7 +437,7 @@ package com.soatech.debtcountdown.services
 		 * @param info
 		 * 
 		 */
-		private function onFail(info:Object):void
+		private function faultHandler(info:Object):void
 		{
 			responder.fault(info);
 		}

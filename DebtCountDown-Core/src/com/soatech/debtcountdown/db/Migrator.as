@@ -100,11 +100,50 @@ package com.soatech.debtcountdown.db
 			_dbi.run(onSelectVersionResult, onSelectVersionFault);
 		}
 		
-		public function onSelectVersionFault(info:Object):void
+		/**
+		 * Runs through the migrations up to the requested version number
+		 * If left blank, it will run all migrations 
+		 * @param version
+		 * 
+		 */		
+		public function migrateTo(version:int = 0):void
 		{
-			onSelectVersionResult([[{'currentVersion': 0}]]);
+			_requestedVersion = version;
+			
+			_dbi.startTransaction(onTransactionStart, onTransactionFail);
 		}
 		
+		//----------------------------------------------------------------------
+		// 
+		// Result Handlers
+		//
+		//----------------------------------------------------------------------
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function onCommit(data:Object):void
+		{
+			dispatch(new MigrationEvent( MigrationEvent.MIGRATION_COMPLETE ));
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		public function onMigrationComplete(data:Object):void
+		{
+			_dbi.commit(onCommit, onCommitFail);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
 		public function onSelectVersionResult(data:Object):void
 		{
 			var migration:Migration;
@@ -139,45 +178,60 @@ package com.soatech.debtcountdown.db
 			_dbi.run(onMigrationComplete, onMigrationFault);
 		}
 		
-		public function onMigrationComplete(data:Object):void
-		{
-			_dbi.commit(onCommit, onCommitFail);
-		}
-		
-		private function onCommitFail(info:Object):void
-		{
-		}
-		
-		private function onCommit(data:Object):void
-		{
-			dispatch(new MigrationEvent( MigrationEvent.MIGRATION_COMPLETE ));
-		}
-		
-		public function onMigrationFault(info:Object):void
-		{
-		}
-		
 		/**
-		 * Runs through the migrations up to the requested version number
-		 * If left blank, it will run all migrations 
-		 * @param version
 		 * 
-		 */		
-		public function migrateTo(version:int = 0):void
-		{
-			_requestedVersion = version;
-			
-			_dbi.startTransaction(onTransactionStart, onTransactionFail);
-		}
-		
-		private function onTransactionFail(info:Object):void
-		{
-		}
-		
+		 * @param data
+		 * 
+		 */
 		private function onTransactionStart(data:Object):void
 		{
 			determineVersion();
 		}
 		
+		//----------------------------------------------------------------------
+		// 
+		// Fault Handlers
+		//
+		//----------------------------------------------------------------------
+		
+		/**
+		 * 
+		 * @param info
+		 * 
+		 */
+		private function onCommitFail(info:Object):void
+		{
+			trace("Migrator::onCommitFail " + info.toString());
+		}
+		
+		/**
+		 * 
+		 * @param info
+		 * 
+		 */
+		private function onMigrationFault(info:Object):void
+		{
+			trace("Migrator::onMigrationFault " + info.toString());
+		}
+		
+		/**
+		 * 
+		 * @param info
+		 * 
+		 */
+		public function onSelectVersionFault(info:Object):void
+		{
+			onSelectVersionResult([[{'currentVersion': 0}]]);
+		}
+		
+		/**
+		 * 
+		 * @param info
+		 * 
+		 */
+		private function onTransactionFail(info:Object):void
+		{
+			trace("Migrator::onTransactionFail " + info.toString());
+		}
 	}
 }

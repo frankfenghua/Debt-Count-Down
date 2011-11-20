@@ -73,6 +73,11 @@ package com.soatech.debtcountdown.views
 		//
 		//---------------------------------------------------------------------
 		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
 		public function addBtn_clickHandler(event:MouseEvent):void
 		{
 			var plan:PlanVO = new PlanVO();
@@ -81,6 +86,11 @@ package com.soatech.debtcountdown.views
 			dispatch( new PlanEvent( PlanEvent.EDIT, plan ) );
 		}
 		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
 		public function plan_listChangedHandler(event:PlanEvent):void
 		{
 			if( event.planList.length )
@@ -91,6 +101,11 @@ package com.soatech.debtcountdown.views
 			view.planList.dataProvider = event.planList;
 		}
 		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
 		public function planList_changeHandler(event:IndexChangeEvent):void
 		{
 			var plan:PlanVO = view.planList.selectedItem as PlanVO;

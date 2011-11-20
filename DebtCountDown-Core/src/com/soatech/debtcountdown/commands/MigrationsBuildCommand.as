@@ -68,7 +68,6 @@ package com.soatech.debtcountdown.commands
 			
 			//3 
 			
-			// convoluted way to drop a column in sqlite
 			migration = new Migration();
 			migration.version = version;
 			migration.upList = new Vector.<String>();
@@ -84,6 +83,7 @@ package com.soatech.debtcountdown.commands
 				"minPayment real)");
 			migration.upList.push("INSERT INTO debts_backup SELECT pid, name, " +
 				"bank, balance, apr, dueDate, minPayment FROM debts");
+			// convoluted way to drop a column in sqlite
 			migration.upList.push("DROP TABLE debts");
 			migration.upList.push("CREATE TABLE debts (pid INTEGER PRIMARY KEY AUTOINCREMENT, " +
 				"name TEXT, bank TEXT, balance REAL, apr REAL, dueDate TEXT, " +
@@ -111,6 +111,25 @@ package com.soatech.debtcountdown.commands
 			migration.version = version;
 			migration.upList = new Vector.<String>();
 			migration.upList.push("UPDATE debts SET paymentRate = minPayment / balance");
+			
+			list.push(migration);
+			
+			version++;
+
+			//5 - Create budget items and frequencies 
+			migration = new Migration();
+			migration.version = version;
+			migration.upList = new Vector.<String>();
+			/*migration.upList.push("CREATE TABLE frequences (pid INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				"type TEXT, dateInfo TEXT, dateInfo2 TEXT");
+			migration.upList("INSERT INTO frequences (type");*/
+			migration.upList.push("CREATE TABLE budgetItems (pid INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				"name TEXT, amount REAL, active INTEGER, type TEXT)");
+			migration.upList.push("CREATE TABLE planBudgetItems (pid INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				"planId integer, budgetItemId integer, " +
+				"FOREIGN KEY(planId) REFERENCES plans(pid), " +
+				"FOREIGN KEY(budgetItemId) REFERENCES budgetItems(pid) )");
+			migration.upList.push("CREATE INDEX planBudgetItem_planId_budgetItemId ON planBudgetItems (planId, budgetItemId)");
 			
 			list.push(migration);
 			

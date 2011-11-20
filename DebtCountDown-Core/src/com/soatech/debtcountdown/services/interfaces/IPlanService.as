@@ -11,6 +11,7 @@ package com.soatech.debtcountdown.services.interfaces
 		function create(plan:PlanVO, responder:IResponder):void;
 		function linkDebt(plan:PlanVO, debt:DebtVO, responder:IResponder):void;
 		function load(responder:IResponder):void;
+		function loadFullPlan(plan:PlanVO, responder:IResponder):void
 		function remove(plan:PlanVO, responder:IResponder):void;
 		function unlinkDebt(plan:PlanVO, debt:DebtVO, responder:IResponder):void;
 		function update(plan:PlanVO, responder:IResponder):void;

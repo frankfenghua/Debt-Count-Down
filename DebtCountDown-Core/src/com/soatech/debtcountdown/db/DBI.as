@@ -567,7 +567,7 @@ package com.soatech.debtcountdown.db
 		 */		
 		protected function stmt_errorHandler(event:SQLErrorEvent):void
 		{
-			stmtResponder.fault(event.error);
+			stmtResponder.fault(event);
 //			stmtResponder = null;
 		}
 		

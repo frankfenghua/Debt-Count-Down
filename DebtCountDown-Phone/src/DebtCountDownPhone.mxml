@@ -3,7 +3,7 @@
 			  xmlns:s="library://ns.adobe.com/flex/spark" 
 			  xmlns:local="*" 
 			  xmlns:debtcountdown="com.soatech.debtcountdown.*"
-			  firstView="com.soatech.debtcountdown.views.components.Manage"
+			  firstView="com.soatech.debtcountdown.views.components.Splash"
 			  title="Debt Count Down">
 	
 	<fx:Declarations>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Plan Details" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+		xmlns:vo="com.soatech.debtcountdown.models.vo.*" 
+		xmlns:components="com.soatech.debtcountdown.views.components.*"
+		implements="com.soatech.debtcountdown.views.interfaces.IPlanEdit">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			public function get backBtn():Button
+			{
+				return _backBtn;
+			}
+			
+			public function get contBtn():Button
+			{
+				return _contBtn;
+			}
+			
+			public function get deleteBtn():Button
+			{
+				return _deleteBtn;
+			}
+
+			public function get instructions():Label
+			{
+				return _instructions;
+			}
+			
+			public function get nameTI():TextInput
+			{
+				return _nameTI;
+			}
+			
+			public function get saveBtn():Button
+			{
+				return _saveBtn;
+			}
+		]]>
+	</fx:Script>
+	
+	<s:navigationContent>
+		<s:Button id="_backBtn" label="Back" />
+	</s:navigationContent>
+	
+	<s:actionContent>
+		<s:Button id="_saveBtn" label="Save" />
+	</s:actionContent>
+	
+	<s:Scroller top="10" bottom="10" left="10" right="10" horizontalScrollPolicy="off">
+		<s:VGroup width="100%" height="100%" paddingRight="20" paddingLeft="10">
+			
+			<s:Label text="Name"/>
+			<s:TextInput id="_nameTI" width="100%"/>
+			
+			<s:Label id="_instructions" horizontalCenter="0" verticalCenter="0" 
+					 width="100%" 
+					 text="Name your plan so you can quickly reference it again later."/>
+			
+			<s:HGroup horizontalAlign="center" width="100%">
+				<s:Button id="_deleteBtn" label="Delete Plan" />
+				<s:Button id="_contBtn" label="Continue" width="100%"/>
+			</s:HGroup>
+		</s:VGroup>
+	</s:Scroller>
+	
+</s:View>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="Income"
+		implements="com.soatech.debtcountdown.views.interfaces.IIncomeSelect">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			public function get addBtn():Button
+			{
+				return _addBtn;
+			}
+			
+			public function get backBtn():Button
+			{
+				return _backBtn;
+			}
+			
+			public function get incomeList():List
+			{
+				return _incomeList;
+			}
+			
+			public function get instructions():Label
+			{
+				return _instructions;
+			}
+			
+			public function get contBtn():Button
+			{
+				return _contBtn;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:navigationContent>
+		<s:Button id="_backBtn" label="Back"/>
+	</s:navigationContent>
+	
+	<s:actionContent>
+		<s:Button id="_addBtn" label="Add Income Item" />
+	</s:actionContent>
+	
+	<s:List id="_incomeList" top="10" bottom="100" left="10" 
+			right="10" labelField="name" borderVisible="true">
+		
+	</s:List>
+	
+	<s:Label id="_instructions" horizontalCenter="0" verticalCenter="-100" width="80%"
+			 text="Tell us all the ways you gain monthly income." />
+	
+	<s:Button id="_contBtn" label="Continue" width="80%" 
+			  horizontalCenter="0" bottom="10" enabled="false" />
+	
+</s:View>

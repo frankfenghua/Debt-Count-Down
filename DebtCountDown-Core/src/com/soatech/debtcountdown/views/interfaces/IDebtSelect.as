@@ -10,7 +10,6 @@ package com.soatech.debtcountdown.views.interfaces
 		function get addBtn():Button;
 		function get debtList():List;
 		function get instructions():Label;
-		
-		function setState(value:String):void;
+		function get contBtn():Button;
 	}
 }

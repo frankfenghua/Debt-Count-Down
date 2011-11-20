@@ -16,6 +16,7 @@ package com.soatech.debtcountdown.views.interfaces
 		
 		function addBtn_clickHandler(event:MouseEvent):void;
 		function backBtn_clickHandler(event:MouseEvent):void;
+		function contBtn_clickHandler(event:MouseEvent):void;
 		function debtList_changeHandler(event:DebtEvent):void;
 		function debtList_selectHandler(event:IndexChangeEvent):void;
 		function setup():void;

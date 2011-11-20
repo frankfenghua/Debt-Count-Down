@@ -88,9 +88,9 @@ package com.soatech.debtcountdown.services
 		/**
 		 * 
 		 * @param debt
-		 * @return 
+		 * @param responder
 		 * 
-		 */		
+		 */
 		public function create(debt:DebtVO, responder:IResponder):void
 		{
 			this.debt = debt;
@@ -101,9 +101,9 @@ package com.soatech.debtcountdown.services
 		
 		/**
 		 * 
-		 * @return 
+		 * @param responder
 		 * 
-		 */		
+		 */
 		public function loadAll(responder:IResponder):void
 		{
 			this.responder = responder;
@@ -115,9 +115,10 @@ package com.soatech.debtcountdown.services
 		
 		/**
 		 * 
-		 * @return 
+		 * @param planId
+		 * @param responder
 		 * 
-		 */		
+		 */
 		public function loadByPlan(planId:int, responder:IResponder):void
 		{
 			this.responder = responder;
@@ -130,8 +131,9 @@ package com.soatech.debtcountdown.services
 		/**
 		 * 
 		 * @param debt
+		 * @param responder
 		 * 
-		 */		
+		 */
 		public function remove(debt:DebtVO, responder:IResponder):void
 		{
 			this.debt = debt;
@@ -143,8 +145,9 @@ package com.soatech.debtcountdown.services
 		/**
 		 * 
 		 * @param debt
+		 * @param responder
 		 * 
-		 */		
+		 */
 		public function update(debt:DebtVO, responder:IResponder):void
 		{
 			this.debt = debt;
@@ -213,7 +216,7 @@ package com.soatech.debtcountdown.services
 				for each( item in result )
 				{
 					debt = new DebtVO();
-					debt.loadFromDb(item);
+					debt.loadFromObject(item);
 					
 					list.addItem(debt);
 				}
@@ -239,7 +242,7 @@ package com.soatech.debtcountdown.services
 				for each( item in result )
 				{
 					debt = new DebtVO();
-					debt.loadFromDb(item);
+					debt.loadFromObject(item);
 					
 					list.addItem(debt);
 				}

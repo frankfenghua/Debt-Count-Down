@@ -8,6 +8,7 @@ package com.soatech.debtcountdown.commands
 	import com.soatech.debtcountdown.models.vo.StatsVO;
 	import com.soatech.debtcountdown.services.interfaces.IDebtService;
 	import com.soatech.debtcountdown.services.interfaces.IPayOffService;
+	import com.soatech.debtcountdown.services.interfaces.IPlanService;
 	
 	import mx.collections.ArrayCollection;
 	import mx.rpc.IResponder;
@@ -35,7 +36,7 @@ package com.soatech.debtcountdown.commands
 		public var statsProxy:StatsProxy;
 		
 		[Inject]
-		public var debtService:IDebtService;
+		public var planService:IPlanService;
 		
 		//---------------------------------------------------------------------
 		//
@@ -45,7 +46,7 @@ package com.soatech.debtcountdown.commands
 		
 		override public function execute():void
 		{
-			debtService.loadByPlan( event.plan.pid, this );
+			planService.loadFullPlan( event.plan, this );
 		}
 
 		//---------------------------------------------------------------------
@@ -61,21 +62,21 @@ package com.soatech.debtcountdown.commands
 		 */
 		public function result(data:Object):void
 		{
-			var list:ArrayCollection = data as ArrayCollection;
+			var plan:PlanVO = data as PlanVO;
 			
 			// need each list unique, as we are modifying object values
 			var balanceList:ArrayCollection = new ArrayCollection();
 			var rateList:ArrayCollection = new ArrayCollection();
 			var minList:ArrayCollection = new ArrayCollection();
 			
-			for each( var item:DebtVO in list )
+			for each( var item:DebtVO in plan.debtList )
 			{
 				balanceList.addItem(item.clone());
 				rateList.addItem(item.clone());
 				minList.addItem(item.clone());
 			}
 			
-			var payment:Number = event.plan.income - event.plan.expenses;
+			var payment:Number = plan.income - plan.expenses;
 			
 			if( payment <= 0 )
 			{
@@ -87,7 +88,7 @@ package com.soatech.debtcountdown.commands
 			statsProxy.minStats = payOffService.determinePayOffMinimumOnly(minList);
 			statsProxy.rateStats = payOffService.determinePayOffMultipleByRate(rateList, payment);
 			
-			dispatch( new PaymentPlanEvent( PaymentPlanEvent.RUN_COMPLETE, null, event.plan ) );
+			dispatch( new PaymentPlanEvent( PaymentPlanEvent.RUN_COMPLETE, null, plan ) );
 		}
 		
 		/**

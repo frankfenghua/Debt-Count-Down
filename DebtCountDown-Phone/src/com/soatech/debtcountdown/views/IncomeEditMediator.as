@@ -1,27 +1,17 @@
 package com.soatech.debtcountdown.views
 {
-	import com.soatech.debtcountdown.events.DatePickerEvent;
-	import com.soatech.debtcountdown.events.DebtEvent;
+	import com.soatech.debtcountdown.events.BudgetEvent;
 	import com.soatech.debtcountdown.events.DeleteConfirmEvent;
-	import com.soatech.debtcountdown.events.PlanEvent;
-	import com.soatech.debtcountdown.models.vo.DebtVO;
-	import com.soatech.debtcountdown.models.vo.PlanVO;
-	import com.soatech.debtcountdown.views.components.DebtDetails;
+	import com.soatech.debtcountdown.models.vo.BudgetItemVO;
 	import com.soatech.debtcountdown.views.components.DeleteConfirm;
-	import com.soatech.debtcountdown.views.interfaces.IDebtEdit;
-	import com.soatech.debtcountdown.views.interfaces.IDebtEditMediator;
+	import com.soatech.debtcountdown.views.components.IncomeEdit;
+	import com.soatech.debtcountdown.views.interfaces.IIncomeEditMediator;
 	
 	import flash.events.MouseEvent;
 	
-	import mx.events.ResizeEvent;
-	import mx.validators.Validator;
-	
 	import org.robotlegs.core.IMediator;
-	import org.robotlegs.mvcs.Mediator;
 	
-	import spark.events.TextOperationEvent;
-	
-	public class DebtDetailsMediator extends DebtEditMediatorBase implements IDebtEditMediator
+	public class IncomeEditMediator extends IncomeEditMediatorBase implements IMediator, IIncomeEditMediator
 	{
 		//---------------------------------------------------------------------
 		//
@@ -30,34 +20,34 @@ package com.soatech.debtcountdown.views
 		//---------------------------------------------------------------------
 		
 		//-----------------------------
-		// localView
+		// incomeItem
 		//-----------------------------
 		
-		public function get localView():DebtDetails
+		override public function get incomeItem():BudgetItemVO
 		{
-			return view as DebtDetails;
+			return localView.data as BudgetItemVO;
 		}
 		
-		//-----------------------------
-		// debt
-		//-----------------------------
-		
-		override public function get debt():DebtVO
-		{
-			return localView.data as DebtVO;
-		}
-		
-		override public function set debt(value:DebtVO):void
+		override public function set incomeItem(value:BudgetItemVO):void
 		{
 			localView.data = value;
 		}
 		
+		//-----------------------------
+		// localView
+		//-----------------------------
+		
+		public function get localView():IncomeEdit
+		{
+			return view as IncomeEdit;
+		}
+
 		//---------------------------------------------------------------------
 		//
 		// Variables
 		//
 		//---------------------------------------------------------------------
-		
+
 		protected var deleteConfirm:DeleteConfirm;
 		
 		//---------------------------------------------------------------------
@@ -69,7 +59,7 @@ package com.soatech.debtcountdown.views
 		/**
 		 * 
 		 * 
-		 */		
+		 */
 		override public function onRegister():void
 		{
 			super.onRegister();
@@ -77,25 +67,10 @@ package com.soatech.debtcountdown.views
 		
 		//---------------------------------------------------------------------
 		//
-		// Methods
-		//
-		//---------------------------------------------------------------------
-		
-		/**
-		 * 
-		 * 
-		 */		
-		override public function populate():void
-		{
-			super.populate();
-		}
-		
-		//---------------------------------------------------------------------
-		//
 		// Event Handlers
 		//
 		//---------------------------------------------------------------------
-
+		
 		/**
 		 * 
 		 * @param event
@@ -103,10 +78,13 @@ package com.soatech.debtcountdown.views
 		 */		
 		protected function confirmation_closeHandler(event:DeleteConfirmEvent):void
 		{
+			deleteConfirm.removeEventListener( DeleteConfirmEvent.NO, confirmation_closeHandler );
+			deleteConfirm.removeEventListener( DeleteConfirmEvent.YES, confirmation_closeHandler );
+			
 			if( event.type == DeleteConfirmEvent.YES )
 			{
-				dispatch( new DebtEvent( DebtEvent.DELETE, debt ) );
-				dispatch( new DebtEvent( DebtEvent.EDIT_BACK ) );
+				dispatch( new BudgetEvent( BudgetEvent.DELETE, incomeItem ) );
+				dispatch( new BudgetEvent( BudgetEvent.EDIT_BACK ) );
 			}
 		}
 		
@@ -114,7 +92,7 @@ package com.soatech.debtcountdown.views
 		 * 
 		 * @param event
 		 * 
-		 */		
+		 */
 		override public function deleteBtn_clickHandler(event:MouseEvent):void
 		{
 			event.preventDefault();

@@ -3,6 +3,8 @@ package com.soatech.debtcountdown.models.vo
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	
+	import mx.collections.ArrayCollection;
+	
 	public class PlanVO extends EventDispatcher
 	{
 		//---------------------------------------------------------------------
@@ -12,10 +14,10 @@ package com.soatech.debtcountdown.models.vo
 		//---------------------------------------------------------------------
 		
 		//-----------------------------
-		// deleting
+		// debtList
 		//-----------------------------
-		// HACK: So we don't dispatch events if delete is click
-		public var deleting:Boolean;
+		
+		public var debtList:ArrayCollection;
 		
 		//-----------------------------
 		// expenses
@@ -54,12 +56,6 @@ package com.soatech.debtcountdown.models.vo
 		
 		public var pid:int;
 		
-		//-----------------------------
-		// startDate
-		//-----------------------------
-		
-		public var startDate:Date;
-
 		//---------------------------------------------------------------------
 		//
 		// Constructor
@@ -72,8 +68,12 @@ package com.soatech.debtcountdown.models.vo
 		 * @param name
 		 * 
 		 */		
-		public function PlanVO()
+		public function PlanVO(pid:int=0, name:String=null, expenses:Number=0, income:Number=0)
 		{
+			this.pid = pid;
+			this.name = name;
+			this.expenses = expenses;
+			this.income = income;
 		}
 		
 		//---------------------------------------------------------------------
@@ -82,6 +82,21 @@ package com.soatech.debtcountdown.models.vo
 		//
 		//---------------------------------------------------------------------
 		
+		/**
+		 * 
+		 * @return 
+		 * 
+		 */
+		public function clone():PlanVO
+		{
+			return new PlanVO(pid, name, expenses, income);
+		}
+		
+		/**
+		 * 
+		 * @param item
+		 * 
+		 */
 		public function loadFromDb(item:Object):void
 		{
 			if( item.hasOwnProperty('pid') )
@@ -89,15 +104,6 @@ package com.soatech.debtcountdown.models.vo
 			
 			if( item.hasOwnProperty('name') )
 				this.name = item['name'];
-			
-			if( item.hasOwnProperty('startDate') )
-				this.startDate = new Date(Date.parse( item['startDate'] ) );
-			
-			if( item.hasOwnProperty('expenses') )
-				this.expenses = Number(item['expenses']);
-			
-			if( item.hasOwnProperty('income') )
-				this.income = Number(item['income']);
 		}
 	}
 }

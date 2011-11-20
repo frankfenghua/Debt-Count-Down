@@ -50,7 +50,7 @@ package com.soatech.debtcountdown.commands
 			var db:DBI;
 			var key:ByteArray;
 			
-			if( elsHelper.isSupported )
+			if( elsHelper.isSupported && 0 )
 			{
 				CONFIG::debugtrace{ trace("ELS Supported"); }
 				key = elsHelper.getEncryptedKey(dbProxy.APPLICATION_KEY_ELS_ID);

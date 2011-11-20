@@ -21,7 +21,7 @@ package com.soatech.debtcountdown.views.interfaces
 		function balanceTI_changeHandler(event:TextOperationEvent):void;
 		function debt_saveSuccessHandler(event:DebtEvent):void;
 		function deleteBtn_clickHandler(event:MouseEvent):void;
-		function removeFromPlanBtn_clickHandler(event:MouseEvent):void;
+		function estimateBtn_clickHandler(event:MouseEvent):void;
 		function saveBtn_clickHandler(event:MouseEvent):void;
 	}
 }

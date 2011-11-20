@@ -30,6 +30,7 @@ package com.soatech.debtcountdown.events
 		public static const SAVE_SUCCESS:String = "DEBT_SAVE_SUCESS";
 		public static const SELECT:String = "DEBT_SELECT";
 		public static const SELECT_BACK:String = "DEBT_SELECT_BACK";
+		public static const SELECT_CONTINUE:String = "DEBT_SELECT_CONTINUE";
 		public static const SELECTED_CHANGED:String = "DEBT_SELECTED_CHANGED";
 		public static const SHOW_SELECT:String = "DEBT_SHOW_SELECT";
 		
@@ -75,6 +76,17 @@ package com.soatech.debtcountdown.events
 			this.plan = plan;
 			
 			super(type, bubbles, cancelable);
+		}
+
+		//---------------------------------------------------------------------
+		//
+		// Overridden Methods
+		//
+		//---------------------------------------------------------------------
+		
+		override public function clone():Event
+		{
+			return new DebtEvent(type, debt, debtList, plan, bubbles, cancelable);
 		}
 	}
 }

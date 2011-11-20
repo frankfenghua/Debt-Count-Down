@@ -74,7 +74,7 @@ package com.soatech.debtcountdown.services
 			for( var i:int = 0; i < debtData.debts.length; i++ )
 			{
 				debt = new DebtVO();
-				debt.loadFromDb( debtData.debts[i] );
+				debt.loadFromObject( debtData.debts[i] );
 				list.addItem( debt );
 			}
 			
@@ -97,7 +97,7 @@ package com.soatech.debtcountdown.services
 				if( planData.debts[i].planId == planId )
 				{
 					debt = new DebtVO();
-					debt.loadFromDb( planData.debts[i] );
+					debt.loadFromObject( planData.debts[i] );
 					list.addItem( debt );
 				}
 			}

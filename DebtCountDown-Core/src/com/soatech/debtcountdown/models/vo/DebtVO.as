@@ -87,13 +87,27 @@ package com.soatech.debtcountdown.models.vo
 			
 			return newItem;
 		}
+
+		/**
+		 * 
+		 * @param item
+		 * @return 
+		 * 
+		 */
+		public static function createFromObject(item:Object):DebtVO
+		{
+			var debt:DebtVO = new DebtVO();
+			debt.loadFromObject(item);
+			
+			return debt;
+		}
 		
 		/**
 		 * 
 		 * @param item
 		 * 
 		 */
-		public function loadFromDb(item:Object):void
+		public function loadFromObject(item:Object):void
 		{
 			if( item.hasOwnProperty('pid') )
 				this.pid = int(item['pid']);

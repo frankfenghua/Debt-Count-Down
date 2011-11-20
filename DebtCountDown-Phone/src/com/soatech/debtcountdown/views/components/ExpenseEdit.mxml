@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="Expense Details"
+		implements="com.soatech.debtcountdown.views.interfaces.IExpenseEdit">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			public function get amountTI():TextInput
+			{
+				return _amountTI;
+			}
+			
+			public function get backBtn():Button
+			{
+				return _backBtn;
+			}
+			
+			public function get deleteBtn():Button
+			{
+				return _deleteBtn;
+			}
+			
+			public function get nameTI():TextInput
+			{
+				return _nameTI;
+			}
+			
+			public function get saveBtn():Button
+			{
+				return _saveBtn;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<!--====================================================================-->
+	<!-- Navigation -->
+	<!--====================================================================-->
+	
+	<s:navigationContent>
+		<s:Button id="_backBtn" label="Back" />
+	</s:navigationContent>
+	
+	<s:actionContent>
+		<s:Button id="_saveBtn" label="Save" />
+	</s:actionContent>
+	
+	<!--====================================================================-->
+	<!-- Form -->
+	<!--====================================================================-->
+	
+	<s:Scroller top="10" bottom="10" left="10" right="10" horizontalScrollPolicy="off">
+		<s:VGroup width="100%" height="100%" paddingRight="20" paddingBottom="10" 
+				  paddingLeft="10">
+			
+			<s:Label text="Name"/>
+			<s:TextInput id="_nameTI" width="100%"/>
+			
+			<s:Label text="Amount"/>
+			<s:TextInput id="_amountTI" width="100%" restrict="0-9."/>
+			
+			<s:Group height="100%" width="100%">
+				<s:HGroup width="100%" horizontalAlign="center" bottom="10">
+					<s:Button id="_deleteBtn" label="Delete Expense Item"
+							  enabled="false"/>
+				</s:HGroup>
+			</s:Group>
+			
+		</s:VGroup>
+	</s:Scroller>
+	
+</s:View>

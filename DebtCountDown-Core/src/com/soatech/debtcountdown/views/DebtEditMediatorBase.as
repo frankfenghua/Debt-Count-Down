@@ -1,11 +1,8 @@
 package com.soatech.debtcountdown.views
 {
-	import com.soatech.debtcountdown.enum.DebtEditStates;
 	import com.soatech.debtcountdown.events.DebtEvent;
-	import com.soatech.debtcountdown.events.PlanEvent;
 	import com.soatech.debtcountdown.models.DebtProxy;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
-	import com.soatech.debtcountdown.models.vo.PlanVO;
 	import com.soatech.debtcountdown.services.interfaces.IPayOffService;
 	import com.soatech.debtcountdown.views.interfaces.IDebtEdit;
 	import com.soatech.debtcountdown.views.interfaces.IDebtEditMediator;
@@ -84,10 +81,10 @@ package com.soatech.debtcountdown.views
 			eventMap.mapListener( eventDispatcher, DebtEvent.SAVE_SUCCESS, debt_saveSuccessHandler );
 			
 			eventMap.mapListener( view.backBtn, MouseEvent.CLICK, backBtn_clickHandler );
-			eventMap.mapListener( view.saveBtn, MouseEvent.CLICK, saveBtn_clickHandler );
-			eventMap.mapListener( view.deleteBtn, MouseEvent.CLICK, deleteBtn_clickHandler );
 			eventMap.mapListener( view.balanceTI, TextOperationEvent.CHANGE, balanceTI_changeHandler );
-			view.removeFromPlanBtn.addEventListener(MouseEvent.CLICK, removeFromPlanBtn_clickHandler);
+			eventMap.mapListener( view.deleteBtn, MouseEvent.CLICK, deleteBtn_clickHandler );
+			eventMap.mapListener( view.estimateBtn, MouseEvent.CLICK, estimateBtn_clickHandler);
+			eventMap.mapListener( view.saveBtn, MouseEvent.CLICK, saveBtn_clickHandler );
 			
 			setup();
 		}
@@ -123,11 +120,6 @@ package com.soatech.debtcountdown.views
 				view.minPaymentTI.text = "";
 			else
 				view.minPaymentTI.text = debt.minPayment.toString();
-			
-			if( debt.planId )
-				view.setState(DebtEditStates.PLAN);
-			else
-				view.setState(DebtEditStates.DEFAULT);
 		}
 		
 		/**
@@ -199,6 +191,12 @@ package com.soatech.debtcountdown.views
 			return true;
 		}
 		
+		//---------------------------------------------------------------------
+		//
+		// Event Handlers
+		//
+		//---------------------------------------------------------------------
+		
 		/**
 		 * 
 		 * @param event
@@ -244,14 +242,10 @@ package com.soatech.debtcountdown.views
 		 * 
 		 * @param event
 		 * 
-		 */		
-		public function removeFromPlanBtn_clickHandler(event:MouseEvent):void
+		 */
+		public function estimateBtn_clickHandler(event:MouseEvent):void
 		{
-			var plan:PlanVO = new PlanVO();
-			plan.pid = debt.planId;
-			
-			dispatch( new PlanEvent( PlanEvent.UNLINK_DEBT, plan, null, debt ) );
-			backBtn_clickHandler(null);
+			trace("Not Yet Implemented: estimateBtn_clickHandler");
 		}
 		
 		/**

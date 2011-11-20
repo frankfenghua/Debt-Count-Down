@@ -6,28 +6,22 @@ package com.soatech.debtcountdown.views
 	import com.soatech.debtcountdown.events.PlanEvent;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
 	import com.soatech.debtcountdown.models.vo.PlanVO;
-	import com.soatech.debtcountdown.views.components.DebtDetails;
-	import com.soatech.debtcountdown.views.components.DebtSelect;
+	import com.soatech.debtcountdown.views.components.DebtEdit;
 	import com.soatech.debtcountdown.views.components.DeleteConfirm;
-	import com.soatech.debtcountdown.views.components.DropDownList;
-	import com.soatech.debtcountdown.views.components.PlanDetails;
-	import com.soatech.debtcountdown.views.components.RunPlan;
-	import com.soatech.debtcountdown.views.interfaces.IPlanEditMediator;
+	import com.soatech.debtcountdown.views.interfaces.IDebtEdit;
+	import com.soatech.debtcountdown.views.interfaces.IDebtEditMediator;
 	
-	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
-	import mx.collections.ArrayCollection;
-	import mx.collections.ArrayList;
 	import mx.events.ResizeEvent;
 	import mx.validators.Validator;
 	
 	import org.robotlegs.core.IMediator;
 	import org.robotlegs.mvcs.Mediator;
 	
-	import spark.events.IndexChangeEvent;
+	import spark.events.TextOperationEvent;
 	
-	public class PlanDetailsMedaitor extends PlanEditMediatorBase implements IPlanEditMediator
+	public class DebtEditMediator extends DebtEditMediatorBase implements IDebtEditMediator
 	{
 		//---------------------------------------------------------------------
 		//
@@ -39,21 +33,21 @@ package com.soatech.debtcountdown.views
 		// localView
 		//-----------------------------
 		
-		public function get localView():PlanDetails
+		public function get localView():DebtEdit
 		{
-			return viewComponent as PlanDetails;
+			return view as DebtEdit;
 		}
 		
 		//-----------------------------
-		// plan
+		// debt
 		//-----------------------------
 		
-		override public function get plan():PlanVO
+		override public function get debt():DebtVO
 		{
-			return localView.data as PlanVO;
+			return localView.data as DebtVO;
 		}
 		
-		override public function set plan(value:PlanVO):void
+		override public function set debt(value:DebtVO):void
 		{
 			localView.data = value;
 		}
@@ -79,8 +73,6 @@ package com.soatech.debtcountdown.views
 		override public function onRegister():void
 		{
 			super.onRegister();
-			
-			localView.addEventListener(ResizeEvent.RESIZE, resizeHandler);
 		}
 		
 		//---------------------------------------------------------------------
@@ -89,13 +81,21 @@ package com.soatech.debtcountdown.views
 		//
 		//---------------------------------------------------------------------
 		
+		/**
+		 * 
+		 * 
+		 */		
+		override public function populate():void
+		{
+			super.populate();
+		}
+		
 		//---------------------------------------------------------------------
 		//
 		// Event Handlers
 		//
 		//---------------------------------------------------------------------
-		
-		
+
 		/**
 		 * 
 		 * @param event
@@ -103,10 +103,15 @@ package com.soatech.debtcountdown.views
 		 */		
 		protected function confirmation_closeHandler(event:DeleteConfirmEvent):void
 		{
+			deleteConfirm.removeEventListener( DeleteConfirmEvent.NO, confirmation_closeHandler );
+			deleteConfirm.removeEventListener( DeleteConfirmEvent.YES, confirmation_closeHandler );
+			
+			this.mediatorMap.removeMediatorByView( deleteConfirm );
+			
 			if( event.type == DeleteConfirmEvent.YES )
 			{
-				dispatch( new PlanEvent( PlanEvent.DELETE, plan ) );
-				dispatch( new PlanEvent( PlanEvent.EDIT_BACK ) );
+				dispatch( new DebtEvent( DebtEvent.DELETE, debt ) );
+				dispatch( new DebtEvent( DebtEvent.EDIT_BACK ) );
 			}
 		}
 		
@@ -126,23 +131,6 @@ package com.soatech.debtcountdown.views
 			deleteConfirm.open(localView);
 			
 			this.mediatorMap.createMediator(deleteConfirm);
-		}
-		
-		/**
-		 * 
-		 * @param event
-		 * 
-		 */		
-		protected function resizeHandler(event:ResizeEvent):void
-		{
-			if( localView.width > localView.height )
-			{
-				localView.debtList.minHeight = localView.height / 2;
-			}
-			else
-			{
-				localView.debtList.minHeight = localView.height / 3;
-			}
 		}
 	}
 }

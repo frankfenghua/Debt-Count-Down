@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		title="Select a Debt"
+		title="Debts"
 		implements="com.soatech.debtcountdown.views.interfaces.IDebtSelect">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -30,40 +30,31 @@
 				return _instructions;
 			}
 			
-			public function setState(value:String):void
+			public function get contBtn():Button
 			{
-				currentState = value;
+				return _contBtn;
 			}
 			
 		]]>
 	</fx:Script>
 	
-	<s:states>
-		<s:State name="manage" />
-		<s:State name="selector" />
-	</s:states>
-	
 	<s:navigationContent>
-		<s:Button id="_backBtn" label="Back"
-				  visible="false" includeInLayout="false"
-				  visible.selector="true" includeInLayout.selector="true"/>
+		<s:Button id="_backBtn" label="Back"/>
 	</s:navigationContent>
 	
 	<s:actionContent>
 		<s:Button id="_addBtn" label="Add Debt" />
 	</s:actionContent>
 	
-	<s:Label text="Select a Debt to add it to your Plan." top="10" left="10" right="10" 
-			 visible="false" includeInLayout="false"
-			 visible.selector="true" includeInLayout.selector="true"/>
-	
-	<s:List id="_debtList" top="10" top.selector="50" bottom="10" left="10" 
+	<s:List id="_debtList" top="10" bottom="100" left="10" 
 			right="10" labelField="name" borderVisible="true">
 		
 	</s:List>
 	
-	<s:Label id="_instructions" horizontalCenter="0" verticalCenter="0" width="80%"
-			 text.manage="Add, edit, and manage your Credit Card Debts.  You can also add them directly to a Plan."
-			 text.selector="Add, edit, and manage your Credit Card Debts.  You can also manage them via the Manage Debts screen."/>
+	<s:Label id="_instructions" horizontalCenter="0" verticalCenter="-100" width="80%"
+			 text="Add all of your Credit Card Debts.  You can later decide which ones to include in your plan." />
+	
+	<s:Button id="_contBtn" label="Continue" width="80%" 
+			  horizontalCenter="0" bottom="10" enabled="false"/>
 	
 </s:View>
