@@ -11,6 +11,8 @@ package com.soatech.debtcountdown.models.vo
 		//
 		//---------------------------------------------------------------------
 		
+		public var active:Boolean;
+		
 		public var pid:int;
 		
 		public var planId:int;

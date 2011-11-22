@@ -132,7 +132,7 @@ package com.soatech.debtcountdown.views
 		 */
 		override public function dataBase_connectedHandler(event:DataBaseEvent):void
 		{
-			view.navigator.pushView( PlanSelect );
+//			view.navigator.pushView( PlanSelect );
 		}
 		
 		/**

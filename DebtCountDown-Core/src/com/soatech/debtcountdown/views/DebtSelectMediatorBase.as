@@ -56,7 +56,7 @@ package com.soatech.debtcountdown.views
 			eventMap.mapListener(view.addBtn, MouseEvent.CLICK, addBtn_clickHandler);
 			eventMap.mapListener(view.backBtn, MouseEvent.CLICK, backBtn_clickHandler);
 			eventMap.mapListener(view.contBtn, MouseEvent.CLICK, contBtn_clickHandler);
-			eventMap.mapListener(view.debtList, IndexChangeEvent.CHANGE, debtList_selectHandler);
+//			eventMap.mapListener(view.debtList, IndexChangeEvent.CHANGE, debtList_selectHandler);
 			
 			setup();
 		}

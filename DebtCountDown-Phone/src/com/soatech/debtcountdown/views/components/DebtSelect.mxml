@@ -47,7 +47,8 @@
 	</s:actionContent>
 	
 	<s:List id="_debtList" top="10" bottom="100" left="10" 
-			right="10" labelField="name" borderVisible="true">
+			right="10" labelField="name" borderVisible="true"
+			itemRenderer="com.soatech.debtcountdown.views.renderers.DebtSelectToggleRenderer">
 		
 	</s:List>
 	
