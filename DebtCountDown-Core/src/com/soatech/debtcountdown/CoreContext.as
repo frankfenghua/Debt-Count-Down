@@ -18,9 +18,11 @@ package com.soatech.debtcountdown
 	import com.soatech.debtcountdown.commands.PaymentPlanRunCommand;
 	import com.soatech.debtcountdown.commands.PlanCreateCommand;
 	import com.soatech.debtcountdown.commands.PlanDeleteCommand;
+	import com.soatech.debtcountdown.commands.PlanLinkBudgetItemCommand;
 	import com.soatech.debtcountdown.commands.PlanLinkDebtCommand;
 	import com.soatech.debtcountdown.commands.PlanSaveCommand;
 	import com.soatech.debtcountdown.commands.PlanSelectCommand;
+	import com.soatech.debtcountdown.commands.PlanUnlinkBudgetItemCommand;
 	import com.soatech.debtcountdown.commands.PlanUnlinkDebtCommand;
 	import com.soatech.debtcountdown.commands.PlansLoadCommand;
 	import com.soatech.debtcountdown.db.Migrator;
@@ -129,10 +131,12 @@ package com.soatech.debtcountdown
 			
 			commandMap.mapEvent( PlanEvent.CREATE, PlanCreateCommand, PlanEvent );
 			commandMap.mapEvent( PlanEvent.DELETE, PlanDeleteCommand, PlanEvent );
+			commandMap.mapEvent( PlanEvent.LINK_BUDGET_ITEM, PlanLinkBudgetItemCommand );
 			commandMap.mapEvent( PlanEvent.LINK_DEBT, PlanLinkDebtCommand );
 			commandMap.mapEvent( PlanEvent.LOAD, PlansLoadCommand, PlanEvent );
 			commandMap.mapEvent( PlanEvent.SELECT, PlanSelectCommand, PlanEvent );
 			commandMap.mapEvent( PlanEvent.SAVE, PlanSaveCommand, PlanEvent );
+			commandMap.mapEvent( PlanEvent.UNLINK_BUDGET_ITEM, PlanUnlinkBudgetItemCommand );
 			commandMap.mapEvent( PlanEvent.UNLINK_DEBT, PlanUnlinkDebtCommand );
 			
 		}

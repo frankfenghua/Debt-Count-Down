@@ -4,6 +4,7 @@ package com.soatech.debtcountdown.services
 	import com.soatech.debtcountdown.enum.QueryTypes;
 	import com.soatech.debtcountdown.models.DataBaseProxy;
 	import com.soatech.debtcountdown.models.vo.BudgetItemVO;
+	import com.soatech.debtcountdown.models.vo.PlanVO;
 	import com.soatech.debtcountdown.services.interfaces.IBudgetService;
 	
 	import mx.collections.ArrayCollection;
@@ -31,8 +32,10 @@ package com.soatech.debtcountdown.services
 		protected const SQL_INSERT:String = "INSERT INTO budgetItems (name, " +
 			"amount, type) VALUES (:name, :amount, :type)";
 
-		protected const SQL_SELECT_ALL:String = 'SELECT pid, name, amount, type ' +
-			'FROM budgetItems';
+		protected const SQL_SELECT_ALL:String = 'SELECT b.pid, name, amount, type, pb.pid AS active ' +
+			'FROM budgetItems b ' +
+			'LEFT OUTER JOIN planBudgetItems pb ON pb.budgetItemId = b.pid ' +
+			'AND pb.planId = :planId';
 		
 		protected const SQL_UPDATE:String = "UPDATE budgetItems SET name = :name, " +
 			"amount = :amount, type = :type WHERE pid = :pid";
@@ -46,12 +49,18 @@ package com.soatech.debtcountdown.services
 		/**
 		 * @private 
 		 */
-		private var responder:IResponder;
+		private var budgetItem:BudgetItemVO;
 		
 		/**
 		 * @private 
 		 */
-		private var budgetItem:BudgetItemVO;
+		private var plan:PlanVO;
+
+		/**
+		 * @private 
+		 */
+		private var responder:IResponder;
+		
 		
 		//---------------------------------------------------------------------
 		//
@@ -79,11 +88,12 @@ package com.soatech.debtcountdown.services
 		 * @return 
 		 * 
 		 */
-		public function loadAll(responder:IResponder):void
+		public function loadAll(plan:PlanVO, responder:IResponder):void
 		{
+			this.plan = plan;
 			this.responder = responder;
 			
-			dbProxy.applicationDb.addQuery( new Query( SQL_SELECT_ALL, QueryTypes.SELECT ) );
+			dbProxy.applicationDb.addQuery( new Query( SQL_SELECT_ALL, QueryTypes.SELECT, [plan.pid] ) );
 			dbProxy.applicationDb.run(loadAll_runResult, faultHandler);
 		}
 		

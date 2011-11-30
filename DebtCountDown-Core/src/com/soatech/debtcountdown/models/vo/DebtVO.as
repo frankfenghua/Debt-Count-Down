@@ -2,8 +2,9 @@ package com.soatech.debtcountdown.models.vo
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import com.soatech.debtcountdown.models.interfaces.IToggleAble;
 
-	public class DebtVO extends EventDispatcher
+	public class DebtVO extends EventDispatcher implements IToggleAble
 	{
 		//---------------------------------------------------------------------
 		//
@@ -11,7 +12,21 @@ package com.soatech.debtcountdown.models.vo
 		//
 		//---------------------------------------------------------------------
 		
-		public var active:Boolean;
+		//-----------------------------
+		// active
+		//-----------------------------
+
+		private var _active:Boolean;
+
+		public function get active():Boolean
+		{
+			return _active;
+		}
+
+		public function set active(value:Boolean):void
+		{
+			_active = value;
+		}
 		
 		public var pid:int;
 		
@@ -134,6 +149,9 @@ package com.soatech.debtcountdown.models.vo
 			
 			if( item.hasOwnProperty('paymentRate') )
 				this.paymentRate = Number(item['paymentRate']);
+			
+			if( item.hasOwnProperty('active') )
+				this.active = Boolean(item['active']);
 		}
 	}
 }

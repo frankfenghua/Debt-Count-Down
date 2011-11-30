@@ -1,6 +1,7 @@
 package com.soatech.debtcountdown.views.interfaces
 {
 	import com.soatech.debtcountdown.events.BudgetEvent;
+	import com.soatech.debtcountdown.events.SelectToggleEvent;
 	
 	import flash.events.MouseEvent;
 	
@@ -14,7 +15,7 @@ package com.soatech.debtcountdown.views.interfaces
 		function backBtn_clickHandler(event:MouseEvent):void;
 		function contBtn_clickHandler(event:MouseEvent):void;
 		function expenseList_changeHandler(event:BudgetEvent):void;
-		function expenseList_selectHandler(event:IndexChangeEvent):void;
+		function expenseList_selectEditHandler(event:SelectToggleEvent):void;
 		function setup():void;
 	}
 }

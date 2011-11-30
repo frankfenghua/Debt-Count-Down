@@ -6,10 +6,11 @@ package com.soatech.debtcountdown.views.interfaces
 
 	public interface IDebtSelect
 	{
-		function get backBtn():Button;
 		function get addBtn():Button;
-		function get debtList():List;
-		function get instructions():Label;
+		function get addInstructions():Label;
+		function get backBtn():Button;
 		function get contBtn():Button;
+		function get debtList():List;
+		function get toggleInstructions():Label;
 	}
 }

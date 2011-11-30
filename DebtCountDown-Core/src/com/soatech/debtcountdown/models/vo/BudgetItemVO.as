@@ -1,6 +1,8 @@
 package com.soatech.debtcountdown.models.vo
 {
-	public class BudgetItemVO
+	import com.soatech.debtcountdown.models.interfaces.IToggleAble;
+
+	public class BudgetItemVO implements IToggleAble
 	{
 		//---------------------------------------------------------------------
 		//
@@ -8,10 +10,25 @@ package com.soatech.debtcountdown.models.vo
 		//
 		//---------------------------------------------------------------------
 		
-		public var pid:int;
-		public var name:String;
+		//-----------------------------
+		// active
+		//-----------------------------
+		
+		private var _active:Boolean;
+		
+		public function get active():Boolean
+		{
+			return _active;
+		}
+		
+		public function set active(value:Boolean):void
+		{
+			_active = value;
+		}
+		
 		public var amount:Number;
-		public var active:Boolean;
+		public var name:String;
+		public var pid:int;
 		public var type:String;
 		
 		//---------------------------------------------------------------------
@@ -30,7 +47,7 @@ package com.soatech.debtcountdown.models.vo
 		 * 
 		 */
 		public function BudgetItemVO(pid:int=0, name:String=null, amount:Number=NaN, 
-								 active:Boolean=true, type:String=null)
+								 active:Boolean=false, type:String=null)
 		{
 			this.pid = pid;
 			this.name = name;

@@ -1,6 +1,10 @@
 package com.soatech.debtcountdown.views
 {
+	import com.soatech.debtcountdown.events.DebtEvent;
+	import com.soatech.debtcountdown.events.SelectToggleEvent;
+	import com.soatech.debtcountdown.models.vo.DebtVO;
 	import com.soatech.debtcountdown.models.vo.PlanVO;
+	import com.soatech.debtcountdown.views.components.DebtEdit;
 	import com.soatech.debtcountdown.views.components.DebtSelect;
 	import com.soatech.debtcountdown.views.interfaces.IDebtSelectMediator;
 	
@@ -40,6 +44,5 @@ package com.soatech.debtcountdown.views
 		{
 			super.onRegister();
 		}
-		
 	}
 }

@@ -9,5 +9,7 @@ package com.soatech.debtcountdown.views.interfaces
 		function get addBtn():Button;
 		function get planList():List;
 		function get instructions():Label;
+		function get currentState():String;
+		function set currentState(value:String):void;
 	}
 }

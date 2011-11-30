@@ -26,14 +26,19 @@
 				return _incomeList;
 			}
 			
-			public function get instructions():Label
+			public function get addInstructions():Label
 			{
-				return _instructions;
+				return _addInstructions;
 			}
 			
 			public function get contBtn():Button
 			{
 				return _contBtn;
+			}
+			
+			public function get toggleInstructions():Label
+			{
+				return _toggleInstructions;
 			}
 			
 		]]>
@@ -47,15 +52,29 @@
 		<s:Button id="_addBtn" label="Add Income Item" />
 	</s:actionContent>
 	
-	<s:List id="_incomeList" top="10" bottom="100" left="10" 
-			right="10" labelField="name" borderVisible="true">
+	<s:layout>
+		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" 
+						  paddingTop="10" />
+	</s:layout>
+	
+	<s:Label id="_toggleInstructions" width="100%"
+			 text="Select which income items you want included in the reports."
+			 visible="true" includeInLayout="true"/>
+	
+	<s:Group width="100%" height="100%">
 		
-	</s:List>
+		<s:List id="_incomeList" width="100%" height="100%" 
+				labelField="name" borderVisible="true"
+				itemRenderer="com.soatech.debtcountdown.views.renderers.SelectToggleRenderer">
+			
+		</s:List>
+		
+		<s:Label id="_addInstructions" horizontalCenter="0" verticalCenter="-50" width="90%"
+				 text="Tell us all the ways you gain monthly income." />
 	
-	<s:Label id="_instructions" horizontalCenter="0" verticalCenter="-100" width="80%"
-			 text="Tell us all the ways you gain monthly income." />
+	</s:Group>
 	
-	<s:Button id="_contBtn" label="Continue" width="80%" 
-			  horizontalCenter="0" bottom="10" enabled="false" />
+	<s:Button id="_contBtn" label="Continue" width="100%" 
+			  horizontalCenter="0" enabled="false" />
 	
 </s:View>

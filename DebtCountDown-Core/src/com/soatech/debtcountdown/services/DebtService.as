@@ -34,10 +34,9 @@ package com.soatech.debtcountdown.services
 			"balance, apr, dueDate, paymentRate FROM debts";
 		
 		private const SQL_SELECT_BY_PLAN:String = "SELECT d.pid, name, bank, " +
-			"balance, apr, dueDate, paymentRate " +
+			"balance, apr, dueDate, paymentRate, pd.pid AS active " +
 			"FROM debts d " +
-			"INNER JOIN planDebts pd ON pd.debtId = d.pid " +
-			"AND pd.planId = :planId";
+			"LEFT OUTER JOIN planDebts pd ON pd.debtId = d.pid AND pd.planId = :planId ";
 		
 		private const SQL_INSERT:String = "INSERT INTO debts (name, bank, " +
 			"balance, apr, dueDate, paymentRate) VALUES (:name, :bank, " +

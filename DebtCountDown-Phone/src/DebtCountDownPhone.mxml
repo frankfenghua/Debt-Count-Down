@@ -3,12 +3,25 @@
 			  xmlns:s="library://ns.adobe.com/flex/spark" 
 			  xmlns:local="*" 
 			  xmlns:debtcountdown="com.soatech.debtcountdown.*"
-			  firstView="com.soatech.debtcountdown.views.components.Splash"
+			  firstView="com.soatech.debtcountdown.views.components.PlanSelect"
 			  title="Debt Count Down">
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<debtcountdown:PhoneContext id="phoneContext" contextView="{this}" />
 	</fx:Declarations>
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace local "*";
+		@namespace debtcountdown "com.soatech.debtcountdown.*";
+		
+		.listToggleCheckbox
+		{
+			/* skinClass: ClassReference('com.soatech.debtcountdown.views.skins.ListToggleCheckboxSkin'); */
+			symbolColor: #FF0000;
+		}
+		
+	</fx:Style>
 	
 </s:ViewNavigatorApplication>

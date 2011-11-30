@@ -2,6 +2,7 @@ package com.soatech.debtcountdown.commands
 {
 	import com.soatech.debtcountdown.events.DebtEvent;
 	import com.soatech.debtcountdown.models.DebtProxy;
+	import com.soatech.debtcountdown.models.PlanProxy;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
 	import com.soatech.debtcountdown.services.interfaces.IDebtService;
 	
@@ -28,6 +29,9 @@ package com.soatech.debtcountdown.commands
 		[Inject]
 		public var debtService:IDebtService;
 		
+		[Inject]
+		public var planProxy:PlanProxy;
+		
 		//---------------------------------------------------------------------
 		//
 		// Overridden Methods
@@ -40,7 +44,7 @@ package com.soatech.debtcountdown.commands
 		 */		
 		override public function execute():void
 		{
-			debtService.loadByPlan( event.plan.pid, this );
+			debtService.loadByPlan( planProxy.selectedPlan.pid, this );
 		}
 
 		//---------------------------------------------------------------------

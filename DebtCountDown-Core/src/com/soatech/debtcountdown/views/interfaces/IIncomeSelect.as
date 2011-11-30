@@ -6,10 +6,11 @@ package com.soatech.debtcountdown.views.interfaces
 
 	public interface IIncomeSelect
 	{
-		function get addBtn():Button
-		function get backBtn():Button
-		function get incomeList():List
-		function get instructions():Label
-		function get contBtn():Button
+		function get addBtn():Button;
+		function get addInstructions():Label;
+		function get backBtn():Button;
+		function get contBtn():Button;
+		function get incomeList():List;
+		function get toggleInstructions():Label;
 	}
 }

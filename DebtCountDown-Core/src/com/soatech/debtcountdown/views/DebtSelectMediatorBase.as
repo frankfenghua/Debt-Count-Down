@@ -2,6 +2,7 @@ package com.soatech.debtcountdown.views
 {
 	import com.soatech.debtcountdown.events.DebtEvent;
 	import com.soatech.debtcountdown.events.PlanEvent;
+	import com.soatech.debtcountdown.events.SelectToggleEvent;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
 	import com.soatech.debtcountdown.models.vo.PlanVO;
 	import com.soatech.debtcountdown.views.interfaces.IDebtSelect;
@@ -56,7 +57,8 @@ package com.soatech.debtcountdown.views
 			eventMap.mapListener(view.addBtn, MouseEvent.CLICK, addBtn_clickHandler);
 			eventMap.mapListener(view.backBtn, MouseEvent.CLICK, backBtn_clickHandler);
 			eventMap.mapListener(view.contBtn, MouseEvent.CLICK, contBtn_clickHandler);
-//			eventMap.mapListener(view.debtList, IndexChangeEvent.CHANGE, debtList_selectHandler);
+			eventMap.mapListener( view.debtList, SelectToggleEvent.EDIT, debtList_selectEditHandler );
+			eventMap.mapListener( view.debtList, SelectToggleEvent.TOGGLE, debtList_selectToggleHandler );
 			
 			setup();
 		}
@@ -73,7 +75,24 @@ package com.soatech.debtcountdown.views
 		 */		
 		public function setup():void
 		{
-			dispatch( new DebtEvent( DebtEvent.LOAD_ALL ) );
+			dispatch( new DebtEvent( DebtEvent.LOAD_BY_PLAN ) );
+		}
+		
+		/**
+		 * 
+		 * 
+		 */
+		public function verifyToggles():void
+		{
+			// check to see if any are select
+			var enabled:Boolean = false;
+			for each( var debt:DebtVO in view.debtList.dataProvider )
+			{
+				if( debt.active )
+					enabled = true;
+			}
+			
+			view.contBtn.enabled = enabled;
 		}
 		
 		//---------------------------------------------------------------------
@@ -128,15 +147,21 @@ package com.soatech.debtcountdown.views
 			if( event.debtList.length )
 			{
 				view.contBtn.enabled = true;
-				view.instructions.visible = false;
+				view.addInstructions.visible = false;
+				view.toggleInstructions.visible = true;
+				view.toggleInstructions.includeInLayout = true;
 			}
 			else
 			{
 				view.contBtn.enabled = false;
-				view.instructions.visible = true;
+				view.addInstructions.visible = true;
+				view.toggleInstructions.visible = false;
+				view.toggleInstructions.includeInLayout = false;
 			}
 			
 			view.debtList.dataProvider = event.debtList;
+			
+			verifyToggles();
 		}
 		
 		/**
@@ -144,24 +169,27 @@ package com.soatech.debtcountdown.views
 		 * @param event
 		 * 
 		 */
-		public function debtList_selectHandler(event:IndexChangeEvent):void
+		public function debtList_selectEditHandler(event:SelectToggleEvent):void
 		{
-			var debt:DebtVO = view.debtList.selectedItem as DebtVO;
+			var debt:DebtVO = event.data as DebtVO;
+			dispatch( new DebtEvent( DebtEvent.SELECT, debt ) );
+			dispatch( new DebtEvent( DebtEvent.EDIT, debt ) );
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
+		private function debtList_selectToggleHandler(event:SelectToggleEvent):void
+		{
+			// dispatch event to update the DB and link the debt to the plan
+			if( (event.data as DebtVO).active )
+				dispatch( new PlanEvent( PlanEvent.LINK_DEBT, null, null, event.data as DebtVO) );
+			else
+				dispatch( new PlanEvent( PlanEvent.UNLINK_DEBT, null, null, event.data as DebtVO) );
 			
-			if( debt )
-			{
-				/*if( plan )
-				{
-					// if we passed in a plan, then instead of editing, we want to assign it to the plan
-					dispatch( new PlanEvent( PlanEvent.LINK_DEBT, plan, null, debt ) );
-					dispatch( new DebtEvent( DebtEvent.SELECT_BACK ) );
-				}
-				else
-				{*/
-					dispatch( new DebtEvent( DebtEvent.SELECT, debt ) );
-					dispatch( new DebtEvent( DebtEvent.EDIT, debt ) );
-//				}
-			}
+			verifyToggles();
 		}
 	}
 }

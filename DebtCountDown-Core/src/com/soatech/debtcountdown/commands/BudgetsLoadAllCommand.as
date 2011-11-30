@@ -2,6 +2,7 @@ package com.soatech.debtcountdown.commands
 {
 	import com.soatech.debtcountdown.events.BudgetEvent;
 	import com.soatech.debtcountdown.models.BudgetItemProxy;
+	import com.soatech.debtcountdown.models.PlanProxy;
 	import com.soatech.debtcountdown.services.interfaces.IBudgetService;
 	
 	import mx.collections.ArrayCollection;
@@ -25,6 +26,9 @@ package com.soatech.debtcountdown.commands
 		
 		[Inject]
 		public var event:BudgetEvent;
+		
+		[Inject]
+		public var planProxy:PlanProxy;
 
 		//---------------------------------------------------------------------
 		//
@@ -38,7 +42,7 @@ package com.soatech.debtcountdown.commands
 		 */
 		override public function execute():void
 		{
-			budgetService.loadAll(this);
+			budgetService.loadAll(planProxy.selectedPlan, this);
 		}
 
 		//---------------------------------------------------------------------

@@ -1,6 +1,7 @@
 package com.soatech.debtcountdown.commands
 {
 	import com.soatech.debtcountdown.events.PlanEvent;
+	import com.soatech.debtcountdown.models.PlanProxy;
 	import com.soatech.debtcountdown.services.interfaces.IPlanService;
 	
 	import mx.rpc.IResponder;
@@ -21,6 +22,9 @@ package com.soatech.debtcountdown.commands
 		[Inject]
 		public var planService:IPlanService;
 		
+		[Inject]
+		public var planProxy:PlanProxy;
+		
 		//---------------------------------------------------------------------
 		//
 		// Overridden Methods
@@ -33,7 +37,7 @@ package com.soatech.debtcountdown.commands
 		 */		
 		override public function execute():void
 		{
-			planService.unlinkDebt(event.plan, event.debt, this);
+			planService.unlinkDebt(planProxy.selectedPlan, event.debt, this);
 		}
 
 		//---------------------------------------------------------------------

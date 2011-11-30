@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:IconItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark"  
+					iconWidth="64" iconHeight="64"
+					click="renderer_clickHandler(event)"
+					minHeight="64"
+					>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.soatech.debtcountdown.events.SelectToggleEvent;
+			import com.soatech.debtcountdown.models.vo.DebtVO;
+			import com.soatech.debtcountdown.models.interfaces.IToggleAble;
+			
+			import spark.components.Button;
+			import spark.components.CheckBox;
+			
+			//-----------------------------------------------------------------
+			//
+			// Variables
+			//
+			//-----------------------------------------------------------------
+			
+			private var activeCB:CheckBox;
+			
+			private var editBtn:Button;
+			
+			private function get toggleAble():IToggleAble
+			{
+				return this.data as IToggleAble;
+			}
+			
+			//-----------------------------------------------------------------
+			//
+			// Overridden Methods
+			//
+			//-----------------------------------------------------------------
+			
+			override protected function createChildren():void
+			{
+				super.createChildren();
+				
+				if( !activeCB )
+				{
+					activeCB = new CheckBox();
+					activeCB.x = parent.width - 70;
+					activeCB.width = this.minHeight;
+					activeCB.height = this.minHeight;
+					activeCB.addEventListener(MouseEvent.CLICK, activeCB_clickHandler);
+					this.addChild( activeCB );
+				}
+				
+				if( !editBtn )
+				{
+					editBtn = new Button();
+					editBtn.label = "E";
+					editBtn.x = parent.width - (activeCB.width + 70 + 10);
+					editBtn.width = this.minHeight - 10;
+					editBtn.height = this.minHeight - 10;
+					editBtn.y = (this.minHeight - editBtn.height) / 2;
+					editBtn.addEventListener(MouseEvent.CLICK, editBtn_clickHandler);
+					this.addChild(editBtn);
+				}
+			}
+			
+			override public function set data(value:Object):void
+			{
+				super.data = value;
+				
+				if( value as IToggleAble )
+					populate();
+			}
+			
+			//-----------------------------------------------------------------
+			//
+			// Methods
+			//
+			//-----------------------------------------------------------------
+			
+			protected function populate():void
+			{
+				activeCB.selected = toggleAble.active;
+			}
+			
+			//-----------------------------------------------------------------
+			//
+			// Event Handlers
+			//
+			//-----------------------------------------------------------------
+			
+			protected function activeCB_clickHandler(event:MouseEvent):void
+			{
+				event.stopImmediatePropagation();
+				event.preventDefault();
+				
+				toggleAble.active = activeCB.selected;
+				
+				dispatchEvent( new SelectToggleEvent( SelectToggleEvent.TOGGLE, this.data ) );
+			}
+			
+			protected function editBtn_clickHandler(event:MouseEvent):void
+			{
+				event.stopImmediatePropagation();
+				event.preventDefault();
+				
+				dispatchEvent( new SelectToggleEvent( SelectToggleEvent.EDIT, this.data ) );
+			}
+			
+			protected function renderer_clickHandler(event:MouseEvent):void
+			{
+				activeCB.selected = !activeCB.selected;
+				toggleAble.active = activeCB.selected;
+				
+				dispatchEvent( new SelectToggleEvent( SelectToggleEvent.TOGGLE, this.data ) );
+			}
+		]]>
+	</fx:Script>
+	
+</s:IconItemRenderer>

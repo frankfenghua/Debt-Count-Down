@@ -7,9 +7,10 @@ package com.soatech.debtcountdown.views.interfaces
 	public interface IExpenseSelect
 	{
 		function get addBtn():Button;
+		function get addInstructions():Label;
 		function get backBtn():Button;
-		function get expenseList():List;
-		function get instructions():Label;
 		function get contBtn():Button;
+		function get expenseList():List;
+		function get toggleInstructions():Label;
 	}
 }

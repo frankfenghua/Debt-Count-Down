@@ -8,7 +8,7 @@ package com.soatech.debtcountdown.commands
 	
 	import org.robotlegs.mvcs.Command;
 	
-	public class PlanLinkDebtCommand extends Command implements IResponder
+	public class PlanLinkBudgetItemCommand extends Command implements IResponder
 	{
 		//---------------------------------------------------------------------
 		//
@@ -33,9 +33,9 @@ package com.soatech.debtcountdown.commands
 		
 		override public function execute():void
 		{
-			planService.linkDebt(planProxy.selectedPlan, event.debt, this);
+			planService.linkBudgetItem(planProxy.selectedPlan, event.budgetItem, this);
 		}
-
+		
 		//---------------------------------------------------------------------
 		//
 		// Handlers
@@ -59,7 +59,7 @@ package com.soatech.debtcountdown.commands
 		 */
 		public function fault(info:Object):void
 		{
-			CONFIG::debugtrace{ trace("PlanLinkDebtCommand::fault - " + info.toString()); }
+			CONFIG::debugtrace{ trace("PlanLinkBudgetItemCommand::fault - " + info.toString()); }
 		}
 	}
 }

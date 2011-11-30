@@ -2,6 +2,8 @@ package com.soatech.debtcountdown.views
 {
 	import com.soatech.debtcountdown.events.BudgetEvent;
 	import com.soatech.debtcountdown.events.ExpenseEvent;
+	import com.soatech.debtcountdown.events.PlanEvent;
+	import com.soatech.debtcountdown.events.SelectToggleEvent;
 	import com.soatech.debtcountdown.models.BudgetItemProxy;
 	import com.soatech.debtcountdown.models.vo.BudgetItemVO;
 	import com.soatech.debtcountdown.views.interfaces.IExpenseSelect;
@@ -61,7 +63,8 @@ package com.soatech.debtcountdown.views
 			eventMap.mapListener( view.addBtn, MouseEvent.CLICK, addBtn_clickHandler );
 			eventMap.mapListener( view.backBtn, MouseEvent.CLICK, backBtn_clickHandler );
 			eventMap.mapListener( view.contBtn, MouseEvent.CLICK, contBtn_clickHandler );
-			eventMap.mapListener( view.expenseList, IndexChangeEvent.CHANGE, expenseList_selectHandler );
+			eventMap.mapListener( view.expenseList, SelectToggleEvent.EDIT, expenseList_selectEditHandler );
+			eventMap.mapListener( view.expenseList, SelectToggleEvent.TOGGLE, expenseList_selectToggleHandler );
 			
 			setup();
 		}
@@ -79,6 +82,23 @@ package com.soatech.debtcountdown.views
 		public function setup():void
 		{
 			dispatch( new BudgetEvent( BudgetEvent.LOAD_ALL ) );
+		}
+		
+		/**
+		 * 
+		 * 
+		 */
+		public function verifyToggles():void
+		{
+			// check to see if any are select
+			var enabled:Boolean = false;
+			for each( var item:BudgetItemVO in view.expenseList.dataProvider )
+			{
+				if( item.active )
+					enabled = true;
+			}
+			
+			view.contBtn.enabled = enabled;
 		}
 		
 		//---------------------------------------------------------------------
@@ -130,15 +150,17 @@ package com.soatech.debtcountdown.views
 			if( biProxy.expenseList.length )
 			{
 				view.contBtn.enabled = true;
-				view.instructions.visible = false;
+				view.addInstructions.visible = false;
 			}
 			else
 			{
 				view.contBtn.enabled = false;
-				view.instructions.visible = true;
+				view.addInstructions.visible = true;
 			}
 			
 			view.expenseList.dataProvider = biProxy.expenseList;
+			
+			verifyToggles();
 		}
 		
 		/**
@@ -146,15 +168,28 @@ package com.soatech.debtcountdown.views
 		 * @param event
 		 * 
 		 */
-		public function expenseList_selectHandler(event:IndexChangeEvent):void
+		public function expenseList_selectEditHandler(event:SelectToggleEvent):void
 		{
-			var expense:BudgetItemVO = view.expenseList.selectedItem as BudgetItemVO;
+			var expense:BudgetItemVO = event.data as BudgetItemVO;
 			
-			if( expense )
-			{
-				dispatch( new BudgetEvent( BudgetEvent.SELECT, expense ) );
-				dispatch( new BudgetEvent( BudgetEvent.EDIT, expense ) );
-			}
+			dispatch( new BudgetEvent( BudgetEvent.SELECT, expense ) );
+			dispatch( new BudgetEvent( BudgetEvent.EDIT, expense ) );
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
+		protected function expenseList_selectToggleHandler(event:SelectToggleEvent):void
+		{
+			// dispatch event to update the DB and link the debt to the plan
+			if( (event.data as BudgetItemVO).active )
+				dispatch( new PlanEvent( PlanEvent.LINK_BUDGET_ITEM, null, null, null, event.data as BudgetItemVO) );
+			else
+				dispatch( new PlanEvent( PlanEvent.UNLINK_BUDGET_ITEM, null, null, null, event.data as BudgetItemVO) );
+			
+			verifyToggles();
 		}
 	}
 }

@@ -5,6 +5,7 @@ package com.soatech.debtcountdown.services
 	import com.soatech.debtcountdown.enum.BudgetItemTypes;
 	import com.soatech.debtcountdown.enum.QueryTypes;
 	import com.soatech.debtcountdown.models.DataBaseProxy;
+	import com.soatech.debtcountdown.models.vo.BudgetItemVO;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
 	import com.soatech.debtcountdown.models.vo.PlanVO;
 	import com.soatech.debtcountdown.services.interfaces.IPlanService;
@@ -52,11 +53,20 @@ package com.soatech.debtcountdown.services
 		
 		private const SQL_DELETE:String = "DELETE FROM plans WHERE pid = :pid";
 		
+		private const SQL_LINK_BUDGET_ITEM:String = "INSERT INTO planBudgetItems " +
+			"(planId, budgetItemId) VALUES (:planId, :budgetItemId)";
+		
 		private const SQL_LINK_DEBT:String = "INSERT INTO planDebts (planId, debtId) " +
 			"VALUES (:planId, :debtId)";
 		
+		private const SQL_UNLINK_BUDGET_ITEM:String = "DELETE FROM planBudgetItems " +
+			"WHERE planId = :planId AND budgetItemId = :budgetItemId";
+		
 		private const SQL_UNLINK_DEBT:String = "DELETE FROM planDebts " +
 			"WHERE planId = :planId AND debtId = :debtId";
+		
+		private const SQL_SELECT_BUDGET_ITEM:String = "SELECT pid FROM planBudgetItems " +
+			"WHERE planId = :planId AND budgetItemId = :budgetItemId";
 		
 		private const SQL_SELECT_DEBT:String = "SELECT pid FROM planDebts " +
 			"WHERE planId = :planId AND debtId = :debtId";
@@ -69,6 +79,11 @@ package com.soatech.debtcountdown.services
 		// Variables
 		//
 		//---------------------------------------------------------------------
+		
+		/**
+		 * @private 
+		 */
+		protected var budgetItem:BudgetItemVO;
 		
 		/**
 		 * @private 
@@ -113,6 +128,24 @@ package com.soatech.debtcountdown.services
 			this.responder = responder;
 			
 			dbProxy.applicationDb.startTransaction(onCreateTransactionResult, faultHandler);
+		}
+		
+		/**
+		 * 
+		 * @param plan
+		 * @param budgetItem
+		 * @param responder
+		 * 
+		 */
+		public function linkBudgetItem(plan:PlanVO, budgetItem:BudgetItemVO, responder:IResponder):void
+		{
+			this.plan = plan;
+			this.budgetItem = budgetItem;
+			this.responder = responder;
+			
+			var db:DBI = new DBI(dbProxy.applicationDb.con);
+			db.addQuery( new Query( SQL_SELECT_BUDGET_ITEM, QueryTypes.SELECT, [plan.pid, budgetItem.pid] ) );
+			db.run(linkBudgetItem_selectHandler, faultHandler);
 		}
 		
 		/**
@@ -209,6 +242,22 @@ package com.soatech.debtcountdown.services
 		/**
 		 * 
 		 * @param plan
+		 * @param budgetItem
+		 * @param responder
+		 * 
+		 */
+		public function unlinkBudgetItem(plan:PlanVO, budgetItem:BudgetItemVO, responder:IResponder):void
+		{
+			this.plan = plan;
+			this.budgetItem = budgetItem;
+			this.responder = responder;
+			
+			dbProxy.applicationDb.startTransaction(unlinkBudgetItem_transactionHandler, faultHandler);
+		}
+		
+		/**
+		 * 
+		 * @param plan
 		 * @param debt
 		 * 
 		 */		
@@ -239,6 +288,56 @@ package com.soatech.debtcountdown.services
 		// Result Handlers
 		//
 		//---------------------------------------------------------------------
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function linkBudgetItem_commitHandler(data:Object):void
+		{
+			responder.result(null);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function linkBudgetItem_linkHandler(data:Object):void
+		{
+			dbProxy.applicationDb.commit(linkBudgetItem_commitHandler, faultHandler);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function linkBudgetItem_selectHandler(data:Object):void
+		{
+			var result:Array = data[0];
+			
+			if( !result )
+			{
+				dbProxy.applicationDb.startTransaction(linkBudgetItem_transactionHandler, faultHandler);
+			}
+			else
+			{
+				responder.result(null);
+			}
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function linkBudgetItem_transactionHandler(data:Object):void
+		{
+			dbProxy.applicationDb.addQuery( new Query( SQL_LINK_BUDGET_ITEM, QueryTypes.INSERT, [plan.pid, budgetItem.pid] ) );
+			dbProxy.applicationDb.run(linkBudgetItem_linkHandler, faultHandler);
+		}
 		
 		/**
 		 * 
@@ -424,6 +523,37 @@ package com.soatech.debtcountdown.services
 				plan.income, plan.name, "", 
 				plan.pid] ) );
 			dbProxy.applicationDb.run(onRunResult, faultHandler);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function unlinkBudgetItem_commitHandler(data:Object):void
+		{
+			responder.result(null);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function unlinkBudgetItem_deleteHandler(data:Object):void
+		{
+			dbProxy.applicationDb.commit(unlinkBudgetItem_commitHandler, faultHandler);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function unlinkBudgetItem_transactionHandler(data:Object):void
+		{
+			dbProxy.applicationDb.addQuery( new Query( SQL_UNLINK_BUDGET_ITEM, QueryTypes.DELETE, [plan.pid, budgetItem.pid] ) );
+			dbProxy.applicationDb.run(unlinkBudgetItem_deleteHandler, faultHandler);
 		}
 		
 		//---------------------------------------------------------------------
