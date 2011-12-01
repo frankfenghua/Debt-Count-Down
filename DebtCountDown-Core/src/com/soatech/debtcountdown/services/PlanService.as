@@ -35,14 +35,22 @@ package com.soatech.debtcountdown.services
 		private const SQL_SELECT_ALL:String = "SELECT pid, expenses, income, " +
 			"name, startDate FROM plans";
 		
-		private const SQL_SELECT_PLAN_DEBTS:String = "SELECT pid, name, bank, " +
-			"balance, apr, dueDate, paymentRate FROM debts";
+		private const SQL_SELECT_PLAN_DEBTS:String = "SELECT d.pid, name, bank, " +
+			"balance, apr, dueDate, paymentRate FROM debts d " +
+			"INNER JOIN planDebts pd ON pd.debtId = d.pid AND pd.planId = :planId";
 		
-		private const SQL_SELECT_PLAN_BUDGET_SUM:String = "SELECT SUM(i.amount) AS income, " +
+		/*private const SQL_SELECT_PLAN_BUDGET_SUM:String = "SELECT SUM(i.amount) AS income, " +
 			"SUM(e.amount) AS expenses " +
 			"FROM budgetItems i " +
 			"LEFT JOIN budgetItems e ON e.type = :expenseType " +
-			"WHERE i.type = :incomeType";
+			"WHERE i.type = :incomeType";*/
+		
+		private const SQL_SELECT_PLAN_BUDGET_SUM:String = "SELECT SUM(i.amount) as income, " +
+			"SUM(e.amount) AS expenses " +
+			"FROM planBudgetItems pbi " +
+			"LEFT JOIN budgetItems e ON e.pid = pbi.budgetItemId AND e.type = :expenseType " +
+			"LEFT JOIN budgetItems i ON i.pid = pbi.budgetItemId AND i.type = :incomeType " +
+			"WHERE pbi.planId = :planId";
 		
 		private const SQL_INSERT:String = "INSERT INTO plans (expenses, income, " +
 			"name, startDate) VALUES (:expenses, :income, :name, :startDate)";
@@ -191,9 +199,9 @@ package com.soatech.debtcountdown.services
 			this.responder = responder;
 			
 			var db:DBI = new DBI(dbProxy.applicationDb.con);
-			db.addQuery( new Query( SQL_SELECT_PLAN_DEBTS, QueryTypes.SELECT ) );
+			db.addQuery( new Query( SQL_SELECT_PLAN_DEBTS, QueryTypes.SELECT, [plan.pid] ) );
 			db.addQuery( new Query( SQL_SELECT_PLAN_BUDGET_SUM, QueryTypes.SELECT, 
-				[ BudgetItemTypes.EXPENSE, BudgetItemTypes.INCOME ] ) );
+				[ BudgetItemTypes.EXPENSE, BudgetItemTypes.INCOME, plan.pid ] ) );
 			db.run(loadFullPlan_runResult, faultHandler);
 		}
 		
