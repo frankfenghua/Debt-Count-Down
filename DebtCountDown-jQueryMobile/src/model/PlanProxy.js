@@ -1,5 +1,5 @@
-var cafescribe = cafescribe || {};
-cafescribe.model = cafescribe.model || {};
+var dcd = dcd || {};
+dcd.model = dcd.model || {};
 
 function PlanProxy()
 {
@@ -28,7 +28,7 @@ function PlanProxy()
 		if( !this.plans )
 			this.plans = [];
 		
-		this.push(plan);
+		this.plans.push(plan);
 	};
 	
 	/**
@@ -38,24 +38,18 @@ function PlanProxy()
 	 */
 	this.getPlanById = function (planId)
 	{
-		for( var i = 0; i < this.plans.length; i++ )
-		{
-			if( this.plans[i].id == planId)
-				return this.plans[i];
-		}
-		
-		return null;
+		return this.plans[this.getPlanIndex(planId)];
 	};
 	
 	/**
-	 * @param plan
+	 * @param planId
 	 * @returns integer
 	 */
-	this.getPlanIndex = function (plan)
+	this.getPlanIndex = function (planId)
 	{
 		for( var i = 0; i < this.plans.length; i++ )
 		{
-			if( this.plans[i].id == plan.id)
+			if( this.plans[i].pid == planId)
 				return i;
 		}
 		
@@ -67,7 +61,7 @@ function PlanProxy()
 	 */
 	this.removePlan = function (plan)
 	{
-		this.plans.splice(this.getPlanIndex(plan), 1);
+		this.plans.splice(this.getPlanIndex(plan.pid), 1);
 	};
 	
 	/**
@@ -75,10 +69,10 @@ function PlanProxy()
 	 */
 	this.updatePlan = function (plan)
 	{
-		this.plans[this.getPlanIndex(plan)] = plan;
+		this.plans[this.getPlanIndex(plan.pid)] = plan;
 	};
 
 };
 
 // make it a singleton
-cafescribe.model.planProxy = cafescribe.model.planProxy || new PlanProxy();
+dcd.model.planProxy = dcd.model.planProxy || new PlanProxy();

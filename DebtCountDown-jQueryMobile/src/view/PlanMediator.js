@@ -1,5 +1,5 @@
-var cafescribe = cafescribe || {};
-cafescribe.view = cafescribe.view || {};
+var dcd = dcd || {};
+dcd.view = dcd.view || {};
 
 function PlanMediator()
 {
@@ -11,28 +11,11 @@ function PlanMediator()
 	//-----------------------------------------------------------------------------
 	
 	/**
-	 * @returns float
+	 * @returns integer
 	 */
 	this.getId = function ()
 	{
-		return parseInt($("#plan-id").val());
-	};
-	
-	/**
-	 * @returns float
-	 */
-	this.getExpenses = function ()
-	{
-		return parseFloat($("#plan-expenses").val());
-	};
-	
-	/**
-	 * 
-	 * @returns float
-	 */
-	this.getIncome = function ()
-	{
-		return parseFloat($("#plan-income").val());
+		return parseInt($("#plan-pid").val());
 	};
 	
 	/**
@@ -42,6 +25,18 @@ function PlanMediator()
 	this.getName = function ()
 	{
 		return $("#plan-name").val();
+	};
+
+	/**
+	 * @returns plan
+	 */
+	this.getPlan = function ()
+	{
+		var plan = new PlanVO();
+		plan.pid = dcd.view.planMediator.getId();
+		plan.name = dcd.view.planMediator.getName();
+
+		return plan;
 	};
 	
 	//-----------------------------------------------------------------------------
@@ -53,7 +48,10 @@ function PlanMediator()
 	this.register = function()
 	{
 		$("#plan-page").live('pagebeforeshow',this.onPageBeforeShow);
-		$("#plan-submit-button").live('click',this.onClick);
+		$("#plan-continue-button").live('click',this.onContinueBtnClick);
+		$("#plan-delete-button").live('click',this.onDeleteBtnClick);
+		$('#plan-page-back-button').live('click', this.onBackBtnClick);
+		$('#plan-page-save-button').live('click', this.onSaveBtnClick);
 	};
 	
 	//-----------------------------------------------------------------------------
@@ -63,45 +61,60 @@ function PlanMediator()
 	//-----------------------------------------------------------------------------
 	
 	/**
+	 *
+	 */
+	this.onBackBtnClick = function()
+	{
+		dcd.controller.appController.changePage(dcd.enum.pages.managePlans);
+	}
+
+	/**
 	 * This can't use 'this' because in the scope/context of the event handler,
-	 * 'this' actually refers to "#plan-submit-button" and not the PlanMediator
+	 * 'this' actually refers to "#plan-continue-button" and not the PlanMediator
 	 * object.
 	 */
-	this.onClick = function()
+	this.onContinueBtnClick = function()
 	{
-		var plan = new PlanVO();
-		plan.id = cafescribe.view.planMediator.getId();
-		plan.expenses = cafescribe.view.planMediator.getExpenses();
-		plan.income = cafescribe.view.planMediator.getIncome();
-		plan.name = cafescribe.view.planMediator.getName();
+		var plan = dcd.view.planMediator.getPlan();
 		
-		if( plan.id )
-		{
-			cafescribe.controller.planController.editPlan(plan);
-		}
-		else
-		{
-			cafescribe.controller.planController.addPlan(plan);
-		}
+		dcd.controller.planController.saveAndCont(plan);
 	};
 	
+	/**
+	 *
+	 */
+	this.onDeleteBtnClick = function()
+	{
+		var plan = dcd.view.planMediator.getPlan();
+
+		if( plan.pid )
+		{
+			dcd.controller.planController.deletePlan(plan);
+		}
+	};
+
 	/**
 	 * 
 	 */
 	this.onPageBeforeShow = function()
 	{
-		var plan = cafescribe.model.planProxy.selectedPlan;
+		var plan = dcd.model.planProxy.selectedPlan;
 		
 		if( !plan )
 			plan = new PlanVO();
 		
 		// reset the view
-		$("#plan-id").val(plan.id);
+		$("#plan-pid").val(plan.pid);
 		$("#plan-name").val(plan.name);
-		$("#plan-income").val(plan.income);
-		$("#plan-expenses").val(plan.expenses);
+	};
+
+	this.onSaveBtnClick = function()
+	{
+		var plan = dcd.view.planMediator.getPlan();
+
+		dcd.controller.planController.save(plan);
 	};
 };
 
-cafescribe.view.planMediator = new PlanMediator();
-cafescribe.view.planMediator.register();
+dcd.view.planMediator = new PlanMediator();
+dcd.view.planMediator.register();

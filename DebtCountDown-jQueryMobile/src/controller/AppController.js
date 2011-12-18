@@ -1,5 +1,5 @@
-var cafescribe = cafescribe || {};
-cafescribe.controller = cafescribe.controller || {};
+var dcd = dcd || {};
+dcd.controller = dcd.controller || {};
 
 function AppController()
 {
@@ -15,4 +15,4 @@ function AppController()
 	};
 };
 
-cafescribe.controller.appController = new AppController();
+dcd.controller.appController = new AppController();

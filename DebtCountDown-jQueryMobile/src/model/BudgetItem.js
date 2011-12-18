@@ -1,47 +1,36 @@
-function PlanVO() 
+function BudgetItemVO()
 {
 	//-------------------------------------------------------------------------
 	//
 	// Properties
 	//
 	//-------------------------------------------------------------------------
-		
-	/**
-	 * @private
-	 */
-	this.expenses = 0.00;
-		
-	/**
-	 * @private
-	 */
-	this.income = 0.00;
-	
-	/**
-	 * @private
-	 */
+
+	this.active = false;
+
+	this.amount = 0.0;
+
+	this.name = '';
+
 	this.pid = 0;
-	
-	/**
-	 * @private
-	 */
-	this.name = "";
-	
+
+	this.type = '';
+
 	//-------------------------------------------------------------------------
 	//
 	// Methods
 	//
 	//-------------------------------------------------------------------------
-	
+
 	/**
-	 * @param json JSON representation of the model
+	 * @param json
 	 */
 	this.fromJSON = function(json)
 	{
-		this.pid = parseInt(json.pid);
+		this.active = /^true$/i.test(json.active);
+		this.amount = parseFloat(json.amount);
 		this.name = json.name;
-		this.expenses = parseFloat(json.expenses);
-		this.income = parseFloat(json.income);
+		this.pid = parseInt(json.pid);
+		this.type = json.type;
 	};
 };
-
-//cafescribe.model.plan = new PlanVO();

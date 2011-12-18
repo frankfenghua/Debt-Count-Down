@@ -5,32 +5,51 @@
 <title>Debt Count Down</title>
 
 <!-- jQuery Mobile -->
-<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.css" />
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
 <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
-<script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.js"></script>
 
 <!-- Enum -->
+<script src="enum/BudgetItemTypes.js"></script>
 <script src="enum/Pages.js"></script>
 
 <!-- Model -->
+<script src="model/BudgetItem.js"></script>
+<script src="model/BudgetItemProxy.js"></script>
+<script src="model/Debt.js"></script>
+<script src="model/DebtProxy.js"></script>
 <script src="model/Plan.js"></script>
 <script src="model/PlanProxy.js"></script>
 
 <!-- Services -->
+<script src="services/BudgetItemService.js"></script>
+<script src="services/DebtService.js"></script>
 <script src="services/PlanService.js"></script>
 
 <!-- Controller -->
 <script src="controller/AppController.js"></script>
+<script src="controller/DebtController.js"></script>
+<script src="controller/ExpenseController.js"></script>
+<script src="controller/IncomeController.js"></script>
 <script src="controller/PlanController.js"></script>
 
 <!-- Views -->
-<script src="view/PlanMediator.js"></script>
+<script src="view/ManageDebtsMediator.js"></script>
+<script src="view/ManageExpensesMediator.js"></script>
+<script src="view/ManageIncomesMediator.js"></script>
 <script src="view/ManagePlansMediator.js"></script>
+<script src="view/DebtMediator.js"></script>
+<script src="view/ExpenseMediator.js"></script>
+<script src="view/IncomeMediator.js"></script>
+<script src="view/PlanMediator.js"></script>
 
 <script type="text/javascript">
 
 	$(document).ready(function() {
-		
+		if( !dcd.model.planProxy.selectedPlan )
+        {
+            dcd.controller.appController.changePage(dcd.enum.pages.managePlans);
+        }
 	});
 </script>
 
@@ -38,12 +57,12 @@
 
 <body>
 
-<div data-role="page" data-theme="b" id="manage-page">
-    <div id="manage-header" data-role="header" data-backbtn="false">
-        <h1>Manage Plans</h1>
-        <a id="manage-page-add-button" href="#" data-icon="plus" data-iconpos="notext"
+<div data-role="page" data-theme="b" id="manage-plans-page">
+    <div id="manage-plans-header" data-role="header" data-backbtn="false">
+        <h1>Plans</h1>
+        <a id="manage-plans-add-button" href="#" data-icon="plus" 
            data-transition="slidedown" class="ui-btn-right" data-rel="page">
-            Add New
+            Add Plan
         </a>
     </div>
     <div data-role="content">
@@ -53,29 +72,192 @@
 
 <div data-role="page" data-theme="b" id="plan-page">
     <div id="plan-header" data-role="header" data-backbtn="false">
-        <h1>Add Plan</h1>
-        <a id="plan-page-back-button" href="#manage-page" data-icon="back" data-iconpos="notext"
+        <h1>Plan Details</h1>
+        <a id="plan-page-back-button" href="#manage-page" data-icon="back"
            data-transition="slidedown" class="ui-btn-left" data-rel="page">
             Back
+        </a>
+         <a id="plan-page-save-button" href="#manage-page" data-icon="check"
+           data-transition="slidedown" class="ui-btn-right" data-rel="page">
+            Save
         </a>
     </div>
     <div data-role="content">
         <div data-role="fieldcontain">
-			<input type="hidden" name="id" id="plan-id" value="" />
+			<input type="hidden" name="pid" id="plan-pid" value="" />
 		</div>
         <div data-role="fieldcontain">
 			<label for="plan-name">Name:</label>
 			<input type="text" name="name" id="plan-name" value="" />
 		</div>
+        <div>Name your Plan so you can quickly reference it again later</div>
+        <a href="#" data-role="button" data-theme="b" id="plan-delete-button">Delete Plan</a>
+		<a href="#" data-role="button" data-theme="b" id="plan-continue-button">Continue</a>
+    </div>
+</div>
+
+<div data-role="page" data-theme="b" id="manage-debts-page">
+    <div id="manage-debts-header" data-role="header" data-backbtn="false">
+        <h1>Debts</h1>
+         <a id="manage-debts-back-button" href="#manage-page" data-icon="back"
+           data-transition="slidedown" class="ui-btn-left" data-rel="page">
+            Back
+        </a>
+        <a id="manage-debts-add-button" href="#" data-icon="plus"
+           data-transition="slidedown" class="ui-btn-right" data-rel="page">
+            Add Debt
+        </a>
+    </div>
+    <div data-role="content">
+        <ul id="debt-list" data-role="listview" data-split-icon="check" data-split-theme="b"></ul>
+
+        <br />
+        <a href="#" id="debts-continue-button" data-role="button" data-theme="b">Continue</a>
+    </div>
+</div>
+
+<div data-role="page" data-theme="b" id="debt-page">
+    <div id="debt-header" data-role="header" data-backbtn="false">
+        <h1>Debt Details</h1>
+        <a id="debt-page-back-button" href="#" data-icon="back"
+           data-transition="slidedown" class="ui-btn-left" data-rel="page">
+            Back
+        </a>
+         <a id="debt-page-save-button" href="#" data-icon="check"
+           data-transition="slidedown" class="ui-btn-right" data-rel="page">
+            Save
+        </a>
+    </div>
+    <div data-role="content">
         <div data-role="fieldcontain">
-			<label for="plan-income">Income:</label>
-			<input type="text" name="income" id="plan-income" value="" />
-		</div>
+            <input type="hidden" name="pid" id="debt-pid" value="" />
+            <input type="hidden" name="active" id="debt-active" value="" />
+        </div>
         <div data-role="fieldcontain">
-			<label for="plan-expenses">Expenses:</label>
-			<input type="text" name="expenses" id="plan-expenses" value="" />
-		</div>
-		<button type="submit" data-theme="b" id="plan-submit-button">Submit</button>
+            <label for="debt-name">Name:</label>
+            <input type="text" name="name" id="debt-name" value="" />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="debt-bank">Bank:</label>
+            <input type="text" name="bank" id="debt-bank" value="" />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="debt-balance">Balance:</label>
+            <input type="text" name="balance" id="debt-balance" value="" />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="debt-apr">APR:</label>
+            <input type="text" name="apr" id="debt-apr" value="" />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="debt-minPayment">Minimum Payment:</label>
+            <input type="text" name="minPayment" id="debt-minPayment" value="" />
+        </div>
+        
+        <a href="#" data-role="button" data-theme="b" id="debt-estimate-button">Estimate Minimum Payment</a>
+        <a href="#" data-role="button" data-theme="b" id="debt-delete-button">Delete Debt</a>
+    </div>
+</div>
+
+<div data-role="page" data-theme="b" id="incomes-page">
+    <div id="incomes-header" data-role="header" data-backbtn="false">
+        <h1>Incomes</h1>
+         <a id="incomes-back-button" href="#" data-icon="back"
+           data-transition="slidedown" class="ui-btn-left" data-rel="page">
+            Back
+        </a>
+        <a id="incomes-add-button" href="#" data-icon="plus"
+           data-transition="slidedown" class="ui-btn-right" data-rel="page">
+            Add Income
+        </a>
+    </div>
+    <div data-role="content">
+        <ul id="income-list" data-role="listview" data-split-icon="check" data-split-theme="b"></ul>
+
+        <br />
+        <a href="#" id="incomes-continue-button" data-transition="slide" data-role="button" data-theme="b">Continue</a>
+    </div>
+</div>
+
+<div data-role="page" data-theme="b" id="income-page">
+    <div id="income-header" data-role="header" data-backbtn="false">
+        <h1>Income Details</h1>
+        <a id="income-page-back-button" href="#" data-icon="back"
+           data-transition="reverse" class="ui-btn-left" data-rel="page">
+            Back
+        </a>
+         <a id="income-page-save-button" href="#" data-icon="check"
+           data-transition="reverse" class="ui-btn-right" data-rel="page">
+            Save
+        </a>
+    </div>
+    <div data-role="content">
+        <div data-role="fieldcontain">
+            <input type="hidden" name="pid" id="income-pid" value="" />
+            <input type="hidden" name="active" id="income-active" value="" />
+            <input type="hidden" name="type" id="income-type" value="" />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="income-name">Name:</label>
+            <input type="text" name="name" id="income-name" value="" />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="income-amount">Amount:</label>
+            <input type="text" name="amount" id="income-amount" value="" />
+        </div>
+        
+        <a href="#" data-role="button" data-theme="b" id="income-delete-button">Delete Income</a>
+    </div>
+</div>
+
+<div data-role="page" data-theme="b" id="expenses-page">
+    <div id="expenses-header" data-role="header" data-backbtn="false">
+        <h1>Expenses</h1>
+         <a id="expenses-back-button" href="#" data-icon="back"
+           data-transition="slidedown" class="ui-btn-left" data-rel="page">
+            Back
+        </a>
+        <a id="expenses-add-button" href="#" data-icon="plus"
+           data-transition="slidedown" class="ui-btn-right" data-rel="page">
+            Add Expense
+        </a>
+    </div>
+    <div data-role="content">
+        <ul id="expense-list" data-role="listview" data-split-icon="check" data-split-theme="b"></ul>
+
+        <br />
+        <a href="#" id="expenses-continue-button" data-transition="slide" data-role="button" data-theme="b" class="ui-disabled">View Reports</a>
+    </div>
+</div>
+
+<div data-role="page" data-theme="b" id="expense-page">
+    <div id="expense-header" data-role="header" data-backbtn="false">
+        <h1>Expense Details</h1>
+        <a id="expense-page-back-button" href="#" data-icon="back"
+           data-transition="reverse" class="ui-btn-left" data-rel="page">
+            Back
+        </a>
+         <a id="expense-page-save-button" href="#" data-icon="check"
+           data-transition="reverse" class="ui-btn-right" data-rel="page">
+            Save
+        </a>
+    </div>
+    <div data-role="content">
+        <div data-role="fieldcontain">
+            <input type="hidden" name="pid" id="expense-pid" value="" />
+            <input type="hidden" name="active" id="expense-active" value="" />
+            <input type="hidden" name="type" id="expense-type" value="" />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="expense-name">Name:</label>
+            <input type="text" name="name" id="expense-name" value="" />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="expense-amount">Amount:</label>
+            <input type="text" name="amount" id="expense-amount" value="" />
+        </div>
+        
+        <a href="#" data-role="button" data-theme="b" id="expense-delete-button">Delete Expense</a>
     </div>
 </div>
 

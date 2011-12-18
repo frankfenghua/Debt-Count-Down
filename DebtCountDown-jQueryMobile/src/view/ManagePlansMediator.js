@@ -1,5 +1,5 @@
-var cafescribe = cafescribe || {};
-cafescribe.view = cafescribe.view || {};
+var dcd = dcd || {};
+dcd.view = dcd.view || {};
 
 function ManagePlansMediator()
 {
@@ -13,11 +13,11 @@ function ManagePlansMediator()
 	 * These references still aren't working, but this is how I'd like them to 
 	 * be handled if possible
 	 */
-	this.appController = cafescribe.controller.appController;
+	this.appController = dcd.controller.appController;
 	
-	this.planController = cafescribe.controller.planController;
+	this.planController = dcd.controller.planController;
 	
-	this.planProxy = cafescribe.model.planProxy;
+	this.planProxy = dcd.model.planProxy;
 	
 	//-----------------------------------------------------------------------------
 	//
@@ -33,8 +33,8 @@ function ManagePlansMediator()
 
 	this.register = function()
 	{
-		$("#manage-page").live('pagebeforeshow',this.onPageBeforeShow);
-		$("#manage-page-add-button").live('click',this.onAddBtnClick);
+		$("#manage-plans-page").live('pagebeforeshow',this.onPageBeforeShow);
+		$("#manage-plans-add-button").live('click',this.onAddBtnClick);
 		$(".edit-plan-link").live('click',this.onEditClick);
 	};
 	
@@ -47,11 +47,21 @@ function ManagePlansMediator()
 	/**
 	 * 
 	 */
+	this.onAddBtnClick = function()
+	{
+		dcd.model.planProxy.selectedPlan = null;
+		
+		dcd.controller.appController.changePage(dcd.enum.pages.addPlan);
+	};
+
+	/**
+	 * 
+	 */
 	this.onEditClick = function(event)
 	{
 		var planId = parseInt(event.currentTarget.attributes[0].value);
 		
-		cafescribe.controller.planController.showPlan(planId);
+		dcd.controller.planController.showPlan(planId);
 	};
 	
 	/**
@@ -60,17 +70,7 @@ function ManagePlansMediator()
 	this.onPageBeforeShow = function()
 	{
 		// fetch plans
-		cafescribe.controller.planController.loadAllPlans();
-	};
-	
-	/**
-	 * 
-	 */
-	this.onAddBtnClick = function()
-	{
-		cafescribe.model.planProxy.selectedPlan = null;
-		
-		cafescribe.controller.appController.changePage(cafescribe.enum.pages.addPlan);
+		dcd.controller.planController.loadAllPlans();
 	};
 	
 	//-----------------------------------------------------------------------------
@@ -104,5 +104,5 @@ function ManagePlansMediator()
 
 };
 
-cafescribe.view.managePlansMediator = cafescribe.view.managePlansMediator || new ManagePlansMediator();
-cafescribe.view.managePlansMediator.register();
+dcd.view.managePlansMediator = dcd.view.managePlansMediator || new ManagePlansMediator();
+dcd.view.managePlansMediator.register();

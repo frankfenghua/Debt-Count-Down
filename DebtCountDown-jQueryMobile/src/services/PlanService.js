@@ -1,5 +1,5 @@
-var cafescribe = cafescribe || {};
-cafescribe.services = cafescribe.services || {};
+var dcd = dcd || {};
+dcd.services = dcd.services || {};
 
 function PlanService()
 {
@@ -21,29 +21,29 @@ function PlanService()
 	this.addPlan = function(plan, onResult, onFault)
 	{
 		// make service call to add new plan
-		plan.id = cafescribe.model.planProxy.plans.length+1;
+		plan.pid = dcd.model.planProxy.plans.length+1;
 		onResult(plan);
 	};
-	
+
 	/**
-	 * 
+	 * @param plan
+	 * @param onResult
+	 * @param onFault
 	 */
-	this.loadPlan = function(planId, onResult, onFault)
+	this.deletePlan = function(plan, onResult, onFault)
 	{
-		var plan = cafescribe.model.planProxy.getPlanById(planId);
-		
 		onResult(plan);
 	};
-	
+
 	/**
 	 * Load all plans in the system
 	 */
 	this.loadAllPlans = function(onResult, onFault)
 	{
 		var list = new Array();
-		if( !cafescribe.model.planProxy.plans.length )
+		if( !dcd.model.planProxy.plans.length )
 		{
-			var json = jQuery.parseJSON('{"plans":[{"id":"1", "name":"Plan1", "expenses":"123.45", "income":"543.21"}, {"id":"3", "name":"Plan2", "expenses":"234.56", "income":"654.32"}]}');
+			var json = jQuery.parseJSON('{"plans":[{"pid":"1", "name":"Plan1", "expenses":"123.45", "income":"543.21"}, {"pid":"2", "name":"Plan2", "expenses":"234.56", "income":"654.32"}]}');
 			var plan;
 			
 			for( var i = 0; i < json.plans.length; i++ )
@@ -56,10 +56,20 @@ function PlanService()
 		}
 		else
 		{
-			list = cafescribe.model.planProxy.plans;
+			list = dcd.model.planProxy.plans;
 		}
 		
 		onResult(list);
+	};
+	
+	/**
+	 * 
+	 */
+	this.loadPlan = function(planId, onResult, onFault)
+	{
+		var plan = dcd.model.planProxy.getPlanById(planId);
+		
+		onResult(plan);
 	};
 	
 	/**
@@ -74,4 +84,4 @@ function PlanService()
 	};
 };
 
-cafescribe.services.planService = new PlanService();
+dcd.services.planService = new PlanService();
