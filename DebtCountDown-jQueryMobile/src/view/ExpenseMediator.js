@@ -168,7 +168,7 @@ function ExpenseMediator()
 	 */
 	this.onBackBtnClick = function(event)
 	{
-		dcd.controller.appController.changePage(dcd.enum.pages.manageExpenses);
+		dcd.controller.appController.changePage(dcd.enum.pages.manageExpenses, {"reverse":true});
 	};
 
 	/**
@@ -199,6 +199,15 @@ function ExpenseMediator()
 		}
 
 		dcd.view.expenseMediator.setExpense(item);
+
+		if( !item.pid )
+		{
+			$('#expense-delete-button').addClass('ui-disabled');
+		}
+		else
+		{
+			$('#expense-delete-button').removeClass('ui-disabled');
+		}
 	};
 
 	/**

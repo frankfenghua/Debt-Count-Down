@@ -168,7 +168,7 @@ function IncomeMediator()
 	 */
 	this.onBackBtnClick = function(event)
 	{
-		dcd.controller.appController.changePage(dcd.enum.pages.manageIncomes);
+		dcd.controller.appController.changePage(dcd.enum.pages.manageIncomes, {"reverse":true});
 	};
 
 	/**
@@ -199,6 +199,15 @@ function IncomeMediator()
 		}
 
 		dcd.view.incomeMediator.setIncome(item);
+
+		if( !item.pid )
+		{
+			$('#income-delete-button').addClass('ui-disabled');
+		}
+		else
+		{
+			$('#income-delete-button').removeClass('ui-disabled');
+		}
 	};
 
 	/**

@@ -115,7 +115,7 @@ function PlanController()
 	{
 		dcd.model.planProxy.addPlan(plan);
 		
-		dcd.controller.appController.changePage(dcd.enum.pages.managePlans);
+		dcd.controller.appController.changePage(dcd.enum.pages.managePlans, {"reverse":true});
 	};
 
 	/**
@@ -125,7 +125,7 @@ function PlanController()
 	{
 		dcd.model.planProxy.removePlan(plan);
 
-		dcd.controller.appController.changePage(dcd.enum.pages.managePlans);
+		dcd.controller.appController.changePage(dcd.enum.pages.managePlans, {"reverse":true});
 	};
 	
 	/**
@@ -164,6 +164,7 @@ function PlanController()
 	this.saveAndCont_addPlan_resultHandler = function(plan)
 	{
 		dcd.model.planProxy.addPlan(plan);
+		dcd.model.planProxy.selectedPlan = plan;
 
 		dcd.controller.appController.changePage(dcd.enum.pages.manageDebts);
 	};
@@ -186,7 +187,7 @@ function PlanController()
 	{
 		dcd.model.planProxy.updatePlan(plan);
 		
-		dcd.controller.appController.changePage(dcd.enum.pages.managePlans);
+		dcd.controller.appController.changePage(dcd.enum.pages.managePlans, {"reverse":true});
 	};
 
 	//-------------------------------------------------------------------------

@@ -48,7 +48,7 @@
 	$(document).ready(function() {
 		if( !dcd.model.planProxy.selectedPlan )
         {
-            dcd.controller.appController.changePage(dcd.enum.pages.managePlans);
+            dcd.controller.appController.changePage(dcd.enum.pages.managePlans, {"reverse":true});
         }
 	});
 </script>
@@ -60,8 +60,8 @@
 <div data-role="page" data-theme="b" id="manage-plans-page">
     <div id="manage-plans-header" data-role="header" data-backbtn="false">
         <h1>Plans</h1>
-        <a id="manage-plans-add-button" href="#" data-icon="plus" 
-           data-transition="slidedown" class="ui-btn-right" data-rel="page">
+        <a id="manage-plans-add-button" href="#plan-page" data-icon="plus" 
+           data-transition="slide" class="ui-btn-right" data-rel="page">
             Add Plan
         </a>
     </div>
@@ -74,7 +74,7 @@
     <div id="plan-header" data-role="header" data-backbtn="false">
         <h1>Plan Details</h1>
         <a id="plan-page-back-button" href="#manage-page" data-icon="back"
-           data-transition="slidedown" class="ui-btn-left" data-rel="page">
+           data-transition="slide" data-direction="reverse'" class="ui-btn-left" data-rel="page">
             Back
         </a>
          <a id="plan-page-save-button" href="#manage-page" data-icon="check"

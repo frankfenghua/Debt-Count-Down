@@ -12,6 +12,32 @@ function ManageDebtsMediator()
 	/**
 	 *
 	 */
+	this.checkActive = function()
+	{
+		var list = dcd.model.debtProxy.debts;
+		var active = false;
+
+		for( var i = 0; i < list.length; i++ )
+		{
+			if( list[i].active )
+			{
+				active = true;
+			}
+		}
+
+		if( active )
+		{
+			$('#debts-continue-button').removeClass('ui-disabled');
+		}
+		else
+		{
+			$('#debts-continue-button').addClass('ui-disabled');
+		}
+	};
+
+	/**
+	 *
+	 */
 	this.register = function()
 	{
 		$("#manage-debts-page").live('pagebeforeshow', this.onPageBeforeShow);
@@ -29,6 +55,8 @@ function ManageDebtsMediator()
 	{
 		$("#debt-list").html(debts);
 		$("#debt-list").listview('refresh');
+
+		this.checkActive();
 	};
 
 	//-------------------------------------------------------------------------
@@ -52,9 +80,7 @@ function ManageDebtsMediator()
 	 */
 	this.onBackClick = function(event)
 	{
-		var plan = dcd.model.planProxy.selectedPlan;
-
-		dcd.controller.planController.showPlan(plan.pid);
+		dcd.controller.appController.changePage(dcd.enum.pages.editPlan, {"reverse":true});
 	};
 
 	/**
@@ -63,7 +89,7 @@ function ManageDebtsMediator()
 	this.onCheckClick = function(event)
 	{
 		var btn = $($(this).children('span').children('span')[1]);
-		var debtId = parseInt(event.currentTarget.attributes[0].value);
+		var debtId = parseInt($(event.currentTarget).attr('value'));
 
 		if( btn.attr('data-theme') == 'c' )
 		{
@@ -77,6 +103,8 @@ function ManageDebtsMediator()
 			btn.attr('class', 'ui-btn ui-btn-up-c ui-btn-icon-notext ui-btn-corner-all ui-shadow');
 			dcd.controller.debtController.updateActive(debtId, false);
 		}
+
+		dcd.view.manageDebtsMediator.checkActive();
 	};
 
 	/**
@@ -92,7 +120,7 @@ function ManageDebtsMediator()
 	 */
 	this.onEditClick = function(event)
 	{
-		var debtId = parseInt(event.currentTarget.attributes[0].value);
+		var debtId = parseInt($(event.currentTarget).attr('value'));
 
 		dcd.controller.debtController.showDebt(debtId);
 	};

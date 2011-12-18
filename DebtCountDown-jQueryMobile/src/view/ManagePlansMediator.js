@@ -59,7 +59,7 @@ function ManagePlansMediator()
 	 */
 	this.onEditClick = function(event)
 	{
-		var planId = parseInt(event.currentTarget.attributes[0].value);
+		var planId = parseInt($(event.currentTarget).attr('value'));
 		
 		dcd.controller.planController.showPlan(planId);
 	};

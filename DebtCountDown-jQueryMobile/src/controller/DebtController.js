@@ -107,7 +107,7 @@ function DebtController()
 		dcd.model.debtProxy.removeDebt(debt);
 		dcd.model.debtProxy.selectedDebt = null;
 
-		dcd.controller.appController.changePage(dcd.enum.pages.manageDebts);
+		dcd.controller.appController.changePage(dcd.enum.pages.manageDebts, {"reverse":true});
 	};
 
 	/**
@@ -162,7 +162,7 @@ function DebtController()
 		dcd.model.debtProxy.updateDebt(debt);
 		dcd.model.debtProxy.selectedDebt = null;
 
-		dcd.controller.appController.changePage(dcd.enum.pages.manageDebts);
+		dcd.controller.appController.changePage(dcd.enum.pages.manageDebts, {"reverse":true});
 	};
 
 	//-------------------------------------------------------------------------

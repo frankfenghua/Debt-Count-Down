@@ -52,6 +52,7 @@ function PlanMediator()
 		$("#plan-delete-button").live('click',this.onDeleteBtnClick);
 		$('#plan-page-back-button').live('click', this.onBackBtnClick);
 		$('#plan-page-save-button').live('click', this.onSaveBtnClick);
+		$('#plan-name').live('keyup', this.planName_keyHandler);
 	};
 	
 	//-----------------------------------------------------------------------------
@@ -65,7 +66,8 @@ function PlanMediator()
 	 */
 	this.onBackBtnClick = function()
 	{
-		dcd.controller.appController.changePage(dcd.enum.pages.managePlans);
+		dcd.model.planProxy.selectedPlan = null;
+		dcd.controller.appController.changePage(dcd.enum.pages.managePlans, {"reverse":true});
 	}
 
 	/**
@@ -106,6 +108,26 @@ function PlanMediator()
 		// reset the view
 		$("#plan-pid").val(plan.pid);
 		$("#plan-name").val(plan.name);
+
+		if( !plan.name || !plan.name.length )
+		{
+			$('#plan-continue-button').addClass('ui-disabled');
+			$('#plan-page-save-button').addClass('ui-disabled');
+		}
+		else
+		{
+			$('#plan-continue-button').removeClass('ui-disabled');
+			$('#plan-page-save-button').removeClass('ui-disabled');
+		}
+
+		if( !plan.pid )
+		{
+			$('#plan-delete-button').addClass('ui-disabled');
+		}
+		else
+		{
+			$('#plan-delete-button').removeClass('ui-disabled');
+		}
 	};
 
 	this.onSaveBtnClick = function()
@@ -113,6 +135,23 @@ function PlanMediator()
 		var plan = dcd.view.planMediator.getPlan();
 
 		dcd.controller.planController.save(plan);
+	};
+
+	/**
+	 * @param event
+	 */
+	this.planName_keyHandler = function(event)
+	{
+		if( $('#plan-name').val().length )
+		{
+			$('#plan-continue-button').removeClass('ui-disabled');
+			$('#plan-page-save-button').removeClass('ui-disabled');
+		}
+		else
+		{
+			$('#plan-continue-button').addClass('ui-disabled');
+			$('#plan-page-save-button').addClass('ui-disabled');
+		}
 	};
 };
 

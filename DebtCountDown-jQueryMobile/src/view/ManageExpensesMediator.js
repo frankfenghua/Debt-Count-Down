@@ -12,6 +12,32 @@ function ManageExpensesMediator()
 	/**
 	 *
 	 */
+	this.checkActive = function()
+	{
+		var list = dcd.model.budgetItemProxy.getExpenses();
+		var active = false;
+
+		for( var i = 0; i < list.length; i++ )
+		{
+			if( list[i].active )
+			{
+				active = true;
+			}
+		}
+
+		if( active )
+		{
+			$('#expenses-continue-button').removeClass('ui-disabled');
+		}
+		else
+		{
+			$('#expenses-continue-button').addClass('ui-disabled');
+		}
+	};
+
+	/**
+	 *
+	 */
 	this.register = function()
 	{
 		$("#expenses-page").live('pagebeforeshow', this.onPageBeforeShow);
@@ -29,6 +55,8 @@ function ManageExpensesMediator()
 	{
 		$("#expense-list").html(expenses);
 		$("#expense-list").listview('refresh');
+
+		this.checkActive();
 	};
 
 	//-------------------------------------------------------------------------
@@ -52,7 +80,7 @@ function ManageExpensesMediator()
 	 */
 	this.onBackClick = function(event)
 	{
-		dcd.controller.appController.changePage(dcd.enum.pages.manageIncomes);
+		dcd.controller.appController.changePage(dcd.enum.pages.manageIncomes, {"reverse":true});
 	};
 
 	/**
@@ -61,7 +89,7 @@ function ManageExpensesMediator()
 	this.onCheckClick = function(event)
 	{
 		var btn = $($(this).children('span').children('span')[1]);
-		var itemId = parseInt(event.currentTarget.attributes[0].value);
+		var itemId = parseInt($(event.currentTarget).attr('value'));
 
 		if( btn.attr('data-theme') == 'c' )
 		{
@@ -75,6 +103,8 @@ function ManageExpensesMediator()
 			btn.attr('class', 'ui-btn ui-btn-up-c ui-btn-icon-notext ui-btn-corner-all ui-shadow');
 			dcd.controller.expenseController.updateActive(itemId, false);
 		}
+
+		dcd.view.manageExpensesMediator.checkActive();
 	};
 
 	/**
@@ -90,7 +120,7 @@ function ManageExpensesMediator()
 	 */
 	this.onEditClick = function(event)
 	{
-		var itemId = parseInt(event.currentTarget.attributes[0].value);
+		var itemId = parseInt($(event.currentTarget).attr('value'));
 
 		dcd.controller.expenseController.showExpense(itemId);
 	};

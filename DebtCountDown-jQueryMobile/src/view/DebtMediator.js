@@ -105,7 +105,7 @@ function DebtMediator()
 		debt.bank = this.getBank();
 		debt.name = this.getName();
 		debt.pid = this.getPid();
-		// TODO: minPayment/paymentRate
+
 		return debt;
 	};
 
@@ -120,6 +120,7 @@ function DebtMediator()
 		this.setBank(value.bank);
 		this.setName(value.name);
 		this.setPid(value.pid);
+		this.setMinPayment(value.getMinPayment());
 	};
 
 	//---------------------------------
@@ -211,7 +212,7 @@ function DebtMediator()
 	 */
 	this.onBackBtnClick = function(event)
 	{
-		dcd.controller.appController.changePage(dcd.enum.pages.manageDebts);
+		dcd.controller.appController.changePage(dcd.enum.pages.manageDebts, {"reverse":true});
 	};
 
 	/**
@@ -245,9 +246,19 @@ function DebtMediator()
 		if( !debt )
 		{
 			debt = new DebtVO();
+			debt.active = true;
 		}
 
 		dcd.view.debtMediator.setDebt(debt);
+
+		if( !debt.pid )
+		{
+			$('#debt-delete-button').addClass('ui-disabled');
+		}
+		else
+		{
+			$('#debt-delete-button').removeClass('ui-disabled');
+		}
 	};
 
 	/**
@@ -256,6 +267,9 @@ function DebtMediator()
 	this.onSaveBtnClick = function(event)
 	{
 		var debt = dcd.view.debtMediator.getDebt();
+
+		// calculate payment rate
+		debt.paymentRate = dcd.view.debtMediator.getMinPayment() / debt.balance;
 
 		dcd.controller.debtController.save(debt);
 	};

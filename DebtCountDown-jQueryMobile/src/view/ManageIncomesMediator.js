@@ -12,6 +12,32 @@ function ManageIncomesMediator()
 	/**
 	 *
 	 */
+	this.checkActive = function()
+	{
+		var list = dcd.model.budgetItemProxy.getIncomes();
+		var active = false;
+
+		for( var i = 0; i < list.length; i++ )
+		{
+			if( list[i].active )
+			{
+				active = true;
+			}
+		}
+
+		if( active )
+		{
+			$('#incomes-continue-button').removeClass('ui-disabled');
+		}
+		else
+		{
+			$('#incomes-continue-button').addClass('ui-disabled');
+		}
+	};
+
+	/**
+	 *
+	 */
 	this.register = function()
 	{
 		$("#incomes-page").live('pagebeforeshow', this.onPageBeforeShow);
@@ -29,6 +55,8 @@ function ManageIncomesMediator()
 	{
 		$("#income-list").html(incomes);
 		$("#income-list").listview('refresh');
+
+		this.checkActive();
 	};
 
 	//-------------------------------------------------------------------------
@@ -52,7 +80,7 @@ function ManageIncomesMediator()
 	 */
 	this.onBackClick = function(event)
 	{
-		dcd.controller.appController.changePage(dcd.enum.pages.manageDebts);
+		dcd.controller.appController.changePage(dcd.enum.pages.manageDebts, {"reverse":true});
 	};
 
 	/**
@@ -61,7 +89,7 @@ function ManageIncomesMediator()
 	this.onCheckClick = function(event)
 	{
 		var btn = $($(this).children('span').children('span')[1]);
-		var itemId = parseInt(event.currentTarget.attributes[0].value);
+		var itemId = parseInt($(event.currentTarget).attr('value'));
 
 		if( btn.attr('data-theme') == 'c' )
 		{
@@ -75,6 +103,8 @@ function ManageIncomesMediator()
 			btn.attr('class', 'ui-btn ui-btn-up-c ui-btn-icon-notext ui-btn-corner-all ui-shadow');
 			dcd.controller.incomeController.updateActive(itemId, false);
 		}
+
+		dcd.view.manageIncomesMediator.checkActive();
 	};
 
 	/**
@@ -90,7 +120,7 @@ function ManageIncomesMediator()
 	 */
 	this.onEditClick = function(event)
 	{
-		var itemId = parseInt(event.currentTarget.attributes[0].value);
+		var itemId = parseInt($(event.currentTarget).attr('value'));
 
 		dcd.controller.incomeController.showItem(itemId);
 	};

@@ -32,7 +32,7 @@ function ExpenseController()
 	 */
 	this.editExpense = function(item)
 	{
-		dcd.services.budgetItemService.updateItem(item, this.updateItem_resultHander,
+		dcd.services.budgetItemService.updateItem(item, this.updateItem_resultHandler,
 			this.faultHandler);
 	};
 
@@ -96,7 +96,7 @@ function ExpenseController()
 		dcd.model.budgetItemProxy.addItem(item);
 		dcd.model.budgetItemProxy.selectedItem = null;
 
-		dcd.controller.appController.changePage(dcd.enum.pages.manageExpenses);
+		dcd.controller.appController.changePage(dcd.enum.pages.manageExpenses, {"reverse":true});
 	};
 
 	/**
@@ -107,7 +107,7 @@ function ExpenseController()
 		dcd.model.budgetItemProxy.removeItem(item);
 		dcd.model.budgetItemProxy.selectedItem = null;
 
-		dcd.controller.appController.changePage(dcd.enum.pages.manageExpenses);
+		dcd.controller.appController.changePage(dcd.enum.pages.manageExpenses, {"reverse":true});
 	};
 
 	/**
@@ -167,7 +167,7 @@ function ExpenseController()
 		dcd.model.budgetItemProxy.updateItem(item);
 		dcd.model.budgetItemProxy.selectedItem = null;
 
-		dcd.controller.appController.changePage(dcd.enum.pages.manageExpenses);
+		dcd.controller.appController.changePage(dcd.enum.pages.manageExpenses, {"reverse":true});
 	};
 
 	//-------------------------------------------------------------------------

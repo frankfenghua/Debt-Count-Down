@@ -9,9 +9,13 @@ function AppController()
 	//
 	//-----------------------------------------------------------------------------
 
-	this.changePage = function (page)
+	/**
+	 * @param {string} page
+	 * @param {object} options
+	 */
+	this.changePage = function (page, options)
 	{
-		$.mobile.changePage(page);
+		$.mobile.changePage($(page), options);
 	};
 };
 

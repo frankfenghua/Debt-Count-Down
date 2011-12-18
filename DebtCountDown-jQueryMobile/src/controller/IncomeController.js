@@ -96,7 +96,7 @@ function IncomeController()
 		dcd.model.budgetItemProxy.addItem(item);
 		dcd.model.budgetItemProxy.selectedItem = null;
 
-		dcd.controller.appController.changePage(dcd.enum.pages.manageIncomes);
+		dcd.controller.appController.changePage(dcd.enum.pages.manageIncomes, {"reverse":true});
 	};
 
 	/**
@@ -107,7 +107,7 @@ function IncomeController()
 		dcd.model.budgetItemProxy.removeItem(item);
 		dcd.model.budgetItemProxy.selectedItem = null;
 
-		dcd.controller.appController.changePage(dcd.enum.pages.manageIncomes);
+		dcd.controller.appController.changePage(dcd.enum.pages.manageIncomes, {"reverse":true});
 	};
 
 	/**
@@ -167,7 +167,7 @@ function IncomeController()
 		dcd.model.budgetItemProxy.updateItem(item);
 		dcd.model.budgetItemProxy.selectedItem = null;
 
-		dcd.controller.appController.changePage(dcd.enum.pages.manageIncomes);
+		dcd.controller.appController.changePage(dcd.enum.pages.manageIncomes, {"reverse":true});
 	};
 
 	//-------------------------------------------------------------------------
