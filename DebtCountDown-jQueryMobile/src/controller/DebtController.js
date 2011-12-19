@@ -126,6 +126,10 @@ function DebtController()
 			{
 				theme = "b";
 			}
+			else
+			{
+				theme = 'c';
+			}
 
 			list += '<li><a href="#" class="edit-debt-link" value="' 
 				+ debts[i].pid + '">' + debts[i].name + '</a><a href="#" '

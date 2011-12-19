@@ -73,6 +73,7 @@ function DebtVO()
 		this.active = /^true$/i.test(json.active);
 		this.apr = parseFloat(json.apr);
 		this.balance = parseFloat(json.balance);
+		this.bank = json.bank;
 		this.pid = parseInt(json.pid);
 		this.name = json.name;
 		this.planId = parseInt(json.planId);
