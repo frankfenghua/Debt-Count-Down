@@ -16,8 +16,26 @@ function BudgetItemService()
 	 */
 	this.addItem = function(item, onResult, onFault)
 	{
-		item.pid = dcd.model.budgetItemProxy.budgetItems.length+1;
-		onResult(item);
+		$.ajax({
+			url: 'server/dcd_server.php',
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				'service':'BudgetItem',
+				'action':'addItem',
+				'item':{'name':item.name, 'amount':item.amount, 'type':item.type, 'active':item.active},
+				'planId':dcd.model.planProxy.selectedPlan.pid
+			},
+			success: function(data, textStatus, jqXHR)
+			{
+				item.pid = data.pid;
+				onResult(item);
+			},
+			error: function(jqXHR, textStatus, errorThrown)
+			{
+				onFault(errorThrown);
+			}
+		});
 	};
 
 	/**
@@ -27,7 +45,25 @@ function BudgetItemService()
 	 */
 	this.deleteItem = function(item, onResult, onFault)
 	{
-		onResult(item);
+		$.ajax({
+			url: 'server/dcd_server.php',
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				'service':'BudgetItem',
+				'action':'deleteItem',
+				'pid':item.pid,
+				'planId':dcd.model.planProxy.selectedPlan.pid
+			},
+			success: function(data, textStatus, jqXHR)
+			{
+				onResult(item);
+			},
+			error: function(jqXHR, textStatus, errorThrown)
+			{
+				onFault(errorThrown);
+			}
+		});
 	};
 
 	/**
@@ -36,28 +72,34 @@ function BudgetItemService()
 	 */
 	this.loadAllItems = function(onResult, onFault)
 	{
-		var list = [];
-		var json = '';
-		var item = null;
-
-		if( !dcd.model.budgetItemProxy.budgetItems.length )
-		{
-			json = jQuery.parseJSON('{"budgetItems":[{"pid":"1", "active":"false", "amount":"123.45", "name":"Expense 1", "type":"EXPENSE"}, {"active":"false", "amount":"6543.21", "name":"Income 1", "pid":"2", "type":"INCOME"}]}');
-			
-			for( var i = 0; i < json.budgetItems.length; i++ )
+		$.ajax({
+			url: 'server/dcd_server.php',
+			dataType: 'json',
+			data: {
+				'service':'BudgetItem',
+				'action':'loadAllItems',
+				'planId':dcd.model.planProxy.selectedPlan.pid
+			},
+			success: function(data, textStatus, jqXHR)
 			{
-				item = new BudgetItemVO();
-				item.fromJSON( json.budgetItems[i] );
+				var item;
+				var list = new Array();
 
-				list.push(item);
+				for( var i = 0; i < data.length; i++ )
+				{
+					item = new BudgetItemVO();
+					item.fromJSON( data[i] );
+
+					list.push(item);
+				}
+
+				onResult(list);
+			},
+			error: function(jqXHR, textStatus, errorThrown)
+			{
+				onFault(errorThrown);
 			}
-		}
-		else
-		{
-			list = dcd.model.budgetItemProxy.budgetItems;
-		}
-
-		onResult(list);
+		});
 	};
 
 	/**
@@ -79,7 +121,25 @@ function BudgetItemService()
 	 */
 	this.updateItem = function(item, onResult, onFault)
 	{
-		onResult(item);
+		$.ajax({
+			url: 'server/dcd_server.php',
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				'service':'BudgetItem',
+				'action':'updateItem',
+				'item':{'pid':item.pid, 'name':item.name, 'amount':item.amount, 'type':item.type, 'active':item.active},
+				'planId':dcd.model.planProxy.selectedPlan.pid
+			},
+			success: function(data, textStatus, jqXHR)
+			{
+				onResult(item);
+			},
+			error: function(jqXHR, textStatus, errorThrown)
+			{
+				onFault(errorThrown);
+			}
+		});
 	};
 };
 

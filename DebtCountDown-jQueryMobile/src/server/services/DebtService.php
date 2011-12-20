@@ -18,6 +18,9 @@ class DebtService
 	//
 	//-------------------------------------------------------------------------
 
+	/**
+	 *
+	 */
 	public function __construct()
 	{
 		try
@@ -58,6 +61,9 @@ class DebtService
 		echo '{"pid":"' . $debtId . '"}';
 	}
 
+	/**
+	 * @param array $params
+	 */
 	public function deleteDebt($params)
 	{
 		$sth = $this->db->prepare("DELETE FROM planDebts WHERE debtId = ?");
@@ -67,6 +73,9 @@ class DebtService
 		$sth->execute(array($params['pid']));
 	}
 
+	/**
+	 * @param array $params
+	 */
 	public function loadAllDebts($params)
 	{
 		$sth = $this->db->prepare("SELECT d.pid, name, bank, balance, apr, "
@@ -77,11 +86,12 @@ class DebtService
 
 		$debts = $sth->fetchAll();
 
-		$retval = json_encode($debts);
-
-		echo $retval;
+		echo json_encode($debts);
 	}
 
+	/**
+	 * @param array $params
+	 */
 	public function updateDebt($params)
 	{
 		$sth = $this->db->prepare("UPDATE debts SET name = ?, bank = ?, "
@@ -99,7 +109,7 @@ class DebtService
 			if( !$pid['pid'] )
 			{
 				$sth = $this->db->prepare("INSERT INTO planDebts (planId, debtId) VALUES(?, ?)");
-				$sth->execute(array($params['debt']['pid'], $params['planId']));
+				$sth->execute(array($params['planId'], $params['debt']['pid']));
 			}
 		}
 		else

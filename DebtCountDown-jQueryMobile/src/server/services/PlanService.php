@@ -39,7 +39,6 @@ class PlanService
 
 	/**
 	 * @param array $params
-	 * @return string
 	 */
 	public function addPlan( $params )
 	{
@@ -62,14 +61,11 @@ class PlanService
 
 	/**
 	 * @param array $params
-	 * @return boolean
 	 */
 	public function deletePlan( $params )
 	{
 		$sth = $this->db->prepare("DELETE FROM plans WHERE pid = ?");
 		$sth->execute(array($params['pid']));
-
-		return true;
 	}
 
 	/**
@@ -98,7 +94,6 @@ class PlanService
 
 	/**
 	 * @param array $params
-	 * @return string
 	 */
 	public function loadPlan( $params )
 	{
@@ -111,7 +106,6 @@ class PlanService
 
 	/**
 	 * @param array $params
-	 * @return string
 	 */
 	public function updatePlan( $params )
 	{
