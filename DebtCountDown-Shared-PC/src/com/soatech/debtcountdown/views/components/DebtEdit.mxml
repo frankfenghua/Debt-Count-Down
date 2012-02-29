@@ -2,16 +2,10 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" 
-		 xmlns:components="com.soatech.debtcountdown.views.components.*"
 		 implements="com.soatech.debtcountdown.views.interfaces.IDebtEdit">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	
-	<s:states>
-		<s:State name="default" />
-		<s:State name="plan" />
-	</s:states>
 	
 	<s:layout>
 		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" 
@@ -20,19 +14,9 @@
 	
 	<fx:Script>
 		<![CDATA[
-			public function setState(value:String):void
-			{
-				this.currentState = value;
-			}
-			
 			public function get saveBtn():Button
 			{
 				return _saveBtn;
-			}
-			
-			public function get removeFromPlanBtn():Button
-			{
-				return _removeFromPlanBtn;
 			}
 			
 			public function get nameTI():TextInput
@@ -69,12 +53,33 @@
 			{
 				return _aprTI;
 			}
+			
+			public function get estimateBtn():Button
+			{
+				return _estimateBtn;
+			}
 		]]>
 	</fx:Script>
 	
-	<s:HGroup width="100%" horizontalAlign="center">
-		<s:Label text="Debt Details" />
+	<!--====================================================================-->
+	<!-- Header Nav -->
+	<!--====================================================================-->
+	
+	<s:HGroup width="100%">
+		<s:Group width="33%">
+			<s:Button id="_backBtn" label="Back" />
+		</s:Group>
+		<s:HGroup width="34%" horizontalAlign="center" verticalAlign="middle">
+			<s:Label text="Debt Details" />
+		</s:HGroup>
+		<s:Group width="33%">
+			<s:Button id="_saveBtn" label="Save" right="0" />
+		</s:Group>
 	</s:HGroup>
+	
+	<!--====================================================================-->
+	<!-- Form -->
+	<!--====================================================================-->
 	
 	<mx:Form>
 		<mx:FormItem label="Name">
@@ -94,18 +99,19 @@
 		</mx:FormItem>
 		
 		<mx:FormItem label="Minimum Payment">
-			<s:TextInput id="_minPaymentTI" restrict="0-9." />
+			<s:HGroup>
+				<s:TextInput id="_minPaymentTI" restrict="0-9."/>
+				<s:Button id="_estimateBtn" label="Estimate" />
+			</s:HGroup>
 		</mx:FormItem>
 	</mx:Form>
 	
-	<s:HGroup width="100%" horizontalAlign="center">
-		<s:Button id="_backBtn" label="Back" />
-		<s:Button id="_saveBtn" label="Save" />
-		<s:Button id="_deleteBtn" label="Delete" 
-				  visible.plan="false" includeInLayout.plan="false"/>
-		<s:Button id="_removeFromPlanBtn" label="Remove From Plan" 
-				  visible="false" includeInLayout="false"
-				  visible.plan="true" includeInLayout.plan="true"/>
-	</s:HGroup>
+	<s:Group height="100%" width="100%">
+		
+		<s:HGroup width="100%" horizontalAlign="center" bottom="10">
+			<s:Button id="_deleteBtn" label="Delete Debt"/>
+		</s:HGroup>
+		
+	</s:Group>
 	
 </s:Group>

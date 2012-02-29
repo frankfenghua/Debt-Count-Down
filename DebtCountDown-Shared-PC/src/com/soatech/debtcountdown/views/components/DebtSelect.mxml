@@ -13,23 +13,8 @@
 						  paddingTop="10" horizontalAlign="center"/>
 	</s:layout>
 	
-	<s:states>
-		<s:State name="manage" />
-		<s:State name="selector" />
-	</s:states>
-	
 	<fx:Script>
 		<![CDATA[
-			
-			public function setState(value:String):void
-			{
-				this.currentState = value;
-			}
-			
-			public function get instructions():Label
-			{
-				return _instructions;
-			}
 			
 			public function get backBtn():Button
 			{
@@ -45,11 +30,39 @@
 			{
 				return _debtList;
 			}
+			
+			public function get addInstructions():Label
+			{
+				return _addInstructions;
+			}
+			
+			public function get toggleInstructions():Label
+			{
+				return _toggleInstructions;
+			}
+			
+			public function get contBtn():Button
+			{
+				return _contBtn;
+			}
 		]]>
 	</fx:Script>
 	
-	<s:Label text="Select a Debt"
-			 text.selector="Select a Debt to add it to your Plan."/>
+	<s:HGroup width="100%">
+		<s:Group width="33%">
+			<s:Button id="_backBtn" label="Back" />
+		</s:Group>
+		<s:HGroup width="34%" horizontalAlign="center" verticalAlign="middle">
+			<s:Label text="Debts" />
+		</s:HGroup>
+		<s:Group width="33%">
+			<s:Button id="_addBtn" label="Add Debt" right="0" />
+		</s:Group>
+	</s:HGroup>
+	
+	<s:Label id="_toggleInstructions" width="100%"
+			 text="Select which debts you want included in the reports."
+			 visible="false" includeInLayout="true"/>
 	
 	<s:Group id="scrollerWrapper" width="100%" height="100%">
 		<s:Scroller height="{scrollerWrapper.height}" width="{scrollerWrapper.width}"
@@ -57,24 +70,18 @@
 			
 			<s:Group width="100%" height="100%">
 				<s:List id="_debtList" width="100%" height="100%"
-						labelField="name">
+						labelField="name"
+						itemRenderer="com.soatech.debtcountdown.views.renderers.DebtListRenderer">
 					
 				</s:List>
 				
-				<s:Label id="_instructions" horizontalCenter="0" verticalCenter="0" width="100%" textAlign="center"
-						 text.manage="Add, edit, and manage your Credit Card Debts.  You can also add them directly to a Plan."
-						 text.selector="Add, edit, and manage your Credit Card Debts.  You can also manage them via the Manage Debts screen."/>
+				<s:Label id="_addInstructions" horizontalCenter="0" verticalCenter="0" width="100%" textAlign="center"
+						 text="Add all of your Credit Card Debts.  You can later decide which ones to include in your plan."/>
 			</s:Group>
 			
 		</s:Scroller>
 	</s:Group>
 	
-	<s:HGroup width="100%" horizontalAlign="center">
-		
-		<s:Button id="_backBtn" label="Back"
-				  visible="false" includeInLayout="false"
-				  visible.selector="true" includeInLayout.selector="true"/>
-		<s:Button id="_addBtn" label="Add Debt" />
-	</s:HGroup>
-	
+	<s:Button id="_contBtn" label="Continue" width="100%" 
+			  horizontalCenter="0" enabled="false"/>
 </s:Group>

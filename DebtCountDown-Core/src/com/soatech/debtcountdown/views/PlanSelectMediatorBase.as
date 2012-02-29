@@ -57,7 +57,8 @@ package com.soatech.debtcountdown.views
 			// view events
 			addViewListener( StateChangeEvent.CURRENT_STATE_CHANGE, view_stateChangeHandler );
 			
-			populate();
+			if( view.currentState == PlanSelectStates.PLANS )
+				populate();
 		}
 		
 		//---------------------------------------------------------------------
@@ -72,15 +73,12 @@ package com.soatech.debtcountdown.views
 		 */
 		public function populate():void
 		{
-			if( view.currentState == PlanSelectStates.PLANS )
-			{
-				if( planProxy.planList && planProxy.planList.length )
-					view.instructions.visible = false;
-				else
-					view.instructions.visible = true;
-				
-				view.planList.dataProvider = planProxy.planList;
-			}
+			if( planProxy.planList && planProxy.planList.length )
+				view.instructions.visible = false;
+			else
+				view.instructions.visible = true;
+			
+			view.planList.dataProvider = planProxy.planList;
 		}
 		
 		/**
@@ -89,6 +87,9 @@ package com.soatech.debtcountdown.views
 		 */		
 		public function setup():void
 		{
+			eventMap.mapListener( view.addBtn, MouseEvent.CLICK, addBtn_clickHandler );
+			eventMap.mapListener( view.planList, IndexChangeEvent.CHANGE, planList_changeHandler );
+			
 			dispatch( new PlanEvent( PlanEvent.LOAD ) );
 		}
 		
@@ -156,11 +157,7 @@ package com.soatech.debtcountdown.views
 		public function view_stateChangeHandler(event:StateChangeEvent):void
 		{
 			if( event.newState == PlanSelectStates.PLANS )
-			{
 				setup();
-				eventMap.mapListener( view.addBtn, MouseEvent.CLICK, addBtn_clickHandler );
-				eventMap.mapListener( view.planList, IndexChangeEvent.CHANGE, planList_changeHandler );
-			}
 			
 			populate();
 		}

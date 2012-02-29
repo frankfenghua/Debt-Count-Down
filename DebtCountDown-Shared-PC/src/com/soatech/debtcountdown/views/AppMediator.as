@@ -215,7 +215,7 @@ package com.soatech.debtcountdown.views
 				}
 				case MainStackEvent.SWITCH_MANAGE:
 				{
-					view.mainView.mainStack.selectedIndex = MainStackIndexes.MANAGE;
+					view.mainView.mainStack.selectedIndex = MainStackIndexes.PLAN_SELECT;
 					break;
 				}
 				case MainStackEvent.SWITCH_PLAN_EDIT:
@@ -247,6 +247,17 @@ package com.soatech.debtcountdown.views
 		 * 
 		 * @param event
 		 * 
+		 */
+		override public function plan_createSuccessHandler(event:PlanEvent):void
+		{
+			planProxy.selectedPlan = event.plan;
+			changeView(MainStackEvent.SWITCH_DEBT_SELECT);
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
 		 */		
 		override public function plan_editBackHandler(event:PlanEvent):void
 		{
@@ -263,6 +274,17 @@ package com.soatech.debtcountdown.views
 		{
 			planProxy.selectedPlan = null;
 			goBackView();
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
+		override public function plan_saveSuccessHandler(event:PlanEvent):void
+		{
+			planProxy.selectedPlan = event.plan;
+			changeView(MainStackEvent.SWITCH_DEBT_SELECT);
 		}
 		
 		/**

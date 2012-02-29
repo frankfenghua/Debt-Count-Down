@@ -97,37 +97,37 @@ package com.soatech.debtcountdown.views
 		
 		public function dataBase_connectedHandler(event:DataBaseEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::dataBase_connectedHandler"); };
 		}
 		
 		public function debt_createSuccessHandler(event:DebtEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::debt_createSuccessHandler"); };
 		}
 		
 		public function debt_editHandler(event:DebtEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::debt_editHandler"); };
 		}
 		
 		public function debt_editBackHandler(event:DebtEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::debt_editBackHandler"); };
 		}
 		
 		public function debt_newBackHandler(event:DebtEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::debt_newBackHandler"); };
 		}
 		
 		public function debt_newHandler(event:DebtEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::debt_newHandler"); };
 		}
 		
 		public function debt_selectBackHandler(event:DebtEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::debt_selectBackHandler"); };
 		}
 		
 		public function debt_selectContinueHandler(event:DebtEvent):void
@@ -137,7 +137,7 @@ package com.soatech.debtcountdown.views
 		
 		public function debt_showSelectHandler(event:DebtEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::debt_showSelectHandler"); };
 		}
 		
 		public function expense_newHandler(event:ExpenseEvent):void
@@ -162,22 +162,22 @@ package com.soatech.debtcountdown.views
 		
 		public function plan_createSuccessHandler(event:PlanEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::plan_createSuccessHandler"); };
 		}
 		
 		public function plan_editBackHandler(event:PlanEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::plan_editBackHandler"); };
 		}
 		
 		public function plan_newBackHandler(event:PlanEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::plan_newBackHandler"); };
 		}
 		
 		public function plan_newHandler(event:PlanEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::plan_newHandler"); };
 		}
 		
 		public function plan_saveSuccessHandler(event:PlanEvent):void
@@ -187,22 +187,22 @@ package com.soatech.debtcountdown.views
 		
 		public function plan_selectedChangedHandler(event:PlanEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::plan_selectedChangedHandler"); };
 		}
 		
 		public function paymentPlan_backHandler(event:PaymentPlanEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::paymentPlan_backHandler"); };
 		}
 		
 		public function paymentPlan_showRunHandler(event:PaymentPlanEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::paymentPlan_showRunHandler"); };
 		}
 		
 		public function paymentPlan_detailsHandler(event:PaymentPlanEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented"); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::paymentPlan_detailsHandler"); };
 		}
 	}
 }

@@ -2,10 +2,12 @@
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx" 
-				autoDrawBackground="true">
+				autoDrawBackground="true"
+				click="renderer_clickHandler(event)">
 	
 	<fx:Script>
 		<![CDATA[
+			import com.soatech.debtcountdown.events.SelectToggleEvent;
 			import com.soatech.debtcountdown.models.vo.DebtVO;
 			
 			//-----------------------------------------------------------------
@@ -18,21 +20,9 @@
 			// debt
 			//-------------------------
 			
-			private var _debt:DebtVO;
-
-			[Bindable(event="debtChanged")]
 			public function get debt():DebtVO
 			{
-				return _debt;
-			}
-
-			public function set debt(value:DebtVO):void
-			{
-				if( _debt !== value)
-				{
-					_debt = value;
-					dispatchEvent(new Event("debtChanged"));
-				}
+				return this.data as DebtVO;
 			}
 			
 			//-----------------------------------------------------------------
@@ -45,18 +35,60 @@
 			{
 				super.data = value;
 				
-				debt = value as DebtVO;
+				if( debt )
+					populate();
+			}
+			
+			
+			private function populate():void
+			{
+				nameLabel.text = debt.name;
+				activeCB.selected = debt.active;
+			}
+			
+			//-----------------------------------------------------------------
+			//
+			// Event Handlers
+			//
+			//-----------------------------------------------------------------
+
+			protected function activeCB_clickHandler(event:MouseEvent):void
+			{
+				event.stopImmediatePropagation();
+				event.preventDefault();
+				
+				debt.active = activeCB.selected;
+				
+				dispatchEvent( new SelectToggleEvent( SelectToggleEvent.TOGGLE, debt ) );
+			}
+			
+			protected function editBtn_clickHandler(event:MouseEvent):void
+			{
+				event.stopImmediatePropagation();
+				event.preventDefault();
+				
+				dispatchEvent( new SelectToggleEvent( SelectToggleEvent.EDIT, debt ) );
+			}
+			
+			protected function renderer_clickHandler(event:MouseEvent):void
+			{
+				debt.active = !debt.active;
+				activeCB.selected = debt.active;
+				
+				dispatchEvent( new SelectToggleEvent( SelectToggleEvent.TOGGLE, debt ) );
 			}
 			
 		]]>
 	</fx:Script>
 	
-	<s:Label text="{debt.name}" left="5"
+	<s:Label id="nameLabel" left="5"
 			 verticalCenter="0"/>
 	
 	<s:HGroup right="5" top="5" bottom="5">
-		<s:Button id="selectBtn" label="Select" />
-		<s:Button id="deleteBtn" label="Delete" />
+		<s:Button id="editBtn" label="Edit" 
+				  click="editBtn_clickHandler(event)"/>
+		<s:CheckBox id="activeCB" selected="{debt.active}" 
+					click="activeCB_clickHandler(event)"/>
 	</s:HGroup>
 	
 </s:ItemRenderer>

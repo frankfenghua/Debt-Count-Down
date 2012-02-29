@@ -18,6 +18,7 @@ package com.soatech.debtcountdown.models.vo
 
 		private var _active:Boolean;
 
+		[Bindable(event="activeChanged")]
 		public function get active():Boolean
 		{
 			return _active;
@@ -25,7 +26,12 @@ package com.soatech.debtcountdown.models.vo
 
 		public function set active(value:Boolean):void
 		{
-			_active = value;
+			if( _active != value)
+			{
+				_active = value;
+				
+				dispatchEvent( new Event( "activeChanged" ) );
+			}
 		}
 		
 		public var pid:int;
@@ -46,9 +52,12 @@ package com.soatech.debtcountdown.models.vo
 
 		public function set name(value:String):void
 		{
-			_name = value;
-			
-			dispatchEvent( new Event( "nameChanged" ) );
+			if( _name != value )
+			{
+				_name = value;
+				
+				dispatchEvent( new Event( "nameChanged" ) );
+			}
 		}
 
 		public var bank:String;

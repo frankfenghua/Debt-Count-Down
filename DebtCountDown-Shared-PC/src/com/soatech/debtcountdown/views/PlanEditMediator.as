@@ -119,8 +119,6 @@ package com.soatech.debtcountdown.views
 			if( !plan )
 				return;
 			
-			dispatch( new DebtEvent( DebtEvent.LOAD_BY_PLAN, null, null, plan ) );
-			
 			populate();
 		}
 	}

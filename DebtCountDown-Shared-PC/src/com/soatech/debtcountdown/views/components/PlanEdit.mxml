@@ -16,15 +16,9 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import flash.net.dns.AAAARecord;
 			public function get saveBtn():Button
 			{
 				return _saveBtn;
-			}
-			
-			public function get runBtn():Button
-			{
-				return _runBtn;
 			}
 			
 			public function get nameTI():TextInput
@@ -32,29 +26,9 @@
 				return _nameTI;
 			}
 			
-			public function get incomeTI():TextInput
-			{
-				return _incomeTI;
-			}
-			
-			public function get expensesTI():TextInput
-			{
-				return _expensesTI;
-			}
-			
 			public function get deleteBtn():Button
 			{
 				return _deleteBtn;
-			}
-			
-			public function get debtList():List
-			{
-				return _debtList;
-			}
-			
-			public function get debtAddBtn():Button
-			{
-				return _debtAddBtn;
 			}
 			
 			public function get backBtn():Button
@@ -62,20 +36,28 @@
 				return _backBtn;
 			}
 			
-			public function get saveInstructions():Label
-			{
-				return _saveInstructions;
-			}
-			
 			public function get instructions():Label
 			{
 				return _instructions;
 			}
+			
+			public function get contBtn():Button
+			{
+				return _contBtn;
+			}
 		]]>
 	</fx:Script>
 	
-	<s:HGroup width="100%" horizontalAlign="center">
-		<s:Label text="Plan Details" />
+	<s:HGroup width="100%">
+		<s:Group width="33%">
+			<s:Button id="_backBtn" label="Back" />
+		</s:Group>
+		<s:HGroup width="34%" horizontalAlign="center" verticalAlign="middle">
+			<s:Label text="Plan Details" />
+		</s:HGroup>
+		<s:Group width="33%">
+			<s:Button id="_saveBtn" label="Save" right="0" />
+		</s:Group>
 	</s:HGroup>
 	
 	<!--====================================================================-->
@@ -87,39 +69,14 @@
 			<s:TextInput id="_nameTI" />
 		</mx:FormItem>
 		
-		<mx:FormItem label="Income">
-			<s:TextInput id="_incomeTI" restrict="0-9." />
-		</mx:FormItem>
-		
-		<mx:FormItem label="Expenses">
-			<s:TextInput id="_expensesTI" restrict="0-9." />
-		</mx:FormItem>
+		<s:Label id="_instructions" horizontalCenter="0" verticalCenter="0" 
+				 width="100%" 
+				 text="Name your plan so you can quickly reference it again later."/>
 	</mx:Form>
 	
-	<!--====================================================================-->
-	<!-- Add Debt Items -->
-	<!--====================================================================-->
-	
-	<s:Group width="100%" height="100%">
-		<s:List id="_debtList" top="0" bottom="0" left="0" right="0"
-				labelField="name" borderVisible="true">
-			
-		</s:List>
-		
-		<s:Label id="_instructions" horizontalCenter="0" verticalCenter="0" 
-				 text="Create new or assign existing Debts to your Plan."/>
-		
-		
-		<s:Label id="_saveInstructions" horizontalCenter="0" verticalCenter="0" 
-				 text="You must Save before adding debts or running the Plan."/>
-	</s:Group>
-	
 	<s:HGroup horizontalAlign="center" width="100%">
-		<s:Button id="_backBtn" label="Back" />
-		<s:Button id="_saveBtn" label="Save" />
-		<s:Button id="_debtAddBtn" label="Add Debt" />
 		<s:Button id="_deleteBtn" label="Delete Plan" />
-		<s:Button id="_runBtn" label="Run" />
+		<s:Button id="_contBtn" label="Continue" width="100%"/>
 	</s:HGroup>
 	
 </s:Group>
