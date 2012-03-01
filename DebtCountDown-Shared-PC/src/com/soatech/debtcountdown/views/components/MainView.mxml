@@ -51,5 +51,21 @@
 			<components:PaymentPlan width="100%" height="100%" />
 		</s:NavigatorContent>
 		
+		<s:NavigatorContent>
+			<components:IncomeSelect width="100%" height="100%" />
+		</s:NavigatorContent>
+
+		<s:NavigatorContent>
+			<components:IncomeEdit width="100%" height="100%" />
+		</s:NavigatorContent>
+
+		<s:NavigatorContent>
+			<components:ExpenseSelect width="100%" height="100%" />
+		</s:NavigatorContent>
+
+		<s:NavigatorContent>
+			<components:ExpenseEdit width="100%" height="100%" />
+		</s:NavigatorContent>
+		
 	</mx:ViewStack>
 </s:Group>

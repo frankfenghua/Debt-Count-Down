@@ -52,10 +52,15 @@ package com.soatech.debtcountdown.services
 		private var budgetItem:BudgetItemVO;
 		
 		/**
+		 * @private
+		 */
+		private var budgetList:ArrayCollection;
+		
+		/**
 		 * @private 
 		 */
 		private var plan:PlanVO;
-
+		
 		/**
 		 * @private 
 		 */
@@ -93,8 +98,7 @@ package com.soatech.debtcountdown.services
 			this.plan = plan;
 			this.responder = responder;
 			
-			dbProxy.applicationDb.addQuery( new Query( SQL_SELECT_ALL, QueryTypes.SELECT, [plan.pid] ) );
-			dbProxy.applicationDb.run(loadAll_runResult, faultHandler);
+			dbProxy.applicationDb.startTransaction(loadAll_transactionResult, faultHandler);
 		}
 		
 		/**
@@ -171,6 +175,16 @@ package com.soatech.debtcountdown.services
 		 * @param data
 		 * 
 		 */
+		protected function loadAll_commitResult(data:Object):void
+		{
+			responder.result(budgetList);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
 		protected function loadAll_runResult(data:Object):void
 		{
 			var result:Array = data[0];
@@ -182,7 +196,20 @@ package com.soatech.debtcountdown.services
 					list.addItem( BudgetItemVO.createFromObject( item ) );
 			}
 			
-			responder.result(list);
+			budgetList = list;
+			
+			dbProxy.applicationDb.commit(loadAll_commitResult, faultHandler);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		protected function loadAll_transactionResult(data:Object):void
+		{
+			dbProxy.applicationDb.addQuery( new Query( SQL_SELECT_ALL, QueryTypes.SELECT, [plan.pid] ) );
+			dbProxy.applicationDb.run(loadAll_runResult, faultHandler);
 		}
 		
 		/**

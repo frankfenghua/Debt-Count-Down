@@ -1,11 +1,16 @@
 package com.soatech.debtcountdown.views
 {
+	import com.soatech.debtcountdown.enum.BudgetItemTypes;
 	import com.soatech.debtcountdown.enum.MainStackIndexes;
+	import com.soatech.debtcountdown.events.BudgetEvent;
 	import com.soatech.debtcountdown.events.DataBaseEvent;
 	import com.soatech.debtcountdown.events.DebtEvent;
+	import com.soatech.debtcountdown.events.ExpenseEvent;
+	import com.soatech.debtcountdown.events.IncomeEvent;
 	import com.soatech.debtcountdown.events.MainStackEvent;
 	import com.soatech.debtcountdown.events.PaymentPlanEvent;
 	import com.soatech.debtcountdown.events.PlanEvent;
+	import com.soatech.debtcountdown.models.BudgetItemProxy;
 	import com.soatech.debtcountdown.models.DebtProxy;
 	import com.soatech.debtcountdown.models.PlanProxy;
 	import com.soatech.debtcountdown.views.components.PlanEdit;
@@ -27,6 +32,9 @@ package com.soatech.debtcountdown.views
 		
 		[Inject]
 		public var debtProxy:DebtProxy;
+		
+		[Inject]
+		public var budgetItemProxy:BudgetItemProxy;
 		
 		[Inject]
 		public var planProxy:PlanProxy;
@@ -66,9 +74,13 @@ package com.soatech.debtcountdown.views
 			
 			addContextListener( MainStackEvent.SWITCH_DEBT_EDIT, mainStack_switchHandler );
 			addContextListener( MainStackEvent.SWITCH_DEBT_SELECT, mainStack_switchHandler );
-			addContextListener( MainStackEvent.SWITCH_MANAGE, mainStack_switchHandler );
+			addContextListener( MainStackEvent.SWITCH_EXPENSE_EDIT, mainStack_switchHandler );
+			addContextListener( MainStackEvent.SWITCH_EXPENSE_SELECT, mainStack_switchHandler );
+			addContextListener( MainStackEvent.SWITCH_INCOME_EDIT, mainStack_switchHandler );
+			addContextListener( MainStackEvent.SWITCH_INCOME_SELECT, mainStack_switchHandler );
 			addContextListener( MainStackEvent.SWITCH_PAYMENT_PLAN, mainStack_switchHandler );
 			addContextListener( MainStackEvent.SWITCH_PLAN_EDIT, mainStack_switchHandler );
+			addContextListener( MainStackEvent.SWITCH_PLAN_SELECT, mainStack_switchHandler );
 			addContextListener( MainStackEvent.SWITCH_RUN_PLAN, mainStack_switchHandler );
 			addContextListener( MainStackEvent.SWITCH_SPLASH, mainStack_switchHandler );
 			
@@ -113,9 +125,61 @@ package com.soatech.debtcountdown.views
 		 * @param event
 		 * 
 		 */
+		override public function budget_createSuccessHandler(event:BudgetEvent):void
+		{
+			budgetItemProxy.selectedItem = null;
+			goBackView();
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
+		override public function budget_editBackHandler(event:BudgetEvent):void
+		{
+			budgetItemProxy.selectedItem = null;
+			goBackView();
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
+		override public function budget_editHandler(event:BudgetEvent):void
+		{
+			budgetItemProxy.selectedItem = event.budgetItem;
+			
+			switch( event.budgetItem.type )
+			{
+				case BudgetItemTypes.EXPENSE:
+					changeView(MainStackEvent.SWITCH_EXPENSE_EDIT);
+					break;
+				case BudgetItemTypes.INCOME:
+					changeView(MainStackEvent.SWITCH_INCOME_EDIT);
+					break;
+			}
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
+		override public function budget_selectBackHandler(event:BudgetEvent):void
+		{
+			goBackView();
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
 		override public function dataBase_connectedHandler(event:DataBaseEvent):void
 		{
-			changeView(MainStackEvent.SWITCH_MANAGE);
+			changeView(MainStackEvent.SWITCH_PLAN_SELECT);
 		}
 		
 		/**
@@ -187,11 +251,63 @@ package com.soatech.debtcountdown.views
 		 * 
 		 * @param event
 		 * 
+		 */
+		override public function debt_selectContinueHandler(event:DebtEvent):void
+		{
+			changeView(MainStackEvent.SWITCH_INCOME_SELECT);
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
 		 */		
 		override public function debt_showSelectHandler(event:DebtEvent):void
 		{
 			debtProxy.selectedDebt = event.debt;
 			changeView(MainStackEvent.SWITCH_DEBT_SELECT);
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
+		override public function expense_newHandler(event:ExpenseEvent):void
+		{
+			budgetItemProxy.selectedItem = event.budgetItem;
+			changeView(MainStackEvent.SWITCH_EXPENSE_EDIT);
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
+		override public function expense_selectContinueHandler(event:ExpenseEvent):void
+		{
+			changeView(MainStackEvent.SWITCH_RUN_PLAN);
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
+		override public function income_newHandler(event:IncomeEvent):void
+		{
+			budgetItemProxy.selectedItem = event.budgetItem;
+			changeView(MainStackEvent.SWITCH_INCOME_EDIT);
+		}
+		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
+		override public function income_selectContinueHandler(event:IncomeEvent):void
+		{
+			changeView(MainStackEvent.SWITCH_EXPENSE_SELECT);
 		}
 		
 		/**
@@ -213,7 +329,7 @@ package com.soatech.debtcountdown.views
 					view.mainView.mainStack.selectedIndex = MainStackIndexes.DEBT_SELECT;
 					break;
 				}
-				case MainStackEvent.SWITCH_MANAGE:
+				case MainStackEvent.SWITCH_PLAN_SELECT:
 				{
 					view.mainView.mainStack.selectedIndex = MainStackIndexes.PLAN_SELECT;
 					break;
@@ -236,6 +352,26 @@ package com.soatech.debtcountdown.views
 				case MainStackEvent.SWITCH_SPLASH:
 				{
 					view.mainView.mainStack.selectedIndex = MainStackIndexes.SPLASH;
+					break;
+				}
+				case MainStackEvent.SWITCH_EXPENSE_EDIT:
+				{
+					view.mainView.mainStack.selectedIndex = MainStackIndexes.EXPENSE_EDIT;
+					break;
+				}
+				case MainStackEvent.SWITCH_EXPENSE_SELECT:
+				{
+					view.mainView.mainStack.selectedIndex = MainStackIndexes.EXPENSE_SELECT;
+					break;
+				}
+				case MainStackEvent.SWITCH_INCOME_EDIT:
+				{
+					view.mainView.mainStack.selectedIndex = MainStackIndexes.INCOME_EDIT;
+					break;
+				}
+				case MainStackEvent.SWITCH_INCOME_SELECT:
+				{
+					view.mainView.mainStack.selectedIndex = MainStackIndexes.INCOME_SELECT;
 					break;
 				}
 			}

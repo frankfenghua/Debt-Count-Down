@@ -72,27 +72,27 @@ package com.soatech.debtcountdown.views
 		
 		public function budget_createSuccessHandler(event:BudgetEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::income_createSuccessHandler" ); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::budget_createSuccessHandler" ); };
 		}
 		
 		public function budget_editBackHandler(event:BudgetEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::income_editBackHandler" ); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::budget_editBackHandler" ); };
 		}
 		
 		public function budget_editHandler(event:BudgetEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::income_editHandler" ); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::budget_editHandler" ); };
 		}
 		
 		public function budget_newBackHandler(event:BudgetEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::income_newBackHandler" ); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::budget_newBackHandler" ); };
 		}
 		
 		public function budget_selectBackHandler(event:BudgetEvent):void
 		{
-			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::income_selectBackHandler" ); };
+			CONFIG::debugtrace{ trace("Not Yet Implemented: AppMediatorBase::budget_selectBackHandler" ); };
 		}
 		
 		public function dataBase_connectedHandler(event:DataBaseEvent):void

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 implements="com.soatech.debtcountdown.views.interfaces.IExpenseSelect">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10"
+						  paddingTop="10" />
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			public function get addBtn():Button
+			{
+				return _addBtn;
+			}
+			
+			public function get backBtn():Button
+			{
+				return _backBtn;
+			}
+			
+			public function get expenseList():List
+			{
+				return _expenseList;
+			}
+			
+			public function get addInstructions():Label
+			{
+				return _addInstructions;
+			}
+			
+			public function get contBtn():Button
+			{
+				return _contBtn;
+			}
+			
+			public function get toggleInstructions():Label
+			{
+				return _toggleInstructions;
+			}
+		]]>
+	</fx:Script>
+	
+	<s:HGroup width="100%">
+		<s:Group width="33%">
+			<s:Button id="_backBtn" label="Back" />
+		</s:Group>
+		<s:HGroup width="34%" horizontalAlign="center" verticalAlign="middle">
+			<s:Label text="Expense" />
+		</s:HGroup>
+		<s:Group width="33%">
+			<s:Button id="_addBtn" label="Add Expense Item" right="0" />
+		</s:Group>
+	</s:HGroup>
+	
+	<s:Label id="_toggleInstructions" width="100%"
+			 text="Select which expense items you want included in the reports."
+			 visible="true" includeInLayout="true"/>
+	
+	<s:Group width="100%" height="100%">
+		
+		<s:List id="_expenseList" width="100%" height="100%" 
+				borderVisible="true"
+				itemRenderer="com.soatech.debtcountdown.views.renderers.ToggleRenderer">
+			
+		</s:List>
+		
+		<s:Label id="_addInstructions" horizontalCenter="0" verticalCenter="0" width="90%"
+				 text="What kind of expenses do you typically have in an average month?" />
+		
+	</s:Group>
+	
+	<s:Button id="_contBtn" label="Continue" width="100%" 
+			  horizontalCenter="0" enabled="false" />
+	
+</s:Group>

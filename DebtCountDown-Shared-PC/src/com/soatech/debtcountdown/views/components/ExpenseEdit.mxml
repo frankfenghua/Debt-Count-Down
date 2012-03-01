@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 implements="com.soatech.debtcountdown.views.interfaces.IExpenseEdit">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			public function get amountTI():TextInput
+			{
+				return _amountTI;
+			}
+			
+			public function get backBtn():Button
+			{
+				return _backBtn;
+			}
+			
+			public function get deleteBtn():Button
+			{
+				return _deleteBtn;
+			}
+			
+			public function get nameTI():TextInput
+			{
+				return _nameTI;
+			}
+			
+			public function get saveBtn():Button
+			{
+				return _saveBtn;
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10"
+						  paddingTop="10" />
+	</s:layout>
+	
+	<!--====================================================================-->
+	<!-- Header Nav -->
+	<!--====================================================================-->
+	
+	<s:HGroup width="100%">
+		<s:Group width="33%">
+			<s:Button id="_backBtn" label="Back" />
+		</s:Group>
+		<s:HGroup width="34%" horizontalAlign="center" verticalAlign="middle">
+			<s:Label text="Expense Details" />
+		</s:HGroup>
+		<s:Group width="33%">
+			<s:Button id="_saveBtn" label="Save" right="0" />
+		</s:Group>
+	</s:HGroup>
+	
+	<!--====================================================================-->
+	<!-- Form -->
+	<!--====================================================================-->
+	
+	<mx:Form>
+		<mx:FormItem label="Name">
+			<s:TextInput id="_nameTI" />
+		</mx:FormItem>
+		
+		<mx:FormItem label="Amount">
+			<s:TextInput id="_amountTI" width="100%" restrict="0-9."/>
+		</mx:FormItem>
+	</mx:Form>
+	
+	<s:Group height="100%" width="100%">
+		<s:HGroup width="100%" horizontalAlign="center" bottom="10">
+			<s:Button id="_deleteBtn" label="Delete Income Item"
+					  enabled="false"/>
+		</s:HGroup>
+	</s:Group>
+	
+</s:Group>

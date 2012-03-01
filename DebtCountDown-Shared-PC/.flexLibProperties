@@ -4,6 +4,14 @@
     <classEntry path="com.soatech.debtcountdown.views.interfaces.IMainView"/>
     <classEntry path="com.soatech.debtcountdown.views.components.MainView"/>
     <classEntry path="com.soatech.debtcountdown.views.interfaces.IPCApplication"/>
+    <classEntry path="com.soatech.debtcountdown.views.components.IncomeSelect"/>
+    <classEntry path="com.soatech.debtcountdown.views.IncomeSelectMediator"/>
+    <classEntry path="com.soatech.debtcountdown.views.components.IncomeEdit"/>
+    <classEntry path="com.soatech.debtcountdown.views.IncomeEditMediator"/>
+    <classEntry path="com.soatech.debtcountdown.views.components.ExpenseSelect"/>
+    <classEntry path="com.soatech.debtcountdown.views.components.ExpenseEdit"/>
+    <classEntry path="com.soatech.debtcountdown.views.ExpenseSelectMediator"/>
+    <classEntry path="com.soatech.debtcountdown.views.ExpenseEditMediator"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

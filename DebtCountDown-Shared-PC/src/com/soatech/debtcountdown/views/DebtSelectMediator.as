@@ -40,7 +40,6 @@ package com.soatech.debtcountdown.views
 		{
 			super.onRegister();
 			
-			eventMap.mapListener( eventDispatcher, MainStackEvent.SWITCH_MANAGE, mainStack_switchHandler );
 			eventMap.mapListener( eventDispatcher, MainStackEvent.SWITCH_DEBT_SELECT, mainStack_switchHandler );
 		}
 		

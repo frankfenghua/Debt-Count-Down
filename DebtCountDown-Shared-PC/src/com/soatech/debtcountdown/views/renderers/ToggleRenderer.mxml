@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				autoDrawBackground="true"
+				click="renderer_clickHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.soatech.debtcountdown.events.SelectToggleEvent;
+			import com.soatech.debtcountdown.models.interfaces.IToggleAble;
+			import com.soatech.debtcountdown.models.vo.DebtVO;
+			
+			//-----------------------------------------------------------------
+			//
+			// Properties
+			//
+			//-----------------------------------------------------------------
+			
+			//-------------------------
+			// toggle
+			//-------------------------
+			
+			public function get toggle():IToggleAble
+			{
+				return this.data as IToggleAble;
+			}
+			
+			//-----------------------------------------------------------------
+			//
+			// Overridden Methods
+			//
+			//-----------------------------------------------------------------
+			
+			override public function set data(value:Object):void
+			{
+				super.data = value;
+				
+				if( toggle )
+					populate();
+			}
+			
+			//-----------------------------------------------------------------
+			//
+			// Methods
+			//
+			//-----------------------------------------------------------------
+			
+			private function populate():void
+			{
+				nameLabel.text = toggle.name;
+				activeCB.selected = toggle.active;
+			}
+			
+			//-----------------------------------------------------------------
+			//
+			// Event Handlers
+			//
+			//-----------------------------------------------------------------
+
+			protected function activeCB_clickHandler(event:MouseEvent):void
+			{
+				event.stopImmediatePropagation();
+				event.preventDefault();
+				
+				toggle.active = activeCB.selected;
+				
+				dispatchEvent( new SelectToggleEvent( SelectToggleEvent.TOGGLE, toggle ) );
+			}
+			
+			protected function editBtn_clickHandler(event:MouseEvent):void
+			{
+				event.stopImmediatePropagation();
+				event.preventDefault();
+				
+				dispatchEvent( new SelectToggleEvent( SelectToggleEvent.EDIT, toggle ) );
+			}
+			
+			protected function renderer_clickHandler(event:MouseEvent):void
+			{
+				toggle.active = !toggle.active;
+				activeCB.selected = toggle.active;
+				
+				dispatchEvent( new SelectToggleEvent( SelectToggleEvent.TOGGLE, toggle ) );
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Label id="nameLabel" left="5"
+			 verticalCenter="0"/>
+	
+	<s:HGroup right="5" top="5" bottom="5">
+		<s:Button id="editBtn" label="Edit" 
+				  click="editBtn_clickHandler(event)"/>
+		<s:CheckBox id="activeCB" 
+					click="activeCB_clickHandler(event)"/>
+	</s:HGroup>
+	
+</s:ItemRenderer>

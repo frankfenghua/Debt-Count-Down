@@ -67,7 +67,7 @@
 			
 		</s:List>
 		
-		<s:Label id="_addInstructions" horizontalCenter="0" verticalCenter="-50" width="90%"
+		<s:Label id="_addInstructions" horizontalCenter="0" verticalCenter="0" width="90%"
 				 text="What kind of expenses do you typically have in an average month?" />
 	</s:Group>
 	

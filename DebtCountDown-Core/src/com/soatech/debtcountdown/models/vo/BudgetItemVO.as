@@ -27,7 +27,23 @@ package com.soatech.debtcountdown.models.vo
 		}
 		
 		public var amount:Number;
-		public var name:String;
+		
+		//-----------------------------
+		// name
+		//-----------------------------
+		
+		private var _name:String;
+
+		public function get name():String
+		{
+			return _name;
+		}
+
+		public function set name(value:String):void
+		{
+			_name = value;
+		}
+
 		public var pid:int;
 		public var type:String;
 		

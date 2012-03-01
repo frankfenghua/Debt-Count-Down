@@ -17,10 +17,9 @@
     <classEntry path="com.soatech.debtcountdown.events.MigrationEvent"/>
     <classEntry path="com.soatech.debtcountdown.events.AppEvent"/>
     <classEntry path="com.soatech.debtcountdown.commands.AppInitCommand"/>
-    <classEntry path="com.soatech.debtcountdown.commands.MigrationsRunCommand"/>
+    <classEntry path="com.soatech.debtcountdown.commands.MigrationsBuildCommand"/>
     <classEntry path="com.soatech.debtcountdown.services.DebtService"/>
     <classEntry path="com.soatech.debtcountdown.services.PlanService"/>
-    <classEntry path="com.soatech.debtcountdown.commands.DebtsLoadAllCommand"/>
     <classEntry path="com.soatech.debtcountdown.commands.PlanAddDebtCommand"/>
     <classEntry path="com.soatech.debtcountdown.commands.PlanLinkDebtCommand"/>
     <classEntry path="com.soatech.debtcountdown.commands.PlanUnlinkDebtCommand"/>
@@ -36,7 +35,6 @@
     <classEntry path="com.soatech.debtcountdown.views.PaymentPlanMediatorBase"/>
     <classEntry path="com.soatech.debtcountdown.events.PaymentPlanEvent"/>
     <classEntry path="com.soatech.debtcountdown.enum.DebtEditStates"/>
-    <classEntry path="com.soatech.debtcountdown.enum.DebtSelectStates"/>
     <classEntry path="com.soatech.debtcountdown.views.interfaces.IDebtSelect"/>
     <classEntry path="com.soatech.debtcountdown.views.interfaces.IDebtSelectMediator"/>
     <classEntry path="com.soatech.debtcountdown.views.DebtSelectMediatorBase"/>
@@ -57,6 +55,11 @@
     <classEntry path="com.soatech.debtcountdown.services.interfaces.IDebtService"/>
     <classEntry path="com.soatech.debtcountdown.services.interfaces.IPayOffService"/>
     <classEntry path="com.soatech.debtcountdown.services.interfaces.IPlanService"/>
+    <classEntry path="com.soatech.debtcountdown.enum.PlanSelectStates"/>
+    <classEntry path="com.soatech.debtcountdown.events.SelectToggleEvent"/>
+    <classEntry path="com.soatech.debtcountdown.models.interfaces.IToggleAble"/>
+    <classEntry path="com.soatech.debtcountdown.commands.PlanLinkBudgetItemCommand"/>
+    <classEntry path="com.soatech.debtcountdown.commands.PlanUnlinkBudgetItemCommand"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

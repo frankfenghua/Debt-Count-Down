@@ -81,6 +81,10 @@ package com.soatech.debtcountdown.views
 		//
 		//---------------------------------------------------------------------
 		
+		/**
+		 * 
+		 * 
+		 */
 		public function setup():void
 		{
 			plan = planProxy.selectedPlan;
@@ -94,11 +98,21 @@ package com.soatech.debtcountdown.views
 		//
 		//---------------------------------------------------------------------
 		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
 		public function backBtn_clickHandler(event:MouseEvent):void
 		{
 			dispatch( new PaymentPlanEvent( PaymentPlanEvent.BACK ) );
 		}
 		
+		/**
+		 * 
+		 * @param event
+		 * 
+		 */
 		public function plan_runCompleteHandler(event:PaymentPlanEvent):void
 		{
 			view.setState(RunPlanStates.SUMMARY);
