@@ -73,7 +73,7 @@ package com.soatech.debtcountdown.models.vo
 			if( min < 15 )
 				min = 15;
 			
-			return min;
+			return Number(min.toFixed(2));
 		}
 		
 		public var paymentRate:Number;

@@ -458,7 +458,7 @@ package com.soatech.debtcountdown.services
 				for each( item in result )
 				{
 					plan = new PlanVO();
-					plan.loadFromDb(item);
+					plan.loadFromObject(item);
 					
 					list.addItem(plan);
 				}

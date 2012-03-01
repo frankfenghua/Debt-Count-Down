@@ -1,10 +1,8 @@
 package com.soatech.debtcountdown
 {
-	import com.soatech.debtcountdown.events.AppEvent;
-	import com.soatech.debtcountdown.models.DebtData;
-	import com.soatech.debtcountdown.models.PlanData;
-	import com.soatech.debtcountdown.services.StaticDebtService;
-	import com.soatech.debtcountdown.services.StaticPlanService;
+	import com.soatech.debtcountdown.events.DataBaseEvent;
+	import com.soatech.debtcountdown.services.DebtService;
+	import com.soatech.debtcountdown.services.PlanService;
 	import com.soatech.debtcountdown.services.interfaces.IDebtService;
 	import com.soatech.debtcountdown.services.interfaces.IPlanService;
 	import com.soatech.debtcountdown.views.AppMediator;
@@ -32,7 +30,6 @@ package com.soatech.debtcountdown
 	import com.soatech.debtcountdown.views.components.PlanEdit;
 	import com.soatech.debtcountdown.views.components.PlanSelect;
 	import com.soatech.debtcountdown.views.components.RunPlan;
-	import com.soatech.debtcountdown.views.renderers.ToggleRenderer;
 	
 	import flash.display.DisplayObjectContainer;
 	
@@ -69,16 +66,11 @@ package com.soatech.debtcountdown
 		{
 			super.startup();
 			
-			// models
-			injector.mapSingleton(DebtData);
-			injector.mapSingleton(PlanData);
-			
 			// services
-			injector.unmap(IDebtService);
-			injector.mapSingletonOf(IDebtService, StaticDebtService);
-			
-			injector.unmap(IPlanService);
-			injector.mapSingletonOf(IPlanService, StaticPlanService);
+//			injector.mapClass( IBudgetService, BudgetService );
+			injector.mapClass( IDebtService, DebtService );
+//			injector.mapClass( IFrequencyService, FrequencyService );
+			injector.mapClass( IPlanService, PlanService );
 			
 			// mediators
 			mediatorMap.mapView( DebtCountDownWeb, AppMediator, contextView );
@@ -94,6 +86,9 @@ package com.soatech.debtcountdown
 			mediatorMap.mapView( PlanEdit, PlanEditMediator );
 			mediatorMap.mapView( PlanSelect, PlanSelectMediator );
 			mediatorMap.mapView( RunPlan, RunPlanMediator );
+			
+			// switch from the splash screen
+			dispatchEvent( new DataBaseEvent( DataBaseEvent.CONNECTED ) );
 		}
 	}
 }

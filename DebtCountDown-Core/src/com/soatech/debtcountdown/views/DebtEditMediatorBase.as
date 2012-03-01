@@ -245,7 +245,7 @@ package com.soatech.debtcountdown.views
 		 */
 		public function estimateBtn_clickHandler(event:MouseEvent):void
 		{
-			trace("Not Yet Implemented: estimateBtn_clickHandler");
+			view.minPaymentTI.text = payOffService.estimateMinimumPayment(Number(view.balanceTI.text)).toFixed(2);
 		}
 		
 		/**

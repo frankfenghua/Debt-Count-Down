@@ -1,7 +1,20 @@
 package com.soatech.debtcountdown
 {
 	
+	import com.soatech.debtcountdown.commands.AppInitCommand;
+	import com.soatech.debtcountdown.commands.DatabaseConnectCommand;
+	import com.soatech.debtcountdown.commands.MigrationsBuildCommand;
+	import com.soatech.debtcountdown.db.Migrator;
 	import com.soatech.debtcountdown.events.AppEvent;
+	import com.soatech.debtcountdown.events.DataBaseEvent;
+	import com.soatech.debtcountdown.events.MigrationEvent;
+	import com.soatech.debtcountdown.models.DataBaseProxy;
+	import com.soatech.debtcountdown.services.BudgetService;
+	import com.soatech.debtcountdown.services.DebtService;
+	import com.soatech.debtcountdown.services.FrequencyService;
+	import com.soatech.debtcountdown.services.PayOffService;
+	import com.soatech.debtcountdown.services.PlanService;
+	import com.soatech.debtcountdown.services.interfaces.*;
 	import com.soatech.debtcountdown.views.AppMediator;
 	import com.soatech.debtcountdown.views.DatePickerMediator;
 	import com.soatech.debtcountdown.views.DebtEditMediator;
@@ -68,6 +81,21 @@ package com.soatech.debtcountdown
 		override public function startup():void
 		{
 			super.startup();
+			
+			// model
+			injector.mapSingleton( DataBaseProxy );
+			injector.mapSingleton( Migrator );
+			
+			// commands
+			commandMap.mapEvent( AppEvent.INIT, AppInitCommand );
+			commandMap.mapEvent( DataBaseEvent.CONNECT, DatabaseConnectCommand );
+			commandMap.mapEvent( MigrationEvent.BUILD, MigrationsBuildCommand );
+			
+			// services
+			injector.mapClass( IBudgetService, BudgetService );
+			injector.mapClass( IDebtService, DebtService );
+			injector.mapClass( IFrequencyService, FrequencyService );
+			injector.mapClass( IPlanService, PlanService );
 			
 			mediatorMap.mapView( DatePicker, DatePickerMediator );
 			mediatorMap.mapView( DebtCountDownPhone, AppMediator );
