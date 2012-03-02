@@ -159,8 +159,14 @@ package com.soatech.debtcountdown.models.vo
 			if( item.hasOwnProperty('paymentRate') )
 				this.paymentRate = Number(item['paymentRate']);
 			
+			// this could be "1" from SQLite or "true" from the web server
 			if( item.hasOwnProperty('active') )
-				this.active = Boolean(item['active']);
+			{
+				if( int(item['active']).toString() == item['active'] )
+					this.active = Boolean(item['active']);
+				else
+					this.active = ((item['active'].toString() == 'true') ? true : false);
+			}
 		}
 	}
 }

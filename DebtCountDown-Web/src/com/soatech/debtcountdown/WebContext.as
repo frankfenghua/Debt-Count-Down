@@ -1,8 +1,10 @@
 package com.soatech.debtcountdown
 {
 	import com.soatech.debtcountdown.events.DataBaseEvent;
+	import com.soatech.debtcountdown.services.BudgetService;
 	import com.soatech.debtcountdown.services.DebtService;
 	import com.soatech.debtcountdown.services.PlanService;
+	import com.soatech.debtcountdown.services.interfaces.IBudgetService;
 	import com.soatech.debtcountdown.services.interfaces.IDebtService;
 	import com.soatech.debtcountdown.services.interfaces.IPlanService;
 	import com.soatech.debtcountdown.views.AppMediator;
@@ -67,9 +69,8 @@ package com.soatech.debtcountdown
 			super.startup();
 			
 			// services
-//			injector.mapClass( IBudgetService, BudgetService );
+			injector.mapClass( IBudgetService, BudgetService );
 			injector.mapClass( IDebtService, DebtService );
-//			injector.mapClass( IFrequencyService, FrequencyService );
 			injector.mapClass( IPlanService, PlanService );
 			
 			// mediators

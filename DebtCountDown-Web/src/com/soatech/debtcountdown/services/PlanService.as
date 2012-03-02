@@ -1,6 +1,7 @@
 package com.soatech.debtcountdown.services
 {
 	import com.soatech.debtcountdown.enum.ServiceInfo;
+	import com.soatech.debtcountdown.models.PlanProxy;
 	import com.soatech.debtcountdown.models.vo.BudgetItemVO;
 	import com.soatech.debtcountdown.models.vo.DebtVO;
 	import com.soatech.debtcountdown.models.vo.PlanVO;
@@ -21,6 +22,9 @@ package com.soatech.debtcountdown.services
 		//
 		//---------------------------------------------------------------------
 
+		[Inject]
+		public var planProxy:PlanProxy;
+		
 		//---------------------------------------------------------------------
 		//
 		// Variables
@@ -81,12 +85,40 @@ package com.soatech.debtcountdown.services
 			token.addResponder(new Responder(create_resultHandler, faultHandler));
 		}
 		
+		/**
+		 * 
+		 * @param plan
+		 * @param budgetItem
+		 * @param responder
+		 * 
+		 */
 		public function linkBudgetItem(plan:PlanVO, budgetItem:BudgetItemVO, responder:IResponder):void
 		{
+			this.responder = responder;
+			
+			// for the server-side on this, the BudgetItem::Update call checks for the 
+			// 'active' flag and makes the appropriate DB changes
+			var budgetService:BudgetService = new BudgetService();
+			budgetService.planProxy = planProxy;
+			budgetService.update(budgetItem, responder);
 		}
 		
+		/**
+		 * 
+		 * @param plan
+		 * @param debt
+		 * @param responder
+		 * 
+		 */
 		public function linkDebt(plan:PlanVO, debt:DebtVO, responder:IResponder):void
 		{
+			this.responder = responder;
+			
+			// for the server-side on this, the Debt Update call checks for the 
+			// 'active' flag and makes the appropriate DB changes
+			var debtService:DebtService = new DebtService();
+			debtService.planProxy = planProxy;
+			debtService.update(debt, responder);
 		}
 		
 		/**
@@ -106,8 +138,24 @@ package com.soatech.debtcountdown.services
 			token.addResponder(new Responder(load_resultHandler, faultHandler));
 		}
 		
+		/**
+		 * 
+		 * @param plan
+		 * @param responder
+		 * 
+		 */
 		public function loadFullPlan(plan:PlanVO, responder:IResponder):void
 		{
+			this.plan = plan;
+			this.responder = responder;
+			
+			service.method = 'GET';
+			var token:AsyncToken = service.send({
+				service:'Plan',
+				action:'loadFullPlan',
+				planId:plan.pid
+			});
+			token.addResponder(new Responder(loadFullPlan_resultHandler, faultHandler));
 		}
 		
 		/**
@@ -129,12 +177,40 @@ package com.soatech.debtcountdown.services
 			token.addResponder(new Responder(remove_resultHandler, faultHandler));
 		}
 		
+		/**
+		 * 
+		 * @param plan
+		 * @param budgetItem
+		 * @param responder
+		 * 
+		 */
 		public function unlinkBudgetItem(plan:PlanVO, budgetItem:BudgetItemVO, responder:IResponder):void
 		{
+			this.responder = responder;
+			
+			// for the server-side on this, the BudgetItem::Update call checks for the 
+			// 'active' flag and makes the appropriate DB changes
+			var budgetService:BudgetService = new BudgetService();
+			budgetService.planProxy = planProxy;
+			budgetService.update(budgetItem, responder);
 		}
 		
+		/**
+		 * 
+		 * @param plan
+		 * @param debt
+		 * @param responder
+		 * 
+		 */
 		public function unlinkDebt(plan:PlanVO, debt:DebtVO, responder:IResponder):void
 		{
+			this.responder = responder;
+			
+			// for the server-side on this, the Debt Update call checks for the 
+			// 'active' flag and makes the appropriate DB changes
+			var debtService:DebtService = new DebtService();
+			debtService.planProxy = planProxy;
+			debtService.update(debt, responder);
 		}
 		
 		/**
@@ -201,6 +277,44 @@ package com.soatech.debtcountdown.services
 			}
 			
 			responder.result(list);
+		}
+		
+		/**
+		 * 
+		 * @param data
+		 * 
+		 */
+		private function loadFullPlan_resultHandler(data:Object):void
+		{
+			var result:ResultEvent = data as ResultEvent;
+			var retset:Object = JSON.parse(result.result.toString());
+			var debts:Array = retset.debts as Array;
+			var budget:Object = retset.budget;
+			var item:Object;
+			
+			plan.debtList = new ArrayCollection();
+			
+			if( debts && debts.length )
+			{
+				for each( item in debts )
+				{
+					plan.debtList.addItem( DebtVO.createFromObject(item) );
+				}
+			}
+			
+			if( budget )
+			{
+				plan.expenses = 0;
+				plan.income = 0;
+				
+				if( budget.hasOwnProperty('expenses') )
+					plan.expenses = Number(budget['expenses']);
+				
+				if( budget.hasOwnProperty('income') )
+					plan.income = Number(budget['income']);
+			}
+			
+			responder.result(plan);
 		}
 		
 		/**

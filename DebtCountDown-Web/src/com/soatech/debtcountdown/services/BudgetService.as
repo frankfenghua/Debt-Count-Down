@@ -2,8 +2,9 @@ package com.soatech.debtcountdown.services
 {
 	import com.soatech.debtcountdown.enum.ServiceInfo;
 	import com.soatech.debtcountdown.models.PlanProxy;
-	import com.soatech.debtcountdown.models.vo.DebtVO;
-	import com.soatech.debtcountdown.services.interfaces.IDebtService;
+	import com.soatech.debtcountdown.models.vo.BudgetItemVO;
+	import com.soatech.debtcountdown.models.vo.PlanVO;
+	import com.soatech.debtcountdown.services.interfaces.IBudgetService;
 	
 	import mx.collections.ArrayCollection;
 	import mx.rpc.AsyncToken;
@@ -12,11 +13,11 @@ package com.soatech.debtcountdown.services
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.http.HTTPService;
 	
-	public class DebtService implements IDebtService
+	public class BudgetService implements IBudgetService
 	{
 		//---------------------------------------------------------------------
 		//
-		//  Properties
+		// Properties
 		//
 		//---------------------------------------------------------------------
 
@@ -25,10 +26,10 @@ package com.soatech.debtcountdown.services
 		
 		//---------------------------------------------------------------------
 		//
-		//  Variables
+		// Variables
 		//
 		//---------------------------------------------------------------------
-
+		
 		/**
 		 * @private 
 		 */		
@@ -37,7 +38,7 @@ package com.soatech.debtcountdown.services
 		/**
 		 * @private 
 		 */		
-		private var debt:DebtVO;
+		private var item:BudgetItemVO;
 		
 		/**
 		 * @private 
@@ -54,7 +55,7 @@ package com.soatech.debtcountdown.services
 		 * 
 		 * 
 		 */
-		public function DebtService()
+		public function BudgetService()
 		{
 			service = new HTTPService(ServiceInfo.BASE_URL);
 			service.url = 'dcd_server.php';
@@ -69,102 +70,86 @@ package com.soatech.debtcountdown.services
 		
 		/**
 		 * 
-		 * @param debt
+		 * @param budgetItem
 		 * @param responder
 		 * 
 		 */
-		public function create(debt:DebtVO, responder:IResponder):void
+		public function create(budgetItem:BudgetItemVO, responder:IResponder):void
 		{
-			this.debt = debt;
+			this.item = budgetItem;
 			this.responder = responder;
 			
-			service.method = "POST";
+			service.method = 'POST';
 			var token:AsyncToken = service.send({
-				service:'Debt', 
-				action:'AddDebt', 
-				'debt[pid]':debt.pid,
-				'debt[name]':debt.name,
-				'debt[bank]':debt.bank,
-				'debt[balance]':debt.balance,
-				'debt[apr]':debt.apr,
-				'debt[paymentRate]':debt.paymentRate,
-				'debt[active]':debt.active,
-				planId: planProxy.selectedPlan.pid
+				service:'BudgetItem',
+				action:'addItem',
+				'item[name]':budgetItem.name,
+				'item[amount]':budgetItem.amount,
+				'item[type]':budgetItem.type,
+				'item[active]':budgetItem.active,
+				planId:planProxy.selectedPlan.pid
 			});
 			token.addResponder(new Responder(create_resultHandler, faultHandler));
 		}
 		
 		/**
 		 * 
+		 * @param plan
 		 * @param responder
 		 * 
 		 */
-		public function loadAll(responder:IResponder):void
+		public function loadAll(plan:PlanVO, responder:IResponder):void
 		{
-			CONFIG::debugtrace{ trace("DebtService::loadAll not yet implemented"); }
+			this.responder = responder;
+			
+			service.method = 'GET';
+			var token:AsyncToken = service.send({
+				service:'BudgetItem',
+				action:'loadAllItems',
+				planId:planProxy.selectedPlan.pid
+			});
+			token.addResponder(new Responder(loadAll_resultHandler, faultHandler));
 		}
 		
 		/**
 		 * 
-		 * @param planId
+		 * @param budgetItem
 		 * @param responder
 		 * 
 		 */
-		public function loadByPlan(planId:int, responder:IResponder):void
+		public function remove(budgetItem:BudgetItemVO, responder:IResponder):void
 		{
 			this.responder = responder;
 			
-			service.method = "GET";
+			service.method = 'POST';
 			var token:AsyncToken = service.send({
-				service:'Debt',
-				action:'loadAllDebts',
+				service:'BudgetItem',
+				action:'deleteItem',
+				pid:budgetItem.pid,
 				planId:planProxy.selectedPlan.pid
 			});
-			token.addResponder(new Responder(loadByPlan_resultHandler, faultHandler));
-		}
-		
-		/**
-		 * 
-		 * @param debt
-		 * @param responder
-		 * 
-		 */
-		public function remove(debt:DebtVO, responder:IResponder):void
-		{
-			this.responder = responder;
-			
-			service.method = "POST";
-			var token:AsyncToken = service.send({
-				service:'Debt',
-				action:'deleteDebt',
-				pid:debt.pid,
-				planId:planProxy.selectedPlan.pid
-			});
-			
 			token.addResponder(new Responder(remove_resultHandler, faultHandler));
 		}
 		
 		/**
 		 * 
-		 * @param debt
+		 * @param budgetItem
 		 * @param responder
 		 * 
 		 */
-		public function update(debt:DebtVO, responder:IResponder):void
+		public function update(budgetItem:BudgetItemVO, responder:IResponder):void
 		{
 			this.responder = responder;
 			
-			service.method = "POST";
+			service.method = 'POST';
 			var token:AsyncToken = service.send({
-				service:'Debt',
-				action:'updateDebt',
-				'debt[pid]':debt.pid,
-				'debt[name]':debt.name,
-				'debt[bank]':debt.bank,
-				'debt[balance]':debt.balance,
-				'debt[apr]':debt.apr,
-				'debt[paymentRate]':debt.paymentRate,
-				'debt[active]':debt.active,
+				service:'BudgetItem',
+				action:'updateItem',
+				'item[pid]':budgetItem.pid,
+				'item[name]':budgetItem.name,
+				'item[amount]':budgetItem.amount,
+				'item[type]':budgetItem.type,
+				'item[active]':budgetItem.active,
 				planId:planProxy.selectedPlan.pid
 			});
 			token.addResponder(new Responder(update_resultHandler, faultHandler));
@@ -185,9 +170,9 @@ package com.soatech.debtcountdown.services
 		{
 			var result:ResultEvent = data as ResultEvent;
 			
-			debt.pid = int(JSON.parse(result.result.toString())['pid']);
+			item.pid = int(JSON.parse(result.result.toString())['pid']);
 			
-			responder.result(debt);
+			responder.result(item);
 		}
 		
 		/**
@@ -195,21 +180,21 @@ package com.soatech.debtcountdown.services
 		 * @param data
 		 * 
 		 */
-		private function loadByPlan_resultHandler(data:Object):void
+		private function loadAll_resultHandler(data:Object):void
 		{
 			var result:ResultEvent = data as ResultEvent;
-			var debts:Array = JSON.parse(result.result.toString()) as Array;
+			var items:Array = JSON.parse(result.result.toString()) as Array;
 			var list:ArrayCollection = new ArrayCollection();
-			var debt:DebtVO;
-			var item:Object;
+			var item:BudgetItemVO;
+			var obj:Object;
 			
-			if( debts && debts.length )
+			if( items && items.length )
 			{
-				for each ( item in debts )
+				for each ( obj in items )
 				{
-					debt = DebtVO.createFromObject(item);
+					item = BudgetItemVO.createFromObject(obj);
 					
-					list.addItem(debt);
+					list.addItem(item);
 				}
 			}
 			

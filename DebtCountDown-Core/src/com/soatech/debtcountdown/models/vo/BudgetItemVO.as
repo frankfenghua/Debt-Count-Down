@@ -121,7 +121,12 @@ package com.soatech.debtcountdown.models.vo
 				this.amount = Number(item['amount']);
 			
 			if( item.hasOwnProperty('active') )
-				this.active = Boolean(item['active']);
+			{
+				if( int(item['active']).toString() == item['active'] )
+					this.active = Boolean(item['active']);
+				else
+					this.active = ((item['active'] == 'true') ? true : false);
+			}
 			
 			if( item.hasOwnProperty('type') )
 				this.type = item['type'];
