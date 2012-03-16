@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="DebtCountDown-Core" basedir="." default="build">
+
+	<!--====================================================================-->
+	<!-- Properties-->
+	<!--====================================================================-->
+
+	<property environment="env" />
+	
+	<property name="FLEX_HOME" value="${env.FLEX_HOME}" />
+	<property name="dist.dir" location="."/>
+    <property name="APP_ROOT" value="${dist.dir}"/>
+	<property name="OUTPATH" value="${APP_ROOT}/bin-ant"/>
+	
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar"/>
+
+	<!--====================================================================-->
+	<!-- Build -->
+	<!--====================================================================-->
+	
+	<target name="build">
+        <echo>Flex SDK In use: ${FLEX_HOME}</echo>
+		<antcall target="clean" />
+        <antcall target="compile" />
+    </target>
+
+	<!--====================================================================-->
+	<!-- Clean -->
+	<!--====================================================================-->
+	
+	<target name="clean">
+		<echo>Cleaning output directory</echo>
+		<delete dir="${OUTPATH}"/>
+		<mkdir dir="${OUTPATH}" />
+	</target>
+
+	<!--====================================================================-->
+	<!-- Compile -->
+	<!--====================================================================-->
+	
+	<target name="compile" description="Compiles the Core">
+		<echo>Compiling DebtCountDown-Core.swc</echo>
+
+		<compc output="${OUTPATH}/DebtCountDown-Core.swc">
+			<locale>en_US</locale>
+			
+			<load-config filename="${FLEX_HOME}/frameworks/air-config.xml"/>
+			
+			<source-path path-element="${APP_ROOT}/src"/>
+			
+			<include-sources dir="${APP_ROOT}/src" includes="com"/>
+			
+			<library-path dir="${APP_ROOT}/libs" append="true">
+			    <include name="**/*.swc" />
+			</library-path>
+			
+			<compiler.define name="CONFIG::debugtrace" value="false"/>
+		</compc>
+
+	</target>
+	
+</project>

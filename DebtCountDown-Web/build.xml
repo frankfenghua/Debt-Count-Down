@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="DebtCountDown-Web" basedir="." default="build">
+
+	<tstamp/>
+	
+	<!--====================================================================-->
+	<!-- Properties-->
+	<!--====================================================================-->
+
+	<property environment="env" />
+	
+	<property name="FLEX_HOME" value="${env.FLEX_HOME}" />
+	<property name="dist.dir" location="."/>
+    <property name="APP_ROOT" value="${dist.dir}"/>
+	<property name="OUTPATH" value="${APP_ROOT}/bin-ant"/>
+	<property name="BUILD_STAMP" value="${DSTAMP}${TSTAMP}"/>
+	<property name="webSwf" value="DebtCountDownWeb-${BUILD_STAMP}"/>
+    <property name="webSwfFile" value = "${OUTPATH}/${webSwf}.swf"/>
+	
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar"/>
+	
+	<!--====================================================================-->
+	<!-- Build-->
+	<!--====================================================================-->
+	
+	<target name="build">
+        <echo>Flex SDK In use: ${FLEX_HOME}</echo>
+		<echo>Build Timestamp: ${BUILD_STAMP}</echo>
+		<antcall target="clean" />
+        <antcall target="compile" />
+		<antcall target="wrapper" />
+    </target>
+
+	<!--====================================================================-->
+	<!-- Clean-->
+	<!--====================================================================-->
+	
+	<target name="clean">
+		<echo>Cleaning output directory</echo>
+		<delete dir="${OUTPATH}"/>
+		<mkdir dir="${OUTPATH}" />
+	</target>
+	
+	<!--====================================================================-->
+	<!-- Compile -->
+	<!--====================================================================-->
+	
+	<target name="compile" description="Compiles for Web" depends="clean">
+		<echo>Compiling DebtCountDownWeb.swf</echo>
+        <mxmlc file="${APP_ROOT}/src/DebtCountDownWeb.mxml" 
+        	keep-generated-actionscript="false"
+            output="${webSwfFile}"
+            incremental="false" fork="true" maxmemory="1024m" debug="false">
+        	
+			 	<locale>en_US</locale>
+				<load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
+             	<source-path path-element="${FLEX_HOME}/frameworks"/>
+	            <compiler.library-path dir="${FLEX_HOME}/frameworks" append="true">
+    	            <include name="libs" />
+	            </compiler.library-path>
+				<compiler.include-libraries dir="${APP_ROOT}/../DebtCountDown-Core/bin-ant" append="true">
+					<include name="DebtCountDown-Core.swc"/>
+				</compiler.include-libraries>
+				<compiler.include-libraries dir="${APP_ROOT}/../DebtCountDown-Shared-PC/bin-ant" append="true">
+					<include name="DebtCountDown-Shared-PC.swc"/>
+				</compiler.include-libraries>
+				<compiler.define name="CONFIG::debugtrace" value="false"/>
+				<library-path dir="${APP_ROOT}/libs" append="true">
+					<include name="**/*.swc" />
+				</library-path>
+				<default-size width="800" height="600" />
+         </mxmlc>
+		<copy file="${FLEX_HOME}/frameworks/rsls/framework_4.6.0.23201.swf" todir="${OUTPATH}" overwrite="true"/>
+		<copy file="${FLEX_HOME}/frameworks/rsls/mx_4.6.0.23201.swf" todir="${OUTPATH}" overwrite="true"/>
+		<copy file="${FLEX_HOME}/frameworks/rsls/rpc_4.6.0.23201.swf" todir="${OUTPATH}" overwrite="true"/>
+		<copy file="${FLEX_HOME}/frameworks/rsls/spark_4.6.0.23201.swf" todir="${OUTPATH}" overwrite="true"/>
+		<copy file="${FLEX_HOME}/frameworks/rsls/sparkskins_4.6.0.23201.swf" todir="${OUTPATH}" overwrite="true"/>
+		<copy file="${FLEX_HOME}/frameworks/rsls/textLayout_2.0.0.232.swf" todir="${OUTPATH}" overwrite="true"/>
+		<copy file="${FLEX_HOME}/templates/swfobject/playerProductInstall.swf" todir="${OUTPATH}" overwrite="true"/>
+    </target>
+	
+	<!--====================================================================-->
+	<!-- Wrapper -->
+	<!--====================================================================-->
+	
+	<target name="wrapper" description="Generates the HTML wrapper">
+		<!--Generate a custom wrapper that we can customize        -->    
+		<echo>Generating the reader html wrapper</echo>
+		<copy file="${dist.dir}/tpl/index.template.ant.html" tofile="${OUTPATH}/DebtCountDownWeb.html" overwrite="true">
+			<filterchain>
+				<replacetokens>
+					<token key="version_major" value="11"/>
+					<token key="version_minor" value="1"/>
+					<token key="version_revision" value="102"/>
+					<token key="application" value="DebtCountDownWeb"/>
+					<token key="expressInstallSwf" value=""/>
+					<token key="useBrowserHistory" value=""/>
+					<token key="title" value="Debt Count Down"/>
+					<token key="width" value="100%"/>
+					<token key="height" value="100%"/>
+					<token key="bgcolor" value="white"/>
+					<token key="webSwf" value="${webSwf}"/>
+				</replacetokens>
+			</filterchain>
+		</copy>
+
+		<echo>Built Custom Wrapper</echo>
+	</target>
+	
+</project>

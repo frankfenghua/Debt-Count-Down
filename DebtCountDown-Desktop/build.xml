@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="DebtCountDown-Desktop" basedir="." default="build">
+
+	<tstamp/>
+	
+	<!--====================================================================-->
+	<!-- Properties-->
+	<!--====================================================================-->
+
+	<property file="build.properties"/>
+
+	<property environment="env" />
+	
+	<property name="FLEX_HOME" value="${env.FLEX_HOME}" />
+	<property name="dist.dir" location="."/>
+    <property name="APP_ROOT" value="${dist.dir}"/>
+	<property name="OUTPATH" value="${APP_ROOT}/bin-ant"/>
+	<property name="air.package.name" value="DebtCountDownDesktop"/>
+	<property name="application.name" value="Debt Count Down" />
+	<property name="desktopSwf" value="DebtCountDown-Desktop"/>
+    <property name="desktopSwfFile" value = "${OUTPATH}/${desktopSwf}.swf"/>
+    <property name="ADL" value="${FLEX_HOME}/bin/adl.exe"/>
+    <property name="ADT.JAR" value="${FLEX_HOME}/lib/adt.jar"/>
+    <property name="air.adt" value="${FLEX_HOME}/bin/adt.bat"/>
+	
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar"/>
+	
+	<!--====================================================================-->
+	<!-- Build-->
+	<!--====================================================================-->
+	
+	<target name="build">
+        <echo>Flex SDK In use: ${FLEX_HOME}</echo>
+		<antcall target="clean" />
+		<antcall target="filter" />
+        <antcall target="compile" />
+		<antcall target="wrapper" />
+    </target>
+
+	<!--====================================================================-->
+	<!-- Clean-->
+	<!--====================================================================-->
+	
+	<target name="clean">
+		<echo>Cleaning output directory</echo>
+		<delete dir="${OUTPATH}"/>
+		<mkdir dir="${OUTPATH}" />
+	</target>
+
+	<!--====================================================================-->
+	<!-- Filter-->
+	<!--====================================================================-->
+	
+	<target name="filter">
+        <filter token="update_version_number" value="${reader.update.version}"/>
+        <filter token="update_url" value="${reader.update.url}"/>
+        <filter token="service_url" value="${reader.service.url}"/>
+		<filter token="application_name" value="${application.name}" />
+		<filter token="desktopSwf" value="${desktopSwf}" />
+
+        <copy todir="${OUTPATH}" filtering="true" failonerror="true">
+            <fileset dir="./tpl" includes="update.xml"/>
+        </copy>
+        <copy todir="${OUTPATH}" filtering="true" failonerror="true">
+            <fileset dir="${dist.dir}/tpl" includes="${air.package.name}-app.xml"/>
+        </copy>
+    </target>
+	
+	<!--====================================================================-->
+	<!-- Compile -->
+	<!--====================================================================-->
+	
+	<target name="compile" description="Compiles for Desktop">
+		<echo>Compiling DebtCountDownDesktop.swf</echo>
+        <mxmlc file="${APP_ROOT}/src/${air.package.name}.mxml" 
+        	keep-generated-actionscript="false"
+            output="${desktopSwfFile}"
+            incremental="false" fork="true" maxmemory="1024m" debug="false">
+        	
+			 	<locale>en_US</locale>
+				<load-config filename="${FLEX_HOME}/frameworks/air-config.xml"/>
+             	<source-path path-element="${FLEX_HOME}/frameworks"/>
+	            <compiler.library-path dir="${FLEX_HOME}/frameworks" append="true">
+    	            <include name="libs" />
+	            </compiler.library-path>
+				<compiler.include-libraries dir="${APP_ROOT}/../DebtCountDown-Core/bin-ant" append="true">
+					<include name="DebtCountDown-Core.swc"/>
+				</compiler.include-libraries>
+        		<compiler.include-libraries dir="${APP_ROOT}/../DebtCountDown-Shared-Offline/bin-ant" append="true">
+					<include name="DebtCountDown-Shared-Offline.swc"/>
+				</compiler.include-libraries>
+				<compiler.include-libraries dir="${APP_ROOT}/../DebtCountDown-Shared-PC/bin-ant" append="true">
+					<include name="DebtCountDown-Shared-PC.swc"/>
+				</compiler.include-libraries>
+				<compiler.define name="CONFIG::debugtrace" value="false"/>
+				<library-path dir="${APP_ROOT}/libs" append="true">
+					<include name="**/*.swc" />
+				</library-path>
+				<default-size width="800" height="600" />
+         </mxmlc>
+    </target>
+	
+	<!--====================================================================-->
+	<!-- Wrapper -->
+	<!--====================================================================-->
+	
+	<target name="wrapper" description="Generates the AIR package">
+		<echo>Generating the AIR package</echo>
+		
+		<java jar="${ADT.JAR}" fork="true" failonerror="true" maxmemory="512m">
+			<arg value="-package"/>
+			<arg value="-storetype"/>
+			<arg value="pkcs12"/>
+			<arg value="-keystore"/>
+			<arg value="${CERTS_PATH}/${KEY_STORE}"/>
+			<arg value="-storepass"/>
+			<arg value="${STORE_PASS}"/>
+			<arg value="${OUTPATH}/${air.package.name}.air"/>
+			<arg value="${OUTPATH}/${air.package.name}-app.xml"/>
+			<arg value="-C"/>
+			<arg value="bin-ant"/>
+			<arg value="${desktopSwf}.swf"/>
+		</java>
+	</target>
+	
+</project>

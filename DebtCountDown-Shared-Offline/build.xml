@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="DebtCountDown-Shared-Offline" basedir="." default="build">
+
+	<!--====================================================================-->
+	<!-- Properties-->
+	<!--====================================================================-->
+
+	<property environment="env" />
+	
+	<property name="FLEX_HOME" value="${env.FLEX_HOME}" />
+	<property name="dist.dir" location="."/>
+    <property name="APP_ROOT" value="${dist.dir}"/>
+	<property name="OUTPATH" value="${APP_ROOT}/bin-ant"/>
+	
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar"/>
+
+	<!--====================================================================-->
+	<!-- Build -->
+	<!--====================================================================-->
+	
+	<target name="build">
+        <echo>Flex SDK In use: ${FLEX_HOME}</echo>
+		<antcall target="clean" />
+        <antcall target="compile" />
+    </target>
+
+	<!--====================================================================-->
+	<!-- Clean -->
+	<!--====================================================================-->
+	
+	<target name="clean">
+		<echo>Cleaning output directory</echo>
+		<delete dir="${OUTPATH}"/>
+		<mkdir dir="${OUTPATH}" />
+	</target>
+
+	<!--====================================================================-->
+	<!-- Compile -->
+	<!--====================================================================-->
+	
+	<target name="compile" description="Compiles the Shared-Offline">
+		<echo>Compiling DebtCountDown-Shared-Offline.swc</echo>
+
+		<compc output="${OUTPATH}/DebtCountDown-Shared-Offline.swc">
+			<locale>en_US</locale>
+			
+			<load-config filename="${FLEX_HOME}/frameworks/air-config.xml"/>
+			
+			<compiler.include-libraries dir="${APP_ROOT}/../DebtCountDown-Core/bin-ant" append="true">
+				<include name="DebtCountDown-Core.swc"/>
+			</compiler.include-libraries>
+			
+			<source-path path-element="${APP_ROOT}/src"/>
+			
+			<include-sources dir="${APP_ROOT}/src" includes="com"/>
+			
+			<compiler.define name="CONFIG::debugtrace" value="false"/>
+		</compc>
+
+	</target>
+	
+</project>

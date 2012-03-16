@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="DebtCountDown" default="buildall">
+	<property environment="env"/>
+	
+	<property name="BUILD_NUMBER" value="${env.BUILD_NUMBER}" />
+	
+	<target name="buildall">
+		<subant target="build">
+			<property name="dist.dir" location="DebtCountDown-Core"/>
+			<fileset dir="DebtCountDown-Core" includes="build.xml"/>
+  		</subant>
+
+		<subant target="build">
+			<property name="dist.dir" location="DebtCountDown-Shared-PC"/>
+			<fileset dir="DebtCountDown-Shared-PC" includes="build.xml"/>
+		</subant>
+		
+		<subant target="build">
+			<property name="dist.dir" location="DebtCountDown-Shared-Offline"/>
+			<fileset dir="DebtCountDown-Shared-Offline" includes="build.xml"/>
+		</subant>
+
+		<subant target="build">
+			<property name="dist.dir" location="DebtCountDown-Desktop"/>
+			<fileset dir="DebtCountDown-Desktop" includes="build.xml"/>
+		</subant>
+
+		<subant target="build">
+			<property name="dist.dir" location="DebtCountDown-Phone"/>
+			<fileset dir="DebtCountDown-Phone" includes="build.xml"/>
+		</subant>
+
+		<subant target="build">
+			<property name="dist.dir" location="DebtCountDown-Web"/>
+			<fileset dir="DebtCountDown-Web" includes="build.xml"/>
+		</subant>
+
+	</target>
+	
+</project>
