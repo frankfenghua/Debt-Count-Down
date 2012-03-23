@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="DebtCountDown" default="buildall">
+<project name="DebtCountDown" default="build-flash">
 	<property environment="env"/>
 	
 	<property name="BUILD_NUMBER" value="${env.BUILD_NUMBER}" />
 	
-	<target name="buildall">
+	<target name="build-flash">
 		<subant target="build">
 			<property name="dist.dir" location="DebtCountDown-Core"/>
 			<fileset dir="DebtCountDown-Core" includes="build.xml"/>
@@ -35,6 +35,45 @@
 			<fileset dir="DebtCountDown-Web" includes="build.xml"/>
 		</subant>
 
+	</target>
+	
+	<target name="install-flash">
+		
+		<subant target="install">
+			<property name="dist.dir" location="DebtCountDown-Core"/>
+			<fileset dir="DebtCountDown-Core" includes="build.xml"/>
+		</subant>
+		
+		<subant target="install">
+			<property name="dist.dir" location="DebtCountDown-Desktop"/>
+			<fileset dir="DebtCountDown-Desktop" includes="build.xml"/>
+		</subant>
+		
+		<subant target="install">
+			<property name="dist.dir" location="DebtCountDown-Phone"/>
+			<fileset dir="DebtCountDown-Phone" includes="build.xml"/>
+		</subant>
+		
+		<subant target="install">
+			<property name="dist.dir" location="DebtCountDown-Shared-Offline"/>
+			<fileset dir="DebtCountDown-Shared-Offline" includes="build.xml"/>
+		</subant>
+		
+		<subant target="install">
+			<property name="dist.dir" location="DebtCountDown-Shared-PC"/>
+			<fileset dir="DebtCountDown-Shared-PC" includes="build.xml"/>
+		</subant>
+		
+		<subant target="install">
+			<property name="dist.dir" location="DebtCountDown-Tablet"/>
+			<fileset dir="DebtCountDown-Tablet" includes="build.xml"/>
+		</subant>
+		
+		<subant target="install">
+			<property name="dist.dir" location="DebtCountDown-Web"/>
+			<fileset dir="DebtCountDown-Web" includes="build.xml"/>
+		</subant>
+		
 	</target>
 	
 </project>

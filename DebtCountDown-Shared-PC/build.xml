@@ -13,6 +13,18 @@
 	<property name="OUTPATH" value="${APP_ROOT}/bin-ant"/>
 	
 	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar"/>
+	
+	<!--====================================================================-->
+	<!-- Install -->
+	<!--====================================================================-->
+	
+	<target name="install">
+		<echo>Setting up FlashBuilder project</echo>
+		
+		<copy file="tpl/tpl.actionScriptProperties" tofile=".actionScriptProperties" filtering="false" failonerror="true" />
+		<copy file="tpl/tpl.flexLibProperties" tofile=".flexLibProperties" filtering="false" failonerror="true" />
+		<copy file="tpl/tpl.project" tofile=".project" filtering="false" failonerror="true" />
+	</target>
 
 	<!--====================================================================-->
 	<!-- Build -->
