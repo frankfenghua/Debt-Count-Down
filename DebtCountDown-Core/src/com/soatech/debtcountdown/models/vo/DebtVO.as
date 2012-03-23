@@ -160,12 +160,12 @@ package com.soatech.debtcountdown.models.vo
 				this.paymentRate = Number(item['paymentRate']);
 			
 			// this could be "1" from SQLite or "true" from the web server
-			if( item.hasOwnProperty('active') )
+			if( item.hasOwnProperty('active') && item['active'] )
 			{
-				if( int(item['active']).toString() == item['active'] )
+				if( int(item['active']) == item['active'] )
 					this.active = Boolean(item['active']);
 				else
-					this.active = ((item['active'].toString() == 'true') ? true : false);
+					this.active = ((item['active'] == 'true') ? true : false);
 			}
 		}
 	}

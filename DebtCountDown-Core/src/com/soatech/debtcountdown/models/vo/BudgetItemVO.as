@@ -120,9 +120,9 @@ package com.soatech.debtcountdown.models.vo
 			if( item.hasOwnProperty('amount') )
 				this.amount = Number(item['amount']);
 			
-			if( item.hasOwnProperty('active') )
+			if( item.hasOwnProperty('active') && item['active'] )
 			{
-				if( int(item['active']).toString() == item['active'] )
+				if( int(item['active']) == item['active'] )
 					this.active = Boolean(item['active']);
 				else
 					this.active = ((item['active'] == 'true') ? true : false);
