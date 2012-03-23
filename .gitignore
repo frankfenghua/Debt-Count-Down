@@ -1,0 +1,12 @@
+*/bin/
+*/bin-debug/
+*/bin-ant/
+*/bin-release/
+*/html-template/
+.FlexUnitSettings/
+.settings/
+.actionScriptProperties
+.flexProperties
+.fxpProperties
+.project
+.flexLibProperties
