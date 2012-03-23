@@ -8,18 +8,11 @@
     <classEntry path="com.soatech.debtcountdown.commands.PlanSaveCommand"/>
     <classEntry path="com.soatech.debtcountdown.commands.DebtCreateCommand"/>
     <classEntry path="com.soatech.debtcountdown.commands.DebtSaveCommand"/>
-    <classEntry path="com.soatech.debtcountdown.services.PayOffService"/>
     <classEntry path="com.soatech.debtcountdown.models.vo.StatsVO"/>
     <classEntry path="com.soatech.debtcountdown.commands.PaymentPlanRunCommand"/>
     <classEntry path="com.soatech.debtcountdown.models.StatsProxy"/>
     <classEntry path="com.soatech.debtcountdown.events.DataBaseEvent"/>
-    <classEntry path="com.soatech.debtcountdown.models.DataBaseProxy"/>
-    <classEntry path="com.soatech.debtcountdown.events.MigrationEvent"/>
     <classEntry path="com.soatech.debtcountdown.events.AppEvent"/>
-    <classEntry path="com.soatech.debtcountdown.commands.AppInitCommand"/>
-    <classEntry path="com.soatech.debtcountdown.commands.MigrationsBuildCommand"/>
-    <classEntry path="com.soatech.debtcountdown.services.DebtService"/>
-    <classEntry path="com.soatech.debtcountdown.services.PlanService"/>
     <classEntry path="com.soatech.debtcountdown.commands.PlanAddDebtCommand"/>
     <classEntry path="com.soatech.debtcountdown.commands.PlanLinkDebtCommand"/>
     <classEntry path="com.soatech.debtcountdown.commands.PlanUnlinkDebtCommand"/>
@@ -60,6 +53,7 @@
     <classEntry path="com.soatech.debtcountdown.models.interfaces.IToggleAble"/>
     <classEntry path="com.soatech.debtcountdown.commands.PlanLinkBudgetItemCommand"/>
     <classEntry path="com.soatech.debtcountdown.commands.PlanUnlinkBudgetItemCommand"/>
+    <classEntry path="com.soatech.debtcountdown.services.PayOffService"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
