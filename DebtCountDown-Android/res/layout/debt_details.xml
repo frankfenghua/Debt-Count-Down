@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <EditText 
+        android:id="@+id/edit_debt_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="@string/debt_name_hint"/>
+
+    <EditText 
+        android:id="@+id/edit_debt_bank"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="@string/debt_bank_hint"/>
+
+    <EditText 
+        android:id="@+id/edit_debt_balance"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="@string/debt_balance_hint"/>
+   
+    <EditText 
+        android:id="@+id/edit_debt_apr"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="@string/debt_apr_hint"/>
+
+    <EditText 
+        android:id="@+id/edit_debt_min_payment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="@string/debt_min_payment_hint"/>
+    
+    <Button 
+        android:id="@+id/estimate_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/estimate_btn_label"/>
+
+    <Button 
+        android:id="@+id/delete_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/debt_delete_btn_label"/>
+    
+    <Button 
+        android:id="@+id/save_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/save_btn_label"/>
+    
+    <Button 
+        android:id="@+id/cont_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cont_btn_label"/>
+
+</LinearLayout>

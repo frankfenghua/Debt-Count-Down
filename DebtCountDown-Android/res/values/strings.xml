@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Debt Count Down</string>
+    <string name="cont_btn_label">Continue</string>
+    <string name="debt_add_btn_label">Create Debt</string>
+    <string name="debt_apr_hint">Current APR on debt</string>
+    <string name="debt_balance_hint">Current balance on debt</string>
+    <string name="debt_bank_hint">Name of issuing bank (optional)</string>
+    <string name="debt_delete_btn_label">Delete Debt</string>
+    <string name="debt_details_label">Debt Details</string>
+    <string name="debt_min_payment_hint">Current Minimum Payment</string>
+    <string name="debt_name_hint">Name your debt</string>
+    <string name="debts_label">Debts</string>
+    
+    <string name="estimate_btn_label">Estimate Min. Payment</string>
+    
+    <string name="no_debts">No Debts</string>
+    <string name="no_plans">No Plans</string>
+    <string name="plan_add_btn_label">Create Plan</string>
+    <string name="plan_delete_btn_label">Delete Plan</string>
+    <string name="plan_details_label">Plan Details</string>
+    <string name="plan_name_hint">Name your Plan</string>
+    <string name="plans_label">Plans</string>
+    
+    <string name="save_btn_label">Save</string>
+    
+    <string name="splash_loading">Loading#8230;</string>
+    
+
+</resources>
