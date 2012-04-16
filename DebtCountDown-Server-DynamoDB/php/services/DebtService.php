@@ -23,15 +23,7 @@ class DebtService
 	 */
 	public function __construct()
 	{
-		try
-		{
-			$this->db = new PDO('sqlite:dcd.db');
-			$this->db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-		}
-		catch( PDOException $e )
-		{
-			print_r($e);
-		}
+		$this->db = new AmazonDynamoDB();
 	}
 
 	//-------------------------------------------------------------------------
@@ -45,20 +37,24 @@ class DebtService
 	 */
 	public function addDebt($params)
 	{
-		$retval = '';
+		var $guid = uniqid('debt-', true);
 
-		$sth = $this->db->prepare("INSERT INTO debts (name, bank, balance, apr, paymentRate) VALUES (?, ?, ?, ?, ?)");
-		$sth->execute(array($params['debt']['name'], $params['debt']['bank'], $params['debt']['balance'], $params['debt']['apr'], $params['debt']['paymentRate']));
-
-		$debtId = $this->db->lastInsertId();
-
-		if( $params['debt']['active'] == 'true' )
+		if( $params['active'] == 'true' )
 		{
-			$sth = $this->db->prepare("INSERT INTO planDebts (planId, debtId) VALUES(?, ?)");
-			$sth->execute(array($params['planId'], $debtId));
+			
 		}
 
-		echo '{"pid":"' . $debtId . '"}';
+		$this->db->put_item(array(
+			'TableName' => 'DCD-Plans',
+			'Item' => array(
+				'pid' => array( AmazonDynamoDB::TYPE_STRING => $guid),
+				'name' => array( AmazonDynamoDB::TYPE_STRING => $params['name'])
+			)
+		));
+
+		$retval = '{"pid":"' . $guid . '"}';
+		
+		echo $retval;
 	}
 
 	/**

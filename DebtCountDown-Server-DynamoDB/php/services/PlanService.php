@@ -25,17 +25,7 @@ class PlanService
 
 	public function __construct()
 	{
-		try
-		{
-			$this->db = new AmazonDynamoDB();
-
-			// $this->db->credentials = array()
-			
-		}
-		catch( PDOException $e )
-		{
-			print_r($e);
-		}
+		$this->db = new AmazonDynamoDB();
 	}
 
 	//-------------------------------------------------------------------------
@@ -49,20 +39,18 @@ class PlanService
 	 */
 	public function addPlan( $params )
 	{
-		$retval = '';
+		var $guid = uniqid('plan-', true);
 
-		try
-		{
-			$sth = $this->db->prepare("INSERT INTO plans (name) VALUES (?)");
-			$sth->execute(array($params['name']));
+		$this->db->put_item(array(
+			'TableName' => 'DCD-Plans',
+			'Item' => array(
+				'pid' => array( AmazonDynamoDB::TYPE_STRING => $guid),
+				'name' => array( AmazonDynamoDB::TYPE_STRING => $params['name'])
+			)
+		));
 
-			$retval = '{"pid":"' . $this->db->lastInsertId() . '"}';
-		}
-		catch( PDOException $e )
-		{
-			print_r($e);
-		}
-
+		$retval = '{"pid":"' . $guid . '"}';
+		
 		echo $retval;
 	}
 
@@ -71,60 +59,15 @@ class PlanService
 	 */
 	public function deletePlan( $params )
 	{
-		$sth = $this->db->prepare("DELETE FROM plans WHERE pid = ?");
-		$sth->execute(array($params['pid']));
+		$this->db->delete_item(array(
+			'TableName' => 'DCD-Plans',
+			'Key' => array(
+				'HashKeyElement' => array( AmazonDynamoDB::TYPE_STRING => $params['pid'] )
+			)
+		));
 	}
 
-	/**
-	 * @param array $params
-	 */
-	public function importData( $params )
-	{
-		echo PHP_EOL . PHP_EOL;
-		echo "# Adding data to the table..." . PHP_EOL;
-
-		$queue = new CFBatchRequest();
-		// $queue->user_credentials($db->credentials);
-
-		$this->db->batch($queue)->put_item(array(
-			'TableName' => 'DCD-Plans',
-			'Item' => array(
-				'pid' => array( AmazonDynamoDB::TYPE_STRING => '101' ),
-				'name' => array( AmazonDynamoDB::TYPE_STRING => 'Plan One' )
-			)
-		));
-
-		$this->db->batch($queue)->put_item(array(
-			'TableName' => 'DCD-Plans',
-			'Item' => array(
-				'pid' => array( AmazonDynamoDB::TYPE_STRING => '102' ),
-				'name' => array( AmazonDynamoDB::TYPE_STRING => 'Plan Two' )
-			)
-		));
-
-
-		$this->db->batch($queue)->put_item(array(
-			'TableName' => 'DCD-Plans',
-			'Item' => array(
-				'pid' => array( AmazonDynamoDB::TYPE_STRING => '103' ),
-				'name' => array( AmazonDynamoDB::TYPE_STRING => 'Plan Three' )
-			)
-		));
-
-		$response = $this->db->batch($queue)->send();
-
-		print_r($response);
-	}
 	
-	public function allData( $params )
-	{
-		$response = $this->db->scan(array(
-			'TableName' => 'DCD-Plans'
-		));
-
-		print_r($response);
-	}
-
 	/**
 	 * @param $params
 	 * @return string
@@ -133,32 +76,34 @@ class PlanService
 	{
 		$retval = "";
 
-		try 
-		{
-			$sth = $this->db->prepare("SELECT d.pid, name, bank, balance, apr, paymentRate FROM debts d INNER JOIN planDebts pd ON pd.debtId = d.pid AND pd.planId = ?");
-			$sth->execute(array($params['planId']));
+		// Here we need to sum up all the expenses and incomes
 
-			$debts = $sth->fetchAll();
+		// try 
+		// {
+		// 	$sth = $this->db->prepare("SELECT d.pid, name, bank, balance, apr, paymentRate FROM debts d INNER JOIN planDebts pd ON pd.debtId = d.pid AND pd.planId = ?");
+		// 	$sth->execute(array($params['planId']));
 
-			$sth = $this->db->prepare("SELECT SUM(i.amount) as income, " .
-				"SUM(e.amount) AS expenses " .
-				"FROM planBudgetItems pbi " .
-				"LEFT JOIN budgetItems e ON e.pid = pbi.budgetItemId AND e.type = 'EXPENSE' " .
-				"LEFT JOIN budgetItems i ON i.pid = pbi.budgetItemId AND i.type = 'INCOME' " .
-				"WHERE pbi.planId = ?");
+		// 	$debts = $sth->fetchAll();
 
-			$sth->execute(array($params['planId']));
+		// 	$sth = $this->db->prepare("SELECT SUM(i.amount) as income, " .
+		// 		"SUM(e.amount) AS expenses " .
+		// 		"FROM planBudgetItems pbi " .
+		// 		"LEFT JOIN budgetItems e ON e.pid = pbi.budgetItemId AND e.type = 'EXPENSE' " .
+		// 		"LEFT JOIN budgetItems i ON i.pid = pbi.budgetItemId AND i.type = 'INCOME' " .
+		// 		"WHERE pbi.planId = ?");
 
-			$budget = $sth->fetch();
+		// 	$sth->execute(array($params['planId']));
 
-			$retset = array('debts' => $debts, 'budget' => $budget);
+		// 	$budget = $sth->fetch();
 
-			$retval = json_encode($retset);
-		} 
-		catch (PDOException $e) 
-		{
-			error_log(print_r($e,1));
-		}
+		// 	$retset = array('debts' => $debts, 'budget' => $budget);
+
+		// 	$retval = json_encode($retset);
+		// } 
+		// catch (PDOException $e) 
+		// {
+		// 	error_log(print_r($e,1));
+		// }
 
 		echo $retval;
 	}
@@ -170,20 +115,13 @@ class PlanService
 	{
 		$retval = "";
 
-		try
-		{
-			$sth = $this->db->prepare("SELECT pid, name FROM plans");
-			$sth->execute();
+		$response = $this->db->scan(array(
+			'TableName' => 'DCD-Plans'
+		));
 
-			$plans = $sth->fetchAll();
-
+	
 			$retval = json_encode($plans);
-		}
-		catch(PDOException $e)
-		{
-			print_r($e);
-		}
-
+	
 		echo $retval;
 	}
 
@@ -192,9 +130,12 @@ class PlanService
 	 */
 	public function loadPlan( $params )
 	{
-		$sth = $this->db->prepare("SELECT pid, name FROM plans WHERE pid = ?");
-		$sth->execute(array($params['pid']));
-		$plan = $sth->fetch();
+		$plan = $this->db->get_item(array(
+			'TableName' => 'DCD-Plans',
+			'Key' => array(
+				'HashKeyElement' => array( AmazonDynamoDB::TYPE_STRING => $params['pid'] )
+			)
+		));
 
 		echo json_encode($plan);
 	}
@@ -204,8 +145,13 @@ class PlanService
 	 */
 	public function updatePlan( $params )
 	{
-		$sth = $this->db->prepare("UPDATE plans SET name = ? WHERE pid = ?");
-		$sth->execute(array($params['plan']['name'], $params['plan']['pid']));
+		$this->db->put_item(array(
+			'TableName' => 'DCD-Plans',
+			'Item' => array(
+				'pid' => array( AmazonDynamoDB::TYPE_STRING => $params['plan']['pid']),
+				'name' => array( AmazonDynamoDB::TYPE_STRING => $params['plan']['name'])
+			)
+		));
 	}
 }
 ?>
