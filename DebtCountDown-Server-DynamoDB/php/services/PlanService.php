@@ -84,31 +84,45 @@ class PlanService
 		echo "# Adding data to the table..." . PHP_EOL;
 
 		$queue = new CFBatchRequest();
-		$queue->user_credentials($db->credentials);
+		// $queue->user_credentials($db->credentials);
 
-		$db->batch($queue)->put_item(array(
+		$this->db->batch($queue)->put_item(array(
 			'TableName' => 'DCD-Plans',
 			'Item' => array(
-				'pid' => array( AmazonDynamoDB::TYPE_NUMBER => '101' ),
-				'name' => 'Plan One'
+				'pid' => array( AmazonDynamoDB::TYPE_STRING => '101' ),
+				'name' => array( AmazonDynamoDB::TYPE_STRING => 'Plan One' )
 			)
 		));
 
-		$db->batch($queue)->put_item(array(
+		$this->db->batch($queue)->put_item(array(
 			'TableName' => 'DCD-Plans',
 			'Item' => array(
-				'pid' => array( AmazonDynamoDB::TYPE_NUMBER => '102' ),
-				'name' => 'Plan Two'
+				'pid' => array( AmazonDynamoDB::TYPE_STRING => '102' ),
+				'name' => array( AmazonDynamoDB::TYPE_STRING => 'Plan Two' )
 			)
 		));
 
-		$db->batch($queue)->put_item(array(
+
+		$this->db->batch($queue)->put_item(array(
 			'TableName' => 'DCD-Plans',
 			'Item' => array(
-				'pid' => array( AmazonDynamoDB::TYPE_NUMBER => '103' ),
-				'name' => 'Plan Three'
+				'pid' => array( AmazonDynamoDB::TYPE_STRING => '103' ),
+				'name' => array( AmazonDynamoDB::TYPE_STRING => 'Plan Three' )
 			)
 		));
+
+		$response = $this->db->batch($queue)->send();
+
+		print_r($response);
+	}
+	
+	public function allData( $params )
+	{
+		$response = $this->db->scan(array(
+			'TableName' => 'DCD-Plans'
+		));
+
+		print_r($response);
 	}
 
 	/**
