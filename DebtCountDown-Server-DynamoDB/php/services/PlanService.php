@@ -67,47 +67,6 @@ class PlanService
 		));
 	}
 
-	
-	/**
-	 * @param $params
-	 * @return string
-	 */
-	public function loadFullPlan( $params )
-	{
-		$retval = "";
-
-		// Here we need to sum up all the expenses and incomes
-
-		// try 
-		// {
-		// 	$sth = $this->db->prepare("SELECT d.pid, name, bank, balance, apr, paymentRate FROM debts d INNER JOIN planDebts pd ON pd.debtId = d.pid AND pd.planId = ?");
-		// 	$sth->execute(array($params['planId']));
-
-		// 	$debts = $sth->fetchAll();
-
-		// 	$sth = $this->db->prepare("SELECT SUM(i.amount) as income, " .
-		// 		"SUM(e.amount) AS expenses " .
-		// 		"FROM planBudgetItems pbi " .
-		// 		"LEFT JOIN budgetItems e ON e.pid = pbi.budgetItemId AND e.type = 'EXPENSE' " .
-		// 		"LEFT JOIN budgetItems i ON i.pid = pbi.budgetItemId AND i.type = 'INCOME' " .
-		// 		"WHERE pbi.planId = ?");
-
-		// 	$sth->execute(array($params['planId']));
-
-		// 	$budget = $sth->fetch();
-
-		// 	$retset = array('debts' => $debts, 'budget' => $budget);
-
-		// 	$retval = json_encode($retset);
-		// } 
-		// catch (PDOException $e) 
-		// {
-		// 	error_log(print_r($e,1));
-		// }
-
-		echo $retval;
-	}
-
 	/**
 	 * @return string
 	 */
@@ -127,21 +86,6 @@ class PlanService
 		$retval = json_encode($plans);
 	
 		echo $retval;
-	}
-
-	/**
-	 * @param array $params
-	 */
-	public function loadPlan( $params )
-	{
-		$plan = $this->db->get_item(array(
-			'TableName' => 'DCD-Plans',
-			'Key' => array(
-				'HashKeyElement' => array( AmazonDynamoDB::TYPE_STRING => $params['pid'] )
-			)
-		));
-
-		echo json_encode($plan);
 	}
 
 	/**

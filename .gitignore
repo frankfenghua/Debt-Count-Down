@@ -13,3 +13,5 @@
 */certs/*.p12
 /DebtCountDown-Phone/build.properties
 /DebtCountDown-Desktop/build.properties
+/DebtCountDown-Server-DynamoDB/php/nbproject/private/
+/DebtCountDown-jQueryMobile/src/nbproject/private/
