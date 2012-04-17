@@ -15,8 +15,8 @@ function __autoload($class) {
 
 CFCredentials::set(array(
 	'production' => array(
-		'key' => 'AKIAJVKEBQPVUIQI5BDQ',
-		'secret' => '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',
+		'key' => $_ENV["AWS_KEY"],
+		'secret' => $_ENV['AWS_SECRET'],
 		'default_cache_config' => 'apc',
 		'certificate_authority' => false
 	)
