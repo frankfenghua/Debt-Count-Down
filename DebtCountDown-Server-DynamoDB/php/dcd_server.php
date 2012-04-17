@@ -1,5 +1,5 @@
 <?php
-require_once 'sdk/sdk.class.php';
+require_once 'AWSSDKforPHP/sdk.class.php';
 require_once 'services/PlanService.php';
 
 // set the various include paths so we can have an easier time auto-loading

@@ -3,6 +3,7 @@
 	<property environment="env"/>
 	
 	<property name="BUILD_NUMBER" value="${env.BUILD_NUMBER}" />
+	<property name="WEB_ROOT" value="${env.WEB_ROOT}" />
 	
 	<target name="build-flash">
 		<subant target="build">
@@ -74,6 +75,22 @@
 			<fileset dir="DebtCountDown-Web" includes="build.xml"/>
 		</subant>
 		
+	</target>
+	
+	<target name="deploy-jquery-aws">
+		<echo>${WEB_ROOT}</echo>
+		<echo>${env.WEB_ROOT}</echo>
+		<delete includeemptydirs="true">
+			<fileset dir="${WEB_ROOT}" includes="*" defaultexcludes="false"/>
+		</delete>
+		
+		<copy todir="${WEB_ROOT}">
+			<fileset dir="DebtCountDown-jQueryMobile/src" />
+		</copy>
+		
+		<copy todir="${WEB_ROOT}/server">
+			<fileset dir="DebtCountDown-Server-DynamoDB/php" />
+		</copy>
 	</target>
 	
 </project>

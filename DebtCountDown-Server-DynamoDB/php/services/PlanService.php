@@ -1,4 +1,4 @@
-<?
+<?php
 class PlanService
 {
 	//-------------------------------------------------------------------------
@@ -39,7 +39,7 @@ class PlanService
 	 */
 	public function addPlan( $params )
 	{
-		var $guid = uniqid('plan-', true);
+		$guid = uniqid('plan-', true);
 
 		$this->db->put_item(array(
 			'TableName' => 'DCD-Plans',
@@ -113,14 +113,18 @@ class PlanService
 	 */
 	public function loadAllPlans()
 	{
-		$retval = "";
-
 		$response = $this->db->scan(array(
 			'TableName' => 'DCD-Plans'
 		));
-
-	
-			$retval = json_encode($plans);
+		
+		$plans = array();
+		
+		foreach( $response->body->to_stdClass()->Items as $item ) {
+			$plan = array("pid" => $item->pid->{AmazonDynamoDB::TYPE_STRING}, "name" => $item->name->{AmazonDynamoDB::TYPE_STRING});
+			array_push($plans, $plan);
+		}
+		
+		$retval = json_encode($plans);
 	
 		echo $retval;
 	}
