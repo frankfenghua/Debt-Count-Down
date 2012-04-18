@@ -171,12 +171,10 @@ class DebtService
 	    }
 	    else
 	    {
-		error_log("Removing plan");
 		if( in_array($params['planId'], $plans) )
 		{
 		    for( $i=0; $i < count($plans); $i++ ) {
 			if( $plans[$i] == $params['planId'] ) {
-			    error_log("Mad slizice");
 			    unset($plans[$i]);
 			}
 		    }
