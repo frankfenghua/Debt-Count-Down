@@ -89,7 +89,7 @@ function ManageDebtsMediator()
 	this.onCheckClick = function(event)
 	{
 		var btn = $($(this).children('span').children('span')[1]);
-		var debtId = parseInt($(event.currentTarget).attr('value'));
+		var debtId = $(event.currentTarget).attr('value');
 
 		if( btn.attr('data-theme') == 'c' )
 		{
@@ -120,7 +120,7 @@ function ManageDebtsMediator()
 	 */
 	this.onEditClick = function(event)
 	{
-		var debtId = parseInt($(event.currentTarget).attr('value'));
+		var debtId = $(event.currentTarget).attr('value');
 
 		dcd.controller.debtController.showDebt(debtId);
 	};

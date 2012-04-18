@@ -72,8 +72,20 @@ class PlanService
 		));
 		
 		$plans = array();
+		$plan = array();
+		$list = array();
+		$class = $response->body->to_stdClass();
 		
-		foreach( $response->body->to_stdClass()->Items as $item ) {
+		if( $class->Count > 1 )
+		{
+		    $list = $class->Items;
+		}
+		elseif( $class->Count == 1 )
+		{
+		    $list = array($class->Items);
+		}
+		
+		foreach( $list as $item ) {
 			$plan = array("pid" => $item->pid->{AmazonDynamoDB::TYPE_STRING}, "name" => $item->name->{AmazonDynamoDB::TYPE_STRING});
 			array_push($plans, $plan);
 		}
