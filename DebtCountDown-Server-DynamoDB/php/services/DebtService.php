@@ -39,15 +39,15 @@ class DebtService
 	{
 		$guid = uniqid('debt-', true);
 
-		$plans = array( AmazonDynamoDB::TYPE_ARRAY_OF_STRINGS => '');
+		$plans = array();
 		$debt = $params['debt'];
 		
 		if( $debt['active'] == 'true' )
 		{
-			$plans[AmazonDynamoDB::TYPE_ARRAY_OF_STRINGS] = array($params['planId']);
+		    array_push($plans, $params['planId']);
 		}
-
-		$response = $this->db->put_item(array(
+		
+		$data = array(
 			'TableName' => 'DCD-Debts',
 			'Item' => array(
 				'pid' => array( AmazonDynamoDB::TYPE_STRING => $guid ),
@@ -55,10 +55,16 @@ class DebtService
 			        'bank' => array( AmazonDynamoDB::TYPE_STRING => $debt['bank'] ),
 			        'balance' => array( AmazonDynamoDB::TYPE_NUMBER => $debt['balance'] ),
 			        'apr' => array( AmazonDynamoDB::TYPE_NUMBER => $debt['apr'] ),
-			        'paymentRate' => array( AmazonDynamoDB::TYPE_NUMBER => $debt['paymentRate'] ),
-			        'plans' => $plans
+			        'paymentRate' => array( AmazonDynamoDB::TYPE_NUMBER => $debt['paymentRate'] )
 			)
-		));
+		);
+		
+		if( count($plans) )
+		{
+		    $data['Item']['plans'] = array( AmazonDynamoDB::TYPE_ARRAY_OF_STRINGS => array_values($plans) );
+		}
+
+		$response = $this->db->put_item($data);
 		
 		$retval = '{"pid":"' . $guid . '"}';
 		

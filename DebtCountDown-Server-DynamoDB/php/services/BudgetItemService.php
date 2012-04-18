@@ -23,8 +23,7 @@ class BudgetItemService
 	 */
 	public function __construct()
 	{
-		$this->db = new PDO('sqlite:dcd.db');
-		$this->db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+		$this->db = new AmazonDynamoDB();
 	}
 
 	//-------------------------------------------------------------------------
@@ -38,18 +37,36 @@ class BudgetItemService
 	 */
 	public function addItem($params)
 	{
-		$sth = $this->db->prepare("INSERT INTO budgetItems (name, amount, type) VALUES (?, ?, ?)");
-		$sth->execute(array($params['item']['name'], $params['item']['amount'], $params['item']['type']));
-
-		$itemId = $this->db->lastInsertId();
-
-		if( $params['item']['active'] == 'true' )
-		{
-			$sth = $this->db->prepare("INSERT INTO planBudgetItems (planId, budgetItemId) VALUES (?, ?)");
-			$sth->execute(array($params['planId'], $itemId));
-		}
-
-		echo '{"pid":"' . $itemId . '"}';
+	    $plans = array();
+	    $item = $params['item'];
+	    
+	    $guid = uniqid('item-', true);
+	    
+	    if( $item['active'] == 'true' )
+	    {
+		array_push($plans, $params['planId']);
+	    }
+	    
+	    $data = array(
+		'TableName' => 'DCD-BudgetItems',
+		'Item' => array(
+		    'pid' => array( AmazonDynamoDB::TYPE_STRING => $guid ),
+		    'name' => array( AmazonDynamoDB::TYPE_STRING => $item['name'] ),
+		    'amount' => array( AmazonDynamoDB::TYPE_NUMBER => $item['amount'] ),
+		    'type' => array( AmazonDynamoDB::TYPE_STRING => $item['type'] )
+		)
+	    );
+	    
+	    if( count($plans) )
+	    {
+		$data['Item']['plans'] = array( AmazonDynamoDB::TYPE_ARRAY_OF_STRINGS => array_values($plans) );
+	    }
+	    
+	    $response = $this->db->put_item($data);
+	    
+	    $retval = '{"pid":"' . $guid . '"}';
+	    
+	    echo $retval;
 	}
 
 	/**
@@ -57,11 +74,12 @@ class BudgetItemService
 	 */
 	public function deleteItem($params)
 	{
-		$sth = $this->db->prepare("DELETE FROM planBudgetItems WHERE budgetItemId = ?");
-		$sth->execute(array($params['pid']));
-
-		$sth = $this->db->prepare("DELETE FROM budgetItems WHERE pid = ?");
-		$sth->execute(array($params['pid']));
+	    $this->db->delete_item(array(
+		'TableName' => 'DCD-BudgetItems',
+		'Key' => array(
+		    'HashKeyElement' => array( AmazonDynamoDB::TYPE_STRING => $params['pid'] )
+		)
+	    ));
 	}
 
 	/**
@@ -69,16 +87,49 @@ class BudgetItemService
 	 */
 	public function loadAllItems($params)
 	{
-		$sth = $this->db->prepare("SELECT bi.pid, name, amount, type, "
-			. "CASE WHEN pbi.pid > 0 THEN 'true' ELSE 'false' END AS active "
-			. "FROM budgetItems bi "
-			. "LEFT OUTER JOIN planBudgetItems pbi ON pbi.budgetItemId = bi.pid "
-			. "AND pbi.planId = ?");
-		$sth->execute(array($params['planId']));
-
-		$items = $sth->fetchAll();
-
-		echo json_encode($items);
+	    $response = $this->db->scan(array(
+		'TableName' => 'DCD-BudgetItems'
+	    ));
+	    
+	    $items = array();
+	    $item = array();
+	    $class = $response->body->to_stdClass();
+	    $list = array();
+	    $plans = array();
+	    
+	    if( $class->Count > 1 )
+	    {
+		$list = $class->Items;
+	    }
+	    elseif( $class->Count == 1 )
+	    {
+		$list = array($class->Items);
+	    }
+	    
+	    foreach( $list as $item ) 
+	    {
+		$item = array(
+		    'pid' => $item->pid->{AmazonDynamoDB::TYPE_STRING},
+		    'name' => $item->name->{AmazonDynamoDB::TYPE_STRING},
+		    'amount' => $item->amount->{AmazonDynamoDB::TYPE_NUMBER},
+		    'type' => $item->type->{AmazonDynamoDB::TYPE_STRING},
+		    'plans' => $item->plans->{AmazonDynamoDB::TYPE_ARRAY_OF_STRINGS},
+		    'active' => false
+		);
+		    
+		$plans = explode(',', $item['plans']->{AmazonDynamoDB::TYPE_ARRAY_OF_STRINGS});
+		
+		if( in_array($params['planId'], $plans) )
+		{
+		    $item['active'] = true;
+		}
+		
+		array_push($items, $item);
+	    }
+	    
+	    $retval = json_encode($items);
+	    
+	    echo $retval;
 	}
 
 	/**
@@ -86,27 +137,62 @@ class BudgetItemService
 	 */
 	public function updateItem($params)
 	{
-		$sth = $this->db->prepare("UPDATE budgetItems SET name = ?, amount = ?, type = ? "
-			. "WHERE pid = ?");
-		$sth->execute(array($params['item']['name'],$params['item']['amount'], $params['item']['type'], $params['item']['pid']));
-
-		if( $params['item']['active'] == 'true' )
+	    $item = $params['item'];
+	    
+	    $response = $this->db->get_item(array(
+		'TableName' => 'DCD-BudgetItems',
+		'Key' => array( 'HashKeyElement' => array( AmazonDynamoDB::TYPE_STRING => $item['pid'] ) )
+	    ));
+	    
+	    $class = $response->body->to_stdClass()->Item;
+	    
+	    $plans = explode(',', $class->plans->{AmazonDynamoDB::TYPE_ARRAY_OF_STRINGS});
+	    
+	    for( $i = 0; $i < count($plans); $i++ )
+	    {
+		if( !strlen($plans[$i]) )
 		{
-			$sth = $this->db->prepare("SELECT pid FROM planBudgetItems WHERE budgetItemId = ? AND planId = ?");
-			$sth->execute(array($params['item']['pid'], $params['planId']));
-			$pid = $sth->fetch();
-
-			if( !$pid['pid'] )
+		    unset($plans[$i]);
+		}
+	    }
+	    
+	    if( $item['active'] == 'true' )
+	    {
+		if( !in_array($params['planId'], $plans) )
+		{
+		    array_push($plans, $params['planId']);
+		}
+	    }
+	    else
+	    {
+		if( in_array($params['planId'], $plans) )
+		{
+		    for( $i = 0; $i < count($plans); $i++ )
+		    {
+			if( $plans[$i] == $params['planId'] )
 			{
-				$sth = $this->db->prepare("INSERT INTO planBudgetItems (planId, budgetItemId) VALUES (?, ?)");
-				$sth->execute(array($params['planId'], $params['item']['pid']));
+			    unset($plans[$i]);
 			}
+		    }
 		}
-		else
-		{
-			$sth = $this->db->prepare("DELETE FROM planBudgetItems WHERE budgetItemId = ? AND planId = ?");
-			$sth->execute(array($params['item']['pid'], $params['planId']));
-		}
+	    }
+	    
+	    $data = array(
+		'TableName' => 'DCD-BudgetItems',
+		'Item' => array(
+		    'pid' => array( AmazonDynamoDB::TYPE_STRING => $item['pid'] ),
+		    'name' => array( AmazonDynamoDB::TYPE_STRING => $item['name'] ),
+		    'amount' => array( AmazonDynamoDB::TYPE_NUMBER => $item['amount'] ),
+		    'type' => array( AmazonDynamoDB::TYPE_STRING => $item['type'] )
+		)
+	    );
+	    
+	    if( count($plans) )
+	    {
+		$data['Item']['plans'] = array( AmazonDynamoDB::TYPE_ARRAY_OF_STRINGS => array_values($plans) );
+	    }
+	    
+	    $response = $this->db->put_item($data);
 	}
 }
 ?>
