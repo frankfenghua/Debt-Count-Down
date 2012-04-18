@@ -37,7 +37,7 @@ class DebtService
 	 */
 	public function addDebt($params)
 	{
-		var $guid = uniqid('debt-', true);
+		$guid = uniqid('debt-', true);
 
 		if( $params['active'] == 'true' )
 		{
@@ -62,11 +62,12 @@ class DebtService
 	 */
 	public function deleteDebt($params)
 	{
-		$sth = $this->db->prepare("DELETE FROM planDebts WHERE debtId = ?");
-		$sth->execute(array($params['pid']));
-
-		$sth = $this->db->prepare("DELETE FROM debts WHERE pid = ?");
-		$sth->execute(array($params['pid']));
+		$this->db->delete_item(array(
+			'TableName' => 'DCD-Debts',
+			'Key' => array(
+				'HashKeyElement' => array( AmazonDynamoDB::TYPE_STRING => $params['pid'] )
+			)
+		));
 	}
 
 	/**

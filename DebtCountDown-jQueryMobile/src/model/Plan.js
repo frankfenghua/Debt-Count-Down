@@ -18,8 +18,9 @@ function PlanVO()
 	
 	/**
 	 * @private
+         * This is now a GUID
 	 */
-	this.pid = 0;
+	this.pid = "";
 	
 	/**
 	 * @private
@@ -37,7 +38,7 @@ function PlanVO()
 	 */
 	this.fromJSON = function(json)
 	{
-		this.pid = parseInt(json.pid);
+		this.pid = json.pid;
 		this.name = json.name;
 		this.expenses = parseFloat(json.expenses);
 		this.income = parseFloat(json.income);

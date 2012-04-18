@@ -15,7 +15,7 @@ function PlanMediator()
 	 */
 	this.getId = function ()
 	{
-		return parseInt($("#plan-pid").val());
+		return $("#plan-pid").val();
 	};
 	
 	/**
