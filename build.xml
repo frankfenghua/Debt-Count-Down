@@ -78,14 +78,54 @@
 	</target>
 	
 	<target name="deploy-jquery-aws">
-		<echo>${WEB_ROOT}</echo>
-		<echo>${env.WEB_ROOT}</echo>
 		<delete includeemptydirs="true">
 			<fileset dir="${WEB_ROOT}" includes="*" defaultexcludes="false"/>
 		</delete>
 		
 		<copy todir="${WEB_ROOT}">
 			<fileset dir="DebtCountDown-jQueryMobile/src" />
+		</copy>
+		
+		<copy todir="${WEB_ROOT}/server">
+			<fileset dir="DebtCountDown-Server-DynamoDB/php" />
+		</copy>
+	</target>
+
+	<target name="deploy-jquery-sqlite">
+		<delete includeemptydirs="true">
+			<fileset dir="${WEB_ROOT}" includes="*" defaultexcludes="false"/>
+		</delete>
+		
+		<copy todir="${WEB_ROOT}">
+			<fileset dir="DebtCountDown-jQueryMobile/src" />
+		</copy>
+		
+		<copy todir="${WEB_ROOT}/server">
+			<fileset dir="DebtCountDown-Server-SQLite/php" />
+		</copy>
+	</target>
+
+	<target name="deploy-flash-sqlite">
+		<delete includeemptydirs="true">
+			<fileset dir="${WEB_ROOT}" includes="*" defaultexcludes="false"/>
+		</delete>
+		
+		<copy todir="${WEB_ROOT}">
+			<fileset dir="DebtCountDown-Web/bin-ant" />
+		</copy>
+		
+		<copy todir="${WEB_ROOT}/server">
+			<fileset dir="DebtCountDown-Server-SQLite/php" />
+		</copy>
+	</target>
+
+	<target name="deploy-flash-aws">
+		<delete includeemptydirs="true">
+			<fileset dir="${WEB_ROOT}" includes="*" defaultexcludes="false"/>
+		</delete>
+		
+		<copy todir="${WEB_ROOT}">
+			<fileset dir="DebtCountDown-Web/bin-ant" />
 		</copy>
 		
 		<copy todir="${WEB_ROOT}/server">

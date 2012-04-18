@@ -89,7 +89,7 @@ function ManageIncomesMediator()
 	this.onCheckClick = function(event)
 	{
 		var btn = $($(this).children('span').children('span')[1]);
-		var itemId = parseInt($(event.currentTarget).attr('value'));
+		var itemId = $(event.currentTarget).attr('value');
 
 		if( btn.attr('data-theme') == 'c' )
 		{
@@ -120,7 +120,7 @@ function ManageIncomesMediator()
 	 */
 	this.onEditClick = function(event)
 	{
-		var itemId = parseInt($(event.currentTarget).attr('value'));
+		var itemId = $(event.currentTarget).attr('value');
 
 		dcd.controller.incomeController.showItem(itemId);
 	};

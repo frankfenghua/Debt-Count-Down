@@ -109,7 +109,7 @@ function IncomeMediator()
 	 */
 	this.getPid = function()
 	{
-		return parseInt($('#income-pid').val());
+		return $('#income-pid').val();
 	};
 
 	/**

@@ -109,7 +109,7 @@ function ExpenseMediator()
 	 */
 	this.getPid = function()
 	{
-		return parseInt($('#expense-pid').val());
+		return $('#expense-pid').val();
 	};
 
 	/**
