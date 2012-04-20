@@ -1,0 +1,9 @@
+#!/bin/sh
+DIR=$(dirname $(which $0))
+export NODE_PATH=$DIR/command/vendor/nodejs/nod_modules
+node $DIR/sencha.js $*
+
+#/var/www/command/vendor/nodejs/node_modules/node-uuid
+#/usr/local/lib/node_modules/npm/node_modules/node-uuid
+#/usr/local/lib/node_modules/node-uuid
+
