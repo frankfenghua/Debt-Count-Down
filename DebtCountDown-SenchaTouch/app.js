@@ -1,15 +1,27 @@
 Ext.application({
     name: 'DCD',
     models: ['Plan'],
-    views: ['ManagePlans'],
-    controllers: ['ManagePlans'],
+    views: ['Navigator', 'ManagePlans'],
+    controllers: ['Navigator', 'ManagePlans'],
     stores: ['Plans'],
 
     launch: function() {
-        Ext.create('DCD.view.ManagePlans');
+    	// var container = Ext.create('Ext.NavigationView', {
+     //    	id: 'DCD-Wrapper',
+     //    	initialize: function() {
+	    //     	this.getNavigationBar().hide();
+	    //     },
+	    //     activate: function() {
+	    //     	this.getNavigationBar().hide();
+	    //     }
+     //    });
+     //    container.getNavigationBar().hide();
+     //    Ext.Viewport.add(container);
 
-        console.log('Plans Get: ' + Ext.getStore('PlanStore'));
+     //    // Ext.ComponentManager.get('DCD-Wrapper').push(Ext.create('DCD.view.ManagePlans'));
+     //    container.push(Ext.create('DCD.view.ManagePlans'));
 
-        console.log(Ext.data.StoreManager);
+        Ext.create('DCD.view.Navigator');
+        Ext.ComponentManager.get('Navigator').push(Ext.create('DCD.view.ManagePlans'));
     }
 });
