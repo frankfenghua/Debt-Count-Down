@@ -9,6 +9,12 @@ Ext.define('DCD.controller.ManagePlans', {
 		// 	'plans/add': 'addPlan',
 		// 	'plans/edit/:id': 'editPlan'
 		// }
+
+		control: {
+			'#plan-list': {
+				select: 'onListSelect'
+			}
+		}
 	},
 
 	init: function() {
@@ -21,19 +27,6 @@ Ext.define('DCD.controller.ManagePlans', {
 	launch: function() {
 		console.log('ManagePlansController::launch');
 		this.callParent(arguments);
-
-		this.setListeners();
-	},
-
-	setListeners: function() {
-		this.control({
-			'#plan-list': {
-				select: 'onListSelect'
-			},
-			'#plan-add-btn': {
-				tap: 'onAddBtnTap'
-			}
-		});
 	},
 
 	onListSelect: function(view, record, eOpts) {
@@ -42,17 +35,6 @@ Ext.define('DCD.controller.ManagePlans', {
 		var planEdit = Ext.create('DCD.view.PlanEdit');
 		planEdit.plan = record.data;
 		Ext.ComponentManager.get('Navigator').push(planEdit);
-
-		this.setListeners();
-	},
-
-	onAddBtnTap: function() {
-		
-		var planEdit = Ext.create('DCD.view.PlanEdit');
-		planEdit.plan = null;
-		Ext.ComponentManager.get('Navigator').push(planEdit);
-
-		this.setListeners();
 	}
 
 });

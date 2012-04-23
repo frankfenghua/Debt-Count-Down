@@ -3,19 +3,22 @@ Ext.define('DCD.controller.Navigator', {
 
 	views: ['Navigator'],
 
-	routes: {
-		'#plan-edit': 'showPlanEdit'
+	config: {
+		control: {
+			'#plan-add-btn': {
+				tap: 'onAddBtnTap'
+			}
+		}
 	},
-
-	refs: {
-		navigator: 'Navigator'
-	},
-
+		
 	init: function() {
 		this.callParent(arguments);
+	},
 
-		this.control({
-			
-		});
+	onAddBtnTap: function() {
+		
+		var planEdit = Ext.create('DCD.view.PlanEdit');
+		planEdit.plan = null;
+		Ext.ComponentManager.get('Navigator').push(planEdit);
 	}
 });
