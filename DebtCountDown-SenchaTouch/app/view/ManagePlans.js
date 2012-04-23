@@ -1,6 +1,7 @@
 Ext.define('DCD.view.ManagePlans', {
 	extend: 'Ext.Panel',
 	id: 'ManagePlansView',
+	name: 'manage-plans-view',
 	
 	config: {
 		fullscreen: true,
@@ -17,6 +18,7 @@ Ext.define('DCD.view.ManagePlans', {
 				grouped: false,
 				pinHeaders: false,
 				itemTpl: '<strong>{name}</strong>',
+				name: 'plan-list',
 				store: 'Plans'
 			}
 		]
@@ -27,7 +29,9 @@ Ext.define('DCD.view.ManagePlans', {
 			xtype: 'button',
 			text: 'Add',
 			align: 'right',
-			id: 'plan-add-btn'
+			id: 'plan-add-btn',
+			itemId: 'plan-add-btn',
+			name: 'plan-add-btn'
 		};
 	}
 

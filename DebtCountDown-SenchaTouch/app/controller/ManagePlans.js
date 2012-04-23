@@ -11,8 +11,22 @@ Ext.define('DCD.controller.ManagePlans', {
 		// }
 
 		control: {
-			'#plan-list': {
+			planList: {
 				select: 'onListSelect'
+			},
+			planAddBtn: {
+				tap: 'onAddBtnTap'
+			}
+		},
+
+		refs: {
+			planAddBtn: {
+				xtype: 'button',
+				selector: 'button[name=plan-add-btn]'
+			},
+			planList: {
+				xtype: 'list',
+				selector: 'panel[name=manage-plans-view] list[name=plan-list]'
 			}
 		}
 	},
@@ -34,6 +48,14 @@ Ext.define('DCD.controller.ManagePlans', {
 		
 		var planEdit = Ext.create('DCD.view.PlanEdit');
 		planEdit.plan = record.data;
+		Ext.ComponentManager.get('Navigator').push(planEdit);
+	},
+
+	onAddBtnTap: function() {
+		console.log("ManagePlansController::onAddBtnTap");
+
+		var planEdit = Ext.create('DCD.view.PlanEdit');
+		planEdit.plan = null;
 		Ext.ComponentManager.get('Navigator').push(planEdit);
 	}
 
