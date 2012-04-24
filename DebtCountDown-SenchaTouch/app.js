@@ -1,8 +1,8 @@
 Ext.application({
     name: 'DCD',
     models: ['Plan'],
-    views: ['Navigator', 'ManagePlans'],
-    controllers: ['Navigator', 'ManagePlans'],
+    views: ['Navigator', 'ManagePlans', 'PlanEdit'],
+    controllers: ['Navigator', 'ManagePlans', 'PlanEdit'],
     stores: ['Plans'],
 
     launch: function() {

@@ -10,12 +10,16 @@ Ext.define('DCD.view.PlanEdit', {
 		items: [
 			{
 				xtype: 'fieldset',
-				title: 'Plan Edit',
+				name: 'plan-form',
 				instructions: 'Name your Plan so you can quickly reference it again later.',
 				defaults: {
 					labelWidth: '35%'
 				},
 				items: [
+					{
+						xtype: 'hiddenfield',
+						name: 'pid'
+					},
 					{
 						xtype: 'textfield',
 						name: 'name',
@@ -28,19 +32,23 @@ Ext.define('DCD.view.PlanEdit', {
 			},
 			{
 				xtype: 'panel',
-				defaults: {
-					xtype: 'button',
-					width: '100%'
-				},
-				layout: {
-					type: 'vbox'
-				},
+				layout: 'vbox',
 				items: [
 					{
-						text: 'Delete Plan'
+						xtype: 'button',
+						width: '100%',
+						text: 'Delete Plan',
+						name: 'plan-delete-btn'
 					},
 					{
-						text: 'Continue'
+						xtype: 'spacer',
+						height: 10
+					},
+					{
+						xtype: 'button',
+						width: '100%',
+						text: 'Continue',
+						name: 'plan-cont-btn'
 					}
 				]
 			}
@@ -54,7 +62,8 @@ Ext.define('DCD.view.PlanEdit', {
 			xtype: 'button',
 			text: 'Save',
 			align: 'right',
-			id: 'plan-save-btn'
+			id: 'plan-save-btn',
+			name: 'plan-save-btn'
 		};
 	},
 
@@ -64,7 +73,8 @@ Ext.define('DCD.view.PlanEdit', {
 		if( this.plan )
 		{
 			this.setValues({
-				name: this.plan.name
+				name: this.plan.name,
+				pid: this.plan.pid
 			});
 		}
 		else // otherwise clear the form
