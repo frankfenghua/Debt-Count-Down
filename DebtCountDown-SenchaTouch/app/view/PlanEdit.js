@@ -1,5 +1,6 @@
 Ext.define('DCD.view.PlanEdit', {
 	extend: 'Ext.form.Panel',
+	name: 'plan-edit-panel',
 
 	config: {
 		fullscreen: true,
@@ -38,7 +39,8 @@ Ext.define('DCD.view.PlanEdit', {
 						xtype: 'button',
 						width: '100%',
 						text: 'Delete Plan',
-						name: 'plan-delete-btn'
+						name: 'plan-delete-btn',
+						itemId: 'plan-delete-btn'
 					},
 					{
 						xtype: 'spacer',
@@ -48,7 +50,8 @@ Ext.define('DCD.view.PlanEdit', {
 						xtype: 'button',
 						width: '100%',
 						text: 'Continue',
-						name: 'plan-cont-btn'
+						name: 'plan-cont-btn',
+						itemId: 'plan-cont-btn'
 					}
 				]
 			}
@@ -65,25 +68,5 @@ Ext.define('DCD.view.PlanEdit', {
 			id: 'plan-save-btn',
 			name: 'plan-save-btn'
 		};
-	},
-
-	show: function() {
-		// populate the view with plan data
-
-		if( this.plan )
-		{
-			this.setValues({
-				name: this.plan.name,
-				pid: this.plan.pid
-			});
-		}
-		else // otherwise clear the form
-		{
-			this.setValues({
-				name: null
-			});
-		}
-
-		this.callParent(arguments);
 	}
 });

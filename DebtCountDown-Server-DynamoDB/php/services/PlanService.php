@@ -34,9 +34,12 @@ class PlanService
 	 */
 	public function addPlan( $params )
 	{
+		error_log("Updating Plan");
+		error_log(print_r($params, true));
+
 		$guid = uniqid('plan-', true);
 
-		$this->db->put_item(array(
+		$response = $this->db->put_item(array(
 			'TableName' => 'DCD-Plans',
 			'Item' => array(
 				'pid' => array( AmazonDynamoDB::TYPE_STRING => $guid),
@@ -47,6 +50,9 @@ class PlanService
 		$retval = '{"pid":"' . $guid . '"}';
 		
 		echo $retval;
+
+		error_log("Add Plan Response:");
+		error_log(print_r($response, true));
 	}
 
 	/**
@@ -67,6 +73,8 @@ class PlanService
 	 */
 	public function loadAllPlans()
 	{
+		error_log("Load All Plans");
+
 		$response = $this->db->scan(array(
 			'TableName' => 'DCD-Plans'
 		));
@@ -93,6 +101,9 @@ class PlanService
 		$retval = json_encode($plans);
 	
 		echo $retval;
+
+		error_log("Load All Plans Response: ");
+		error_log(print_r($response, true));
 	}
 
 	/**
@@ -100,13 +111,19 @@ class PlanService
 	 */
 	public function updatePlan( $params )
 	{
-		$this->db->put_item(array(
+		error_log("Updating Plan");
+		error_log(print_r($params, true));
+
+		$response = $this->db->put_item(array(
 			'TableName' => 'DCD-Plans',
 			'Item' => array(
 				'pid' => array( AmazonDynamoDB::TYPE_STRING => $params['plan']['pid']),
 				'name' => array( AmazonDynamoDB::TYPE_STRING => $params['plan']['name'])
 			)
 		));
+
+		error_log("Update Plan Response:");
+		error_log(print_r($response, true));
 	}
 }
 ?>
