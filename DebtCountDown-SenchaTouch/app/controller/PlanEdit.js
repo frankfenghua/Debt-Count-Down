@@ -40,7 +40,6 @@ Ext.define('DCD.controller.PlanEdit', {
 				xtype: 'panel',
 				selector: 'panel[name=plan-edit-panel]'
 			}
-
 		},
 
 		//-----------------------------
@@ -201,9 +200,13 @@ Ext.define('DCD.controller.PlanEdit', {
 	//-------------------------------------------------------------------------
 
 	onContinueSuccess: function(plan, action) {
-		this.savePlan(plan);
+		var me = action.getScope();
 
-		// Ext.ComponentManager.get('Navigator').push(Ext.create('DCD.view.ManageDebts'));
+		me.savePlan(plan);
+
+		var manageDebts = Ext.create('DCD.view.ManageDebts');
+		manageDebts.plan = plan;
+		Ext.ComponentManager.get('Navigator').push(manageDebts);
 	},
 
 	onDeleteSuccess: function(plan, action) {
@@ -217,7 +220,9 @@ Ext.define('DCD.controller.PlanEdit', {
 	},
 
 	onSaveSuccess: function(plan, action) {
-		this.savePlan(plan);
+		var me = action.getScope();
+
+		me.savePlan(plan);
 
 		Ext.ComponentManager.get('Navigator').pop(1);
 	}
