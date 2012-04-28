@@ -4,55 +4,39 @@ Ext.define('DCD.controller.ManagePlans', {
 	views: ['ManagePlans'],
 	
 	config: {
-		// routes: {
-		// 	'plans': 'listPlans',
-		// 	'plans/add': 'addPlan',
-		// 	'plans/edit/:id': 'editPlan'
-		// }
-	},
-
-	init: function() {
-		this.callParent(arguments);
-
-		console.log('ManagePlans Controller::init');
-		
-	},
-
-	launch: function() {
-		console.log('ManagePlansController::launch');
-		this.callParent(arguments);
-
-		this.setListeners();
-	},
-
-	setListeners: function() {
-		this.control({
-			'#plan-list': {
+		control: {
+			planList: {
 				select: 'onListSelect'
 			},
-			'#plan-add-btn': {
+			planAddBtn: {
 				tap: 'onAddBtnTap'
 			}
-		});
+		},
+
+		refs: {
+			planAddBtn: {
+				xtype: 'button',
+				selector: 'button[name=plan-add-btn]'
+			},
+			planList: {
+				xtype: 'list',
+				selector: 'panel[name=manage-plans-view] list[name=plan-list]'
+			}
+		}
 	},
 
 	onListSelect: function(view, record, eOpts) {
-		// Ext.ComponentManager.get('Navigator').push(Ext.create('DCD.view.PlanEdit', {plan: record.data}));
-		
 		var planEdit = Ext.create('DCD.view.PlanEdit');
 		planEdit.plan = record.data;
 		Ext.ComponentManager.get('Navigator').push(planEdit);
-
-		this.setListeners();
 	},
 
 	onAddBtnTap: function() {
-		
+		console.log("ManagePlansController::onAddBtnTap");
+
 		var planEdit = Ext.create('DCD.view.PlanEdit');
 		planEdit.plan = null;
 		Ext.ComponentManager.get('Navigator').push(planEdit);
-
-		this.setListeners();
 	}
 
 });
