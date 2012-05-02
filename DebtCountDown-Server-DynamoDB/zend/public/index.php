@@ -17,6 +17,17 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 /** Zend_Application */
 require_once 'Zend/Application.php';
+require_once APPLICATION_PATH . '/configs/aws.config.php';
+require_once 'AWSSDKforPHP/sdk.class.php';
+
+CFCredentials::set(array(
+	'production' => array(
+		'key' => AWS_KEY,
+		'secret' => AWS_SECRET,
+		'default_cache_config' => 'apc',
+		'certificate_authority' => false
+	)
+));
 
 // Create application, bootstrap, and run
 $application = new Zend_Application(
