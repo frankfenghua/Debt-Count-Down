@@ -17,7 +17,7 @@ function DebtVO()
 	/**
 	 * @private
 	 */
-	this.pid = 0;
+	this.pid = '';
 
 	this.name = "";
 
@@ -74,9 +74,9 @@ function DebtVO()
 		this.apr = parseFloat(json.apr);
 		this.balance = parseFloat(json.balance);
 		this.bank = json.bank;
-		this.pid = parseInt(json.pid);
+		this.pid = json.pid;
 		this.name = json.name;
-		this.planId = parseInt(json.planId);
+		this.planId = json.planId;
 		this.paymentRate = parseFloat(json.paymentRate);
 	};
 }

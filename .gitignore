@@ -13,3 +13,5 @@
 */certs/*.p12
 /DebtCountDown-Phone/build.properties
 /DebtCountDown-Desktop/build.properties
+*/nbproject/
+/DebtCountDown-Server-DynamoDB/php/aws.config.php

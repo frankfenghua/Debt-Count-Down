@@ -3,6 +3,13 @@
 	<property environment="env"/>
 	
 	<property name="BUILD_NUMBER" value="${env.BUILD_NUMBER}" />
+	<property name="WEB_ROOT" value="${env.WEB_ROOT}" />
+	
+	<target name="clean-webroot">
+		<delete includeemptydirs="true">
+			<fileset dir="${WEB_ROOT}" includes="**/*" defaultexcludes="false"/>
+		</delete>
+	</target>
 	
 	<target name="build-flash">
 		<subant target="build">
@@ -73,6 +80,66 @@
 			<property name="dist.dir" location="DebtCountDown-Web"/>
 			<fileset dir="DebtCountDown-Web" includes="build.xml"/>
 		</subant>
+		
+	</target>
+	
+	<target name="deploy-aws">
+		<copy todir="${WEB_ROOT}/server">
+			<fileset dir="DebtCountDown-Server-DynamoDB/php" />
+		</copy>
+	</target>
+	
+	<target name="deploy-sqlite">
+		<copy todir="${WEB_ROOT}/server">
+			<fileset dir="DebtCountDown-Server-SQLite/php" />
+		</copy>
+	</target>
+	
+	<target name="deploy-jquery-aws" depends="clean-webroot,deploy-aws">
+		
+		<copy todir="${WEB_ROOT}">
+			<fileset dir="DebtCountDown-jQueryMobile/src" />
+		</copy>
+		
+	</target>
+
+	<target name="deploy-jquery-sqlite" depends="clean-webroot,deploy-sqlite">
+		
+		<copy todir="${WEB_ROOT}">
+			<fileset dir="DebtCountDown-jQueryMobile/src" />
+		</copy>
+		
+	</target>
+
+	<target name="deploy-flash-sqlite" depends="clean-webroot,deploy-sqlite">
+		
+		<copy todir="${WEB_ROOT}">
+			<fileset dir="DebtCountDown-Web/bin-ant" />
+		</copy>
+		
+	</target>
+
+	<target name="deploy-flash-aws" depends="clean-webroot,deploy-aws">
+		
+		<copy todir="${WEB_ROOT}">
+			<fileset dir="DebtCountDown-Web/bin-ant" />
+		</copy>
+		
+	</target>
+	
+	<target name="deploy-sencha-sqlite" depends="clean-webroot,deploy-sqlite">
+		
+		<copy todir="${WEB_ROOT}">
+			<fileset dir="DebtCountDown-SenchaTouch" />
+		</copy>
+		
+	</target>
+
+	<target name="deploy-sencha-aws" depends="clean-webroot,deploy-aws">
+		
+		<copy todir="${WEB_ROOT}">
+			<fileset dir="DebtCountDown-SenchaTouch" />
+		</copy>
 		
 	</target>
 	

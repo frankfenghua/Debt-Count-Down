@@ -12,11 +12,6 @@ class PlanService
 	 */
 	private $db;
 
-	/**
-	 * @private
-	 */
-	private $queue;
-
 	//-------------------------------------------------------------------------
 	//
 	// Constructor
@@ -39,9 +34,12 @@ class PlanService
 	 */
 	public function addPlan( $params )
 	{
-		var $guid = uniqid('plan-', true);
+		error_log("Updating Plan");
+		error_log(print_r($params, true));
 
-		$this->db->put_item(array(
+		$guid = uniqid('plan-', true);
+
+		$response = $this->db->put_item(array(
 			'TableName' => 'DCD-Plans',
 			'Item' => array(
 				'pid' => array( AmazonDynamoDB::TYPE_STRING => $guid),
@@ -52,6 +50,9 @@ class PlanService
 		$retval = '{"pid":"' . $guid . '"}';
 		
 		echo $retval;
+
+		error_log("Add Plan Response:");
+		error_log(print_r($response, true));
 	}
 
 	/**
@@ -67,77 +68,42 @@ class PlanService
 		));
 	}
 
-	
-	/**
-	 * @param $params
-	 * @return string
-	 */
-	public function loadFullPlan( $params )
-	{
-		$retval = "";
-
-		// Here we need to sum up all the expenses and incomes
-
-		// try 
-		// {
-		// 	$sth = $this->db->prepare("SELECT d.pid, name, bank, balance, apr, paymentRate FROM debts d INNER JOIN planDebts pd ON pd.debtId = d.pid AND pd.planId = ?");
-		// 	$sth->execute(array($params['planId']));
-
-		// 	$debts = $sth->fetchAll();
-
-		// 	$sth = $this->db->prepare("SELECT SUM(i.amount) as income, " .
-		// 		"SUM(e.amount) AS expenses " .
-		// 		"FROM planBudgetItems pbi " .
-		// 		"LEFT JOIN budgetItems e ON e.pid = pbi.budgetItemId AND e.type = 'EXPENSE' " .
-		// 		"LEFT JOIN budgetItems i ON i.pid = pbi.budgetItemId AND i.type = 'INCOME' " .
-		// 		"WHERE pbi.planId = ?");
-
-		// 	$sth->execute(array($params['planId']));
-
-		// 	$budget = $sth->fetch();
-
-		// 	$retset = array('debts' => $debts, 'budget' => $budget);
-
-		// 	$retval = json_encode($retset);
-		// } 
-		// catch (PDOException $e) 
-		// {
-		// 	error_log(print_r($e,1));
-		// }
-
-		echo $retval;
-	}
-
 	/**
 	 * @return string
 	 */
 	public function loadAllPlans()
 	{
-		$retval = "";
+		error_log("Load All Plans");
 
 		$response = $this->db->scan(array(
 			'TableName' => 'DCD-Plans'
 		));
-
-	
-			$retval = json_encode($plans);
+		
+		$plans = array();
+		$plan = array();
+		$list = array();
+		$class = $response->body->to_stdClass();
+		
+		if( $class->Count > 1 )
+		{
+		    $list = $class->Items;
+		}
+		elseif( $class->Count == 1 )
+		{
+		    $list = array($class->Items);
+		}
+		
+		foreach( $list as $item ) {
+			$plan = array("pid" => $item->pid->{AmazonDynamoDB::TYPE_STRING}, "name" => $item->name->{AmazonDynamoDB::TYPE_STRING});
+			array_push($plans, $plan);
+		}
+		
+		$retval = json_encode($plans);
 	
 		echo $retval;
-	}
 
-	/**
-	 * @param array $params
-	 */
-	public function loadPlan( $params )
-	{
-		$plan = $this->db->get_item(array(
-			'TableName' => 'DCD-Plans',
-			'Key' => array(
-				'HashKeyElement' => array( AmazonDynamoDB::TYPE_STRING => $params['pid'] )
-			)
-		));
-
-		echo json_encode($plan);
+		error_log("Load All Plans Response: ");
+		error_log(print_r($response, true));
 	}
 
 	/**
@@ -145,13 +111,19 @@ class PlanService
 	 */
 	public function updatePlan( $params )
 	{
-		$this->db->put_item(array(
+		error_log("Updating Plan");
+		error_log(print_r($params, true));
+
+		$response = $this->db->put_item(array(
 			'TableName' => 'DCD-Plans',
 			'Item' => array(
 				'pid' => array( AmazonDynamoDB::TYPE_STRING => $params['plan']['pid']),
 				'name' => array( AmazonDynamoDB::TYPE_STRING => $params['plan']['name'])
 			)
 		));
+
+		error_log("Update Plan Response:");
+		error_log(print_r($response, true));
 	}
 }
 ?>

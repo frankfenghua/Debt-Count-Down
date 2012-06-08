@@ -172,7 +172,7 @@ function DebtMediator()
 	 */
 	this.getPid = function()
 	{
-		return parseInt($('#debt-pid').val());
+		return $('#debt-pid').val();
 	};
 
 	/**
