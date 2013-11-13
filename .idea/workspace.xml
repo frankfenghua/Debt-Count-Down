@@ -2,16 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0f9957ed-6614-403c-946d-ea5091c75050" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DebtCountDown-Core/DebtCountDown-Core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DebtCountDown-Desktop/src/DebtCountDownDesktop-app.xml" afterPath="$PROJECT_DIR$/DebtCountDown-Desktop/src/DebtCountDownDesktop-app.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DebtCountDown-Desktop/tpl/DebtCountDownDesktop-app.xml" afterPath="$PROJECT_DIR$/DebtCountDown-Desktop/tpl/DebtCountDownDesktop-app.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DebtCountDown-Phone/src/DebtCountDownPhone-app.xml" afterPath="$PROJECT_DIR$/DebtCountDown-Phone/src/DebtCountDownPhone-app.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DebtCountDown-Phone/tpl/DebtCountDownPhone-app.xml" afterPath="$PROJECT_DIR$/DebtCountDown-Phone/tpl/DebtCountDownPhone-app.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Debt-Count-Down.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/fragment.js2" changelist="0f9957ed-6614-403c-946d-ea5091c75050" time="1384385647752" ignored="false" />
     <file path="/Dummy.txt" changelist="0f9957ed-6614-403c-946d-ea5091c75050" time="1384383369324" ignored="false" />
+    <file path="/.gitignore" changelist="0f9957ed-6614-403c-946d-ea5091c75050" time="1384387010199" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,10 +88,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DesktopContext.as" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="DesktopContext.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DebtCountDown-Desktop/src/com/soatech/debtcountdown/DesktopContext.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="51" column="53" selection-start="2727" selection-end="2727" vertical-scroll-proportion="0.2982456">
+            <state line="51" column="53" selection-start="2727" selection-end="2727" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="13" column="13" selection-start="203" selection-end="203" vertical-scroll-proportion="0.3981982">
               <folding />
             </state>
           </provider>
@@ -166,6 +173,7 @@
         <option value="$PROJECT_DIR$/DebtCountDown-Phone/tpl/DebtCountDownPhone-app.xml" />
         <option value="$PROJECT_DIR$/DebtCountDown-Phone/src/DebtCountDownPhone-app.xml" />
         <option value="$PROJECT_DIR$/DebtCountDown-Desktop/src/DebtCountDownDesktop-app.xml" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -513,13 +521,13 @@
     <editor active="true" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962137" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962137" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32962137" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2497332" sideWeight="0.6002227" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3997773" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2497332" sideWeight="0.6703786" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3997773" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -648,7 +656,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DebtCountDown-Desktop/src/com/soatech/debtcountdown/DesktopContext.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="51" column="53" selection-start="2727" selection-end="2727" vertical-scroll-proportion="0.2982456">
+        <state line="51" column="53" selection-start="2727" selection-end="2727" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="13" selection-start="203" selection-end="203" vertical-scroll-proportion="0.3981982">
           <folding />
         </state>
       </provider>
