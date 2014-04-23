@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AngularJS/AngularJS.iml" filepath="$PROJECT_DIR$/AngularJS/AngularJS.iml" />
       <module fileurl="file://$PROJECT_DIR$/Flash-Core/Flash-Core.iml" filepath="$PROJECT_DIR$/Flash-Core/Flash-Core.iml" />
       <module fileurl="file://$PROJECT_DIR$/Flash-Desktop/Flash-Desktop.iml" filepath="$PROJECT_DIR$/Flash-Desktop/Flash-Desktop.iml" />
       <module fileurl="file://$PROJECT_DIR$/Flash-Phone/Flash-Phone.iml" filepath="$PROJECT_DIR$/Flash-Phone/Flash-Phone.iml" />
