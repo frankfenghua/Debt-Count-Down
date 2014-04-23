@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="Flex" version="4">
-  <component name="FlexBuildConfigurationManager" active="DebtCountDownWeb">
+  <component name="FlexBuildConfigurationManager" active="DebtCountDownTablet">
     <configurations>
-      <configuration name="DebtCountDownWeb" main-class="DebtCountDownWeb" output-file="DebtCountDownWeb.swf" output-folder="$MODULE_DIR$/bin-debug" use-html-wrapper="true" wrapper-template-path="$MODULE_DIR$/html-template">
-        <dependencies target-player="11.9">
+      <configuration name="DebtCountDownTablet" target-platform="Mobile" main-class="DebtCountDownTablet" output-file="DebtCountDownTablet.swf" output-folder="$MODULE_DIR$/bin-debug">
+        <dependencies>
           <entries>
-            <entry module-name="DebtCountDown-Shared-PC" build-configuration-name="DebtCountDown-Shared-PC">
+            <entry module-name="DebtCountDown-Shared-Offline" build-configuration-name="DebtCountDown-Shared-Offline">
               <dependency linkage="Merged" />
             </entry>
-            <entry library-id="7334d186-5914-4ab3-ac00-d8f385425734">
+            <entry library-id="366a99d9-8cf3-46f0-8854-c2a0450d2429">
               <dependency linkage="Merged" />
             </entry>
             <entry module-name="DebtCountDown-Core" build-configuration-name="DebtCountDown-Core">
@@ -21,11 +21,10 @@
           <map>
             <entry key="compiler.locale" value="en_US" />
           </map>
-          <option name="additionalOptions" value="-define=CONFIG::debugtrace,true" />
         </compiler-options>
         <packaging-air-desktop />
-        <packaging-android />
-        <packaging-ios />
+        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/DebtCountDownTablet-app.xml" package-file-name="DebtCountDownTablet" />
+        <packaging-ios use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/DebtCountDownTablet-app.xml" package-file-name="DebtCountDownTablet" />
       </configuration>
     </configurations>
     <compiler-options />
@@ -38,18 +37,17 @@
     <orderEntry type="jdk" jdkName="4.11" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
-      <library type="flex">
-        <properties id="7334d186-5914-4ab3-ac00-d8f385425734" />
+      <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/libs" />
+          <root url="file://$MODULE_DIR$/../DebtCountDown-Tablet/libs" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/libs" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../DebtCountDown-Tablet/libs" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="DebtCountDown-Shared-PC" exported="" />
-    <orderEntry type="module" module-name="DebtCountDown-Core" exported="" />
+    <orderEntry type="module" module-name="Flash-Shared-Offline" exported="" />
+    <orderEntry type="module" module-name="Flash-Core" exported="" />
   </component>
 </module>
 

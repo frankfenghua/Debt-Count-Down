@@ -47,18 +47,17 @@
     <orderEntry type="jdk" jdkName="4.11" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
-      <library type="flex">
-        <properties id="b6e8190a-14ae-4e92-90ae-fef25d56381f" />
+      <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/libs" />
+          <root url="file://$MODULE_DIR$/../DebtCountDown-Phone/libs" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/libs" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../DebtCountDown-Phone/libs" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="DebtCountDown-Shared-Offline" exported="" />
-    <orderEntry type="module" module-name="DebtCountDown-Core" exported="" />
+    <orderEntry type="module" module-name="Flash-Shared-Offline" exported="" />
+    <orderEntry type="module" module-name="Flash-Core" exported="" />
   </component>
 </module>
 

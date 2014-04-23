@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="Flex" version="4">
-  <component name="FlexBuildConfigurationManager" active="DebtCountDown-Core">
+  <component name="FlexBuildConfigurationManager" active="DebtCountDownWeb">
     <configurations>
-      <configuration name="DebtCountDown-Core" target-platform="Desktop" output-type="Library" output-file="DebtCountDown-Core.swc" output-folder="$MODULE_DIR$/bin">
-        <dependencies>
+      <configuration name="DebtCountDownWeb" main-class="DebtCountDownWeb" output-file="DebtCountDownWeb.swf" output-folder="$MODULE_DIR$/bin-debug" use-html-wrapper="true" wrapper-template-path="$MODULE_DIR$/html-template">
+        <dependencies target-player="11.9">
           <entries>
-            <entry library-id="015d0987-22f0-4c52-89f5-6baeb04e3850">
+            <entry module-name="DebtCountDown-Shared-PC" build-configuration-name="DebtCountDown-Shared-PC">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-id="7334d186-5914-4ab3-ac00-d8f385425734">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry module-name="DebtCountDown-Core" build-configuration-name="DebtCountDown-Core">
               <dependency linkage="Merged" />
             </entry>
           </entries>
@@ -32,16 +38,17 @@
     <orderEntry type="jdk" jdkName="4.11" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
-      <library type="flex">
-        <properties id="015d0987-22f0-4c52-89f5-6baeb04e3850" />
+      <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/libs" />
+          <root url="file://$MODULE_DIR$/../DebtCountDown-Web/libs" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/libs" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../DebtCountDown-Web/libs" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="Flash-Shared-PC" exported="" />
+    <orderEntry type="module" module-name="Flash-Core" exported="" />
   </component>
 </module>
 
